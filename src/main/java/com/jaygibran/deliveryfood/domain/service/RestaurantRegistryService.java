@@ -1,9 +1,9 @@
 package com.jaygibran.deliveryfood.domain.service;
 
 import com.jaygibran.deliveryfood.domain.exception.EntityNotFoundException;
-import com.jaygibran.deliveryfood.domain.model.Kitchen;
+import com.jaygibran.deliveryfood.domain.model.Cuisine;
 import com.jaygibran.deliveryfood.domain.model.Restaurant;
-import com.jaygibran.deliveryfood.domain.repository.KitchenRepository;
+import com.jaygibran.deliveryfood.domain.repository.CuisineRepository;
 import com.jaygibran.deliveryfood.domain.repository.RestaurantRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -15,15 +15,15 @@ public class RestaurantRegistryService {
 
     private RestaurantRepository restaurantRepository;
 
-    private KitchenRepository kitchenRepository;
+    private CuisineRepository cuisineRepository;
 
     public Restaurant save(Restaurant restaurant){
-        Long kitchenId = restaurant.getKitchen().getId();
-        Kitchen kitchen = kitchenRepository.findById(kitchenId);
-        if(kitchen == null){
+        Long kitchenId = restaurant.getCuisine().getId();
+        Cuisine cuisine = cuisineRepository.findById(kitchenId);
+        if(cuisine == null){
             throw new EntityNotFoundException(String.format("It doesn't exist any kitchen with id: %d", kitchenId));
         }
-        restaurant.setKitchen(kitchen);
+        restaurant.setCuisine(cuisine);
 
         return this.restaurantRepository.save(restaurant);
     }

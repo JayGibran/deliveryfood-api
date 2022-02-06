@@ -2,7 +2,6 @@ package com.jaygibran.deliveryfood.domain.service;
 
 import com.jaygibran.deliveryfood.domain.exception.EntityNotFoundException;
 import com.jaygibran.deliveryfood.domain.model.City;
-import com.jaygibran.deliveryfood.domain.model.Kitchen;
 import com.jaygibran.deliveryfood.domain.model.State;
 import com.jaygibran.deliveryfood.domain.repository.CityRepository;
 import com.jaygibran.deliveryfood.domain.repository.StateRepository;

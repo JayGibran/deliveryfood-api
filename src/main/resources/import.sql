@@ -1,5 +1,5 @@
-insert into kitchen(id, name) values (1, "Indian");
-insert into kitchen(id, name) values (2, "Italian");
+insert into cuisine(id, name) values (1, "Indian");
+insert into cuisine(id, name) values (2, "Italian");
 
 insert into restaurant(name, fee_delivery, kitchen_id) values ("Thai Gourmet", 10, 1);
 insert into restaurant(name, fee_delivery, kitchen_id) values ("Thai Delivery", 9.5, 2);

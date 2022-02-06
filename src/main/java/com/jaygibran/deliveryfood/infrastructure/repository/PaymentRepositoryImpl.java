@@ -1,6 +1,5 @@
 package com.jaygibran.deliveryfood.infrastructure.repository;
 
-import com.jaygibran.deliveryfood.domain.model.Kitchen;
 import com.jaygibran.deliveryfood.domain.model.PaymentMethod;
 import com.jaygibran.deliveryfood.domain.repository.PaymentMethodRepository;
 import org.springframework.stereotype.Component;

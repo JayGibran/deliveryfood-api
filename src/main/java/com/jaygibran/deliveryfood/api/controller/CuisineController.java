@@ -3,12 +3,11 @@ package com.jaygibran.deliveryfood.api.controller;
 
 import com.jaygibran.deliveryfood.domain.exception.EntityInUseException;
 import com.jaygibran.deliveryfood.domain.exception.EntityNotFoundException;
-import com.jaygibran.deliveryfood.domain.model.Kitchen;
-import com.jaygibran.deliveryfood.domain.repository.KitchenRepository;
-import com.jaygibran.deliveryfood.domain.service.KitchenRegistryService;
+import com.jaygibran.deliveryfood.domain.model.Cuisine;
+import com.jaygibran.deliveryfood.domain.repository.CuisineRepository;
+import com.jaygibran.deliveryfood.domain.service.CuisineRegistryService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,51 +25,51 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/kitchens")
-public class KitchenController {
+@RequestMapping("/cuisines")
+public class CuisineController {
 
-    private KitchenRegistryService kitchenRegistryService;
+    private CuisineRegistryService cuisineRegistryService;
 
-    private KitchenRepository kitchenRepository;
+    private CuisineRepository cuisineRepository;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Kitchen> list(){
-        return this.kitchenRepository.all();
+    public List<Cuisine> list(){
+        return this.cuisineRepository.all();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Kitchen> search(@PathVariable Long id){
-        Kitchen kitchen = this.kitchenRepository.findById(id);
-        if (kitchen != null){
-            return ResponseEntity.ok(kitchen);
+    public ResponseEntity<Cuisine> search(@PathVariable Long id){
+        Cuisine cuisine = this.cuisineRepository.findById(id);
+        if (cuisine != null){
+            return ResponseEntity.ok(cuisine);
         }
         return ResponseEntity.notFound().build();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Kitchen add(@RequestBody Kitchen kitchen){
-       return kitchenRegistryService.save(kitchen);
+    public Cuisine add(@RequestBody Cuisine cuisine){
+       return cuisineRegistryService.save(cuisine);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Kitchen> update(@PathVariable Long id, @RequestBody Kitchen kitchen){
-        Kitchen kitchenToUpdate = this.kitchenRepository.findById(id);
+    public ResponseEntity<Cuisine> update(@PathVariable Long id, @RequestBody Cuisine cuisine){
+        Cuisine cuisineToUpdate = this.cuisineRepository.findById(id);
 
-        if(kitchenToUpdate != null){
-            BeanUtils.copyProperties(kitchen, kitchenToUpdate, "id");
+        if(cuisineToUpdate != null){
+            BeanUtils.copyProperties(cuisine, cuisineToUpdate, "id");
 
-            Kitchen updatedKitchen = this.kitchenRegistryService.save(kitchenToUpdate);
-            return ResponseEntity.ok(updatedKitchen);
+            Cuisine updatedCuisine = this.cuisineRegistryService.save(cuisineToUpdate);
+            return ResponseEntity.ok(updatedCuisine);
         }
 
         return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Kitchen> delete(@PathVariable Long id){
+    public ResponseEntity<Cuisine> delete(@PathVariable Long id){
         try{
-            this.kitchenRegistryService.delete(id);
+            this.cuisineRegistryService.delete(id);
             return ResponseEntity.noContent().build();
         }catch(EntityNotFoundException e){
             return ResponseEntity.notFound().build();

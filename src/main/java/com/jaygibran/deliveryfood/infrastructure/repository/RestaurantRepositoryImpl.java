@@ -1,6 +1,5 @@
 package com.jaygibran.deliveryfood.infrastructure.repository;
 
-import com.jaygibran.deliveryfood.domain.model.Kitchen;
 import com.jaygibran.deliveryfood.domain.model.Restaurant;
 import com.jaygibran.deliveryfood.domain.repository.RestaurantRepository;
 import org.springframework.dao.EmptyResultDataAccessException;

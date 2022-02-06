@@ -1,5 +1,6 @@
 package com.jaygibran.deliveryfood.api.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jaygibran.deliveryfood.domain.exception.EntityNotFoundException;
 import com.jaygibran.deliveryfood.domain.model.Restaurant;
 import com.jaygibran.deliveryfood.domain.repository.RestaurantRepository;
@@ -8,17 +9,20 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @RestController
@@ -76,5 +80,31 @@ public class RestaurantController {
         }catch (EntityNotFoundException e){
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> merge(@PathVariable Long id, @RequestBody Map<String, Object> mapValues){
+        Restaurant restaurantToUpdate = this.restaurantRepository.findById(id);
+        if(restaurantToUpdate == null){
+            return ResponseEntity.notFound().build();
+        }
+        merge(mapValues, restaurantToUpdate);
+
+        return update(id, restaurantToUpdate);
+    }
+
+    public Restaurant merge(Map<String, Object> originData, Restaurant restaurantToUpdate) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Restaurant restaurantOrigen = objectMapper.convertValue(originData, Restaurant.class);
+
+        originData.forEach((key, value) -> {
+            Field field = ReflectionUtils.findField(Restaurant.class, key);
+            field.setAccessible(true);
+
+            Object newValue = ReflectionUtils.getField(field, restaurantOrigen);
+
+            ReflectionUtils.setField(field, restaurantToUpdate, newValue);
+        });
+        return restaurantToUpdate;
     }
 }

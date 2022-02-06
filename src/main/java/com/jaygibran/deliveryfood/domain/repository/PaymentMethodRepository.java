@@ -1,6 +1,5 @@
 package com.jaygibran.deliveryfood.domain.repository;
 
-import com.jaygibran.deliveryfood.domain.model.Kitchen;
 import com.jaygibran.deliveryfood.domain.model.PaymentMethod;
 
 import java.util.List;

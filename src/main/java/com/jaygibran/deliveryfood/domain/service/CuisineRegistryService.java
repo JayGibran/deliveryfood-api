@@ -2,8 +2,8 @@ package com.jaygibran.deliveryfood.domain.service;
 
 import com.jaygibran.deliveryfood.domain.exception.EntityInUseException;
 import com.jaygibran.deliveryfood.domain.exception.EntityNotFoundException;
-import com.jaygibran.deliveryfood.domain.model.Kitchen;
-import com.jaygibran.deliveryfood.domain.repository.KitchenRepository;
+import com.jaygibran.deliveryfood.domain.model.Cuisine;
+import com.jaygibran.deliveryfood.domain.repository.CuisineRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -11,21 +11,21 @@ import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
 @Service
-public class KitchenRegistryService {
+public class CuisineRegistryService {
 
-    private KitchenRepository kitchenRepository;
+    private CuisineRepository cuisineRepository;
 
-    public Kitchen save(Kitchen kitchen){
-        return this.kitchenRepository.save(kitchen);
+    public Cuisine save(Cuisine cuisine){
+        return this.cuisineRepository.save(cuisine);
     }
 
     public void delete(Long id){
         try{
-            this.kitchenRepository.delete(id);
+            this.cuisineRepository.delete(id);
         } catch(EmptyResultDataAccessException e){
-            throw new EntityNotFoundException(String.format("It doesn't exist any kitchen with id: %d", id));
+            throw new EntityNotFoundException(String.format("It doesn't exist any cuisine with id: %d", id));
         } catch(DataIntegrityViolationException ex){
-            throw new EntityInUseException(String.format("Kitchen of id %d can't be removed because is being used", id));
+            throw new EntityInUseException(String.format("Cuisine of id %d can't be removed because is being used", id));
         }
     }
 }
