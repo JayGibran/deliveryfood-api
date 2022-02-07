@@ -1,13 +1,11 @@
 package com.jaygibran.deliveryfood.domain.repository;
 
 import com.jaygibran.deliveryfood.domain.model.State;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface StateRepository {
-
-    List<State> all();
-    State findById(Long id);
-    State save(State state);
-    void delete (Long id);
+@Repository
+public interface StateRepository extends JpaRepository<State, Long> {
 }

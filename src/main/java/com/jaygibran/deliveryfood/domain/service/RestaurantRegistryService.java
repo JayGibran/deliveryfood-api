@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @AllArgsConstructor
 @Service
 public class RestaurantRegistryService {
@@ -17,22 +19,21 @@ public class RestaurantRegistryService {
 
     private CuisineRepository cuisineRepository;
 
-    public Restaurant save(Restaurant restaurant){
-        Long kitchenId = restaurant.getCuisine().getId();
-        Cuisine cuisine = cuisineRepository.findById(kitchenId);
-        if(cuisine == null){
-            throw new EntityNotFoundException(String.format("It doesn't exist any kitchen with id: %d", kitchenId));
-        }
+    public Restaurant save(Restaurant restaurant) {
+        Long cuisineId = restaurant.getCuisine().getId();
+        Cuisine cuisine = cuisineRepository.findById(cuisineId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("It doesn't exist any Cuisine with id: %d", cuisineId)));
+
         restaurant.setCuisine(cuisine);
 
         return this.restaurantRepository.save(restaurant);
     }
 
     public void delete(Long id) {
-        try{
-            this.restaurantRepository.delete(id);
-        }catch (EmptyResultDataAccessException e){
-            throw new EntityNotFoundException(String.format("It doesn't exist any kitchen with id: %d", id));
+        try {
+            this.restaurantRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new EntityNotFoundException(String.format("It doesn't exist any Cuisine with id: %d", id));
         }
     }
 }

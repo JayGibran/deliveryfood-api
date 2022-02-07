@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
@@ -34,63 +35,63 @@ public class RestaurantController {
     private RestaurantRegistryService restaurantRegistryService;
 
     @GetMapping
-    public List<Restaurant> list(){
-        return this.restaurantRepository.all();
+    public List<Restaurant> list() {
+        return this.restaurantRepository.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Restaurant> search(@PathVariable Long id){
-        Restaurant restaurant = this.restaurantRepository.findById(id);
-        if(restaurant == null){
+    public ResponseEntity<Restaurant> search(@PathVariable Long id) {
+        Optional<Restaurant> restaurant = this.restaurantRepository.findById(id);
+        if (restaurant.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(restaurant);
+        return ResponseEntity.ok(restaurant.get());
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody Restaurant restaurant){
-        try{
+    public ResponseEntity<?> save(@RequestBody Restaurant restaurant) {
+        try {
             Restaurant savedRestaurant = this.restaurantRegistryService.save(restaurant);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedRestaurant);
-        }catch(EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Restaurant restaurant){
-        Restaurant restaurantToUpdate = this.restaurantRepository.findById(id);
-        if(restaurantToUpdate == null){
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Restaurant restaurant) {
+        Optional<Restaurant> restaurantToUpdate = this.restaurantRepository.findById(id);
+        if (restaurantToUpdate.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        BeanUtils.copyProperties(restaurant, restaurantToUpdate, "id");
-        try{
-            Restaurant updatedRestaurant = this.restaurantRegistryService.save(restaurantToUpdate);
+        BeanUtils.copyProperties(restaurant, restaurantToUpdate.get(), "id");
+        try {
+            Restaurant updatedRestaurant = this.restaurantRegistryService.save(restaurantToUpdate.get());
             return ResponseEntity.ok(updatedRestaurant);
-        }catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Restaurant> delete(@PathVariable Long id){
-        try{
+    public ResponseEntity<Restaurant> delete(@PathVariable Long id) {
+        try {
             this.restaurantRegistryService.delete(id);
             return ResponseEntity.noContent().build();
-        }catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> merge(@PathVariable Long id, @RequestBody Map<String, Object> mapValues){
-        Restaurant restaurantToUpdate = this.restaurantRepository.findById(id);
-        if(restaurantToUpdate == null){
+    public ResponseEntity<?> merge(@PathVariable Long id, @RequestBody Map<String, Object> mapValues) {
+        Optional<Restaurant> restaurantToUpdate = this.restaurantRepository.findById(id);
+        if (restaurantToUpdate == null) {
             return ResponseEntity.notFound().build();
         }
-        merge(mapValues, restaurantToUpdate);
+        merge(mapValues, restaurantToUpdate.get());
 
-        return update(id, restaurantToUpdate);
+        return update(id, restaurantToUpdate.get());
     }
 
     public Restaurant merge(Map<String, Object> originData, Restaurant restaurantToUpdate) {

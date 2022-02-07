@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
@@ -32,44 +33,44 @@ public class StateController {
     private StateRegistryService stateRegistryService;
 
     @GetMapping
-    public List<State> list(){
-        return this.stateRepository.all();
+    public List<State> list() {
+        return this.stateRepository.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<State> search(@PathVariable Long id){
-        State state = this.stateRepository.findById(id);
-        if(state == null){
+    public ResponseEntity<State> search(@PathVariable Long id) {
+        Optional<State> state = this.stateRepository.findById(id);
+        if (state.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok().body(state);
+        return ResponseEntity.ok().body(state.get());
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public State save(@RequestBody State state){
+    public State save(@RequestBody State state) {
         return stateRegistryService.save(state);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<State> update(@PathVariable Long id, @RequestBody State state){
-        State stateToUpdate = this.stateRepository.findById(id);
-        if(stateToUpdate == null){
+    public ResponseEntity<State> update(@PathVariable Long id, @RequestBody State state) {
+        Optional<State> stateToUpdate = this.stateRepository.findById(id);
+        if (stateToUpdate.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        BeanUtils.copyProperties(state, stateToUpdate, "id");
-        State updatedState = stateRegistryService.save(stateToUpdate);
+        BeanUtils.copyProperties(state, stateToUpdate.get(), "id");
+        State updatedState = stateRegistryService.save(stateToUpdate.get());
         return ResponseEntity.ok(updatedState);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id){
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         try {
             stateRegistryService.delete(id);
             return ResponseEntity.noContent().build();
-        }catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
-        }catch (EntityInUseException e){
+        } catch (EntityInUseException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

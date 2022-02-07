@@ -3,13 +3,14 @@ package com.jaygibran.deliveryfood.infrastructure.repository;
 import com.jaygibran.deliveryfood.domain.model.PaymentMethod;
 import com.jaygibran.deliveryfood.domain.repository.PaymentMethodRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.List;
 
-@Component
+@Repository
 public class PaymentRepositoryImpl implements PaymentMethodRepository {
 
     @PersistenceContext

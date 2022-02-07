@@ -1,14 +1,12 @@
 package com.jaygibran.deliveryfood.domain.repository;
 
 import com.jaygibran.deliveryfood.domain.model.Cuisine;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface CuisineRepository {
-
-    List<Cuisine> all();
-    Cuisine findById(Long id);
-    Cuisine save(Cuisine cuisine);
-    void delete (Long id);
+@Repository
+public interface CuisineRepository extends JpaRepository<Cuisine, Long> {
 
 }

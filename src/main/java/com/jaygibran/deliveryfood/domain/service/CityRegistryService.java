@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @AllArgsConstructor
 @Service
 public class CityRegistryService {
@@ -17,20 +19,18 @@ public class CityRegistryService {
 
     private StateRepository stateRepository;
 
-    public City save(City city){
+    public City save(City city) {
         Long stateId = city.getState().getId();
-        State state = stateRepository.findById(stateId);
-        if(state == null){
-            throw new EntityNotFoundException(String.format("It doesn't exist any state with id: %d", stateId));
-        }
+        State state = stateRepository.findById(stateId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("It doesn't exist any state with id: %d", stateId)));
         city.setState(state);
         return cityRepository.save(city);
     }
 
     public void delete(Long id) {
-        try{
-            cityRepository.delete(id);
-        }catch (EmptyResultDataAccessException e){
+        try {
+            cityRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException(String.format("It doesn't exist any city with id: %d", id));
         }
     }

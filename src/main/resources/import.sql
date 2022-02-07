@@ -1,9 +1,9 @@
 insert into cuisine(id, name) values (1, "Indian");
 insert into cuisine(id, name) values (2, "Italian");
 
-insert into restaurant(name, fee_delivery, kitchen_id) values ("Thai Gourmet", 10, 1);
-insert into restaurant(name, fee_delivery, kitchen_id) values ("Thai Delivery", 9.5, 2);
-insert into restaurant(name, fee_delivery, kitchen_id) values ("Tuk Tuk Indian Food", 15, 2);
+insert into restaurant(name, fee_delivery, cuisine_id) values ("Thai Gourmet", 10, 1);
+insert into restaurant(name, fee_delivery, cuisine_id) values ("Thai Delivery", 9.5, 2);
+insert into restaurant(name, fee_delivery, cuisine_id) values ("Tuk Tuk Indian Food", 15, 2);
 
 insert into payment_method(description) value ("Credit card");
 insert into payment_method(description) value ("Debit card");
