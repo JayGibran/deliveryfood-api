@@ -2,8 +2,7 @@ package com.jaygibran.deliveryfood.api.controller;
 
 import com.jaygibran.deliveryfood.domain.model.Restaurant;
 import com.jaygibran.deliveryfood.domain.repository.RestaurantRepository;
-import com.jaygibran.deliveryfood.infrastructure.repository.spec.RestaurantWithFreeDelivery;
-import com.jaygibran.deliveryfood.infrastructure.repository.spec.RestaurantWithSimilarName;
+import com.jaygibran.deliveryfood.infrastructure.repository.spec.RestaurantSpecs;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.util.List;
+
+import static com.jaygibran.deliveryfood.infrastructure.repository.spec.RestaurantSpecs.withFreeDelivery;
+import static com.jaygibran.deliveryfood.infrastructure.repository.spec.RestaurantSpecs.withSimilarName;
 
 @AllArgsConstructor
 @RestController
@@ -32,9 +34,6 @@ public class TestController {
 
     @GetMapping("/restaurants/with-free-delivery")
     public List<Restaurant> restaurantsByFreeDelivery(String name) {
-        var withFreeDelivery = new RestaurantWithFreeDelivery();
-        var withSimilarName = new RestaurantWithSimilarName(name);
-
-        return restaurantRepository.findAll(withSimilarName.and(withFreeDelivery));
+        return restaurantRepository.findAll(withSimilarName(name).and(withFreeDelivery()));
     }
 }
