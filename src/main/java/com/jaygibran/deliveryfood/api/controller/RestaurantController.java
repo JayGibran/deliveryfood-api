@@ -86,7 +86,7 @@ public class RestaurantController {
     @PatchMapping("/{id}")
     public ResponseEntity<?> merge(@PathVariable Long id, @RequestBody Map<String, Object> mapValues) {
         Optional<Restaurant> restaurantToUpdate = this.restaurantRepository.findById(id);
-        if (restaurantToUpdate == null) {
+        if (restaurantToUpdate.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         merge(mapValues, restaurantToUpdate.get());
@@ -94,18 +94,19 @@ public class RestaurantController {
         return update(id, restaurantToUpdate.get());
     }
 
-    public Restaurant merge(Map<String, Object> originData, Restaurant restaurantToUpdate) {
+    public void merge(Map<String, Object> originData, Restaurant restaurantToUpdate) {
         ObjectMapper objectMapper = new ObjectMapper();
         Restaurant restaurantOrigen = objectMapper.convertValue(originData, Restaurant.class);
 
         originData.forEach((key, value) -> {
             Field field = ReflectionUtils.findField(Restaurant.class, key);
-            field.setAccessible(true);
+            if (field != null) {
+                field.setAccessible(true);
 
-            Object newValue = ReflectionUtils.getField(field, restaurantOrigen);
+                Object newValue = ReflectionUtils.getField(field, restaurantOrigen);
 
-            ReflectionUtils.setField(field, restaurantToUpdate, newValue);
+                ReflectionUtils.setField(field, restaurantToUpdate, newValue);
+            }
         });
-        return restaurantToUpdate;
     }
 }
