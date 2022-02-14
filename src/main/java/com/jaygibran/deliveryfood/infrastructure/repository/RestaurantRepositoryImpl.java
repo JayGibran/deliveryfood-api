@@ -1,8 +1,11 @@
 package com.jaygibran.deliveryfood.infrastructure.repository;
 
 import com.jaygibran.deliveryfood.domain.model.Restaurant;
+import com.jaygibran.deliveryfood.domain.repository.RestaurantRepository;
 import com.jaygibran.deliveryfood.domain.repository.RestaurantRepositoryQueries;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -18,12 +21,22 @@ import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-@AllArgsConstructor
+import static com.jaygibran.deliveryfood.infrastructure.repository.spec.RestaurantSpecs.withFreeDelivery;
+import static com.jaygibran.deliveryfood.infrastructure.repository.spec.RestaurantSpecs.withSimilarName;
+
 @Repository
 public class RestaurantRepositoryImpl implements RestaurantRepositoryQueries {
 
     @PersistenceContext
     private final EntityManager entityManager;
+
+    private final RestaurantRepository restaurantRepository;
+
+    @Lazy
+    public RestaurantRepositoryImpl(EntityManager entityManager, RestaurantRepository restaurantRepository) {
+        this.entityManager = entityManager;
+        this.restaurantRepository = restaurantRepository;
+    }
 
     @Override
     public List<Restaurant> find(String name, BigDecimal feeDeliveryMin, BigDecimal feeDeliveryMax) {
@@ -51,5 +64,10 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryQueries {
 
         TypedQuery<Restaurant> query = entityManager.createQuery(criteria);
         return query.getResultList();
+    }
+
+    @Override
+    public List<Restaurant> findWithFreeDelivery(String name) {
+        return restaurantRepository.findAll(withSimilarName(name).and(withFreeDelivery()));
     }
 }
