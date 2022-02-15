@@ -64,7 +64,7 @@ public class RestaurantController {
         if (restaurantToUpdate.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        BeanUtils.copyProperties(restaurant, restaurantToUpdate.get(), "id", "paymentMethods", "address", "dateCreated");
+        BeanUtils.copyProperties(restaurant, restaurantToUpdate.get(), "id", "paymentMethods", "address", "dateCreated", "products");
         try {
             Restaurant updatedRestaurant = this.restaurantRegistryService.save(restaurantToUpdate.get());
             return ResponseEntity.ok(updatedRestaurant);
