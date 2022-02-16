@@ -1,6 +1,7 @@
 package com.jaygibran.deliveryfood.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -38,7 +40,9 @@ public class Restaurant {
     @Column(name = "fee_delivery", nullable = false)
     private BigDecimal feeDelivery;
 
-    @ManyToOne
+    //    @JsonIgnoreProperties("hibernateLazyInitializer")
+    @JsonIgnore
+    @ManyToOne //(fetch = FetchType.LAZY)
     @JoinColumn(name = "cuisine_id", nullable = false)
     private Cuisine cuisine;
 
