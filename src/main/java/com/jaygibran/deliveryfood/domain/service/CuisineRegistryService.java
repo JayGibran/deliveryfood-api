@@ -13,19 +13,27 @@ import org.springframework.stereotype.Service;
 @Service
 public class CuisineRegistryService {
 
+    public static final String MSG_CUISINE_NOT_FOUND = "It doesn't exist any cuisine with id: %d";
+    public static final String MSG_CUISINE_BEING_USED = "Cuisine of id %d can't be removed because is being used";
     private CuisineRepository cuisineRepository;
 
-    public Cuisine save(Cuisine cuisine){
+    public Cuisine save(Cuisine cuisine) {
         return this.cuisineRepository.save(cuisine);
     }
 
-    public void delete(Long id){
-        try{
+    public void delete(Long id) {
+        try {
             this.cuisineRepository.deleteById(id);
-        } catch(EmptyResultDataAccessException e){
-            throw new EntityNotFoundException(String.format("It doesn't exist any cuisine with id: %d", id));
-        } catch(DataIntegrityViolationException ex){
-            throw new EntityInUseException(String.format("Cuisine of id %d can't be removed because is being used", id));
+        } catch (EmptyResultDataAccessException e) {
+            throw new EntityNotFoundException(String.format(MSG_CUISINE_NOT_FOUND, id));
+        } catch (DataIntegrityViolationException ex) {
+            throw new EntityInUseException(String.format(MSG_CUISINE_BEING_USED, id));
         }
+    }
+
+    public Cuisine searchOrFail(Long id) {
+        return this.cuisineRepository
+                .findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(String.format(MSG_CUISINE_NOT_FOUND, id)));
     }
 }

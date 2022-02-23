@@ -40,12 +40,8 @@ public class CuisineController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Cuisine> search(@PathVariable Long id) {
-        Optional<Cuisine> cuisine = this.cuisineRepository.findById(id);
-        if (cuisine.isPresent()) {
-            return ResponseEntity.ok(cuisine.get());
-        }
-        return ResponseEntity.notFound().build();
+    public Cuisine search(@PathVariable Long id) {
+        return cuisineRegistryService.searchOrFail(id);
     }
 
     @PostMapping
@@ -55,28 +51,17 @@ public class CuisineController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Cuisine> update(@PathVariable Long id, @RequestBody Cuisine cuisine) {
-        Optional<Cuisine> cuisineToUpdate = this.cuisineRepository.findById(id);
+    public Cuisine update(@PathVariable Long id, @RequestBody Cuisine cuisine) {
+        Cuisine cuisineToUpdate = cuisineRegistryService.searchOrFail(id);
 
-        if (cuisineToUpdate.isPresent()) {
-            BeanUtils.copyProperties(cuisine, cuisineToUpdate.get(), "id");
+        BeanUtils.copyProperties(cuisine, cuisineToUpdate, "id");
 
-            Cuisine updatedCuisine = this.cuisineRegistryService.save(cuisineToUpdate.get());
-            return ResponseEntity.ok(updatedCuisine);
-        }
-
-        return ResponseEntity.notFound().build();
+        return this.cuisineRegistryService.save(cuisineToUpdate);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
-        try {
-            this.cuisineRegistryService.delete(id);
-            return ResponseEntity.noContent().build();
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (EntityInUseException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        }
+    public void delete(@PathVariable Long id) {
+        this.cuisineRegistryService.delete(id);
     }
 }
