@@ -5,6 +5,7 @@ import com.jaygibran.deliveryfood.domain.exception.EntityNotFoundException;
 import com.jaygibran.deliveryfood.domain.model.Restaurant;
 import com.jaygibran.deliveryfood.domain.repository.RestaurantRepository;
 import com.jaygibran.deliveryfood.domain.service.RestaurantRegistryService;
+import com.jaygibran.deliveryfood.domain.util.ObjectMerger;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -89,24 +90,11 @@ public class RestaurantController {
         if (restaurantToUpdate.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        merge(mapValues, restaurantToUpdate.get());
+
+        ObjectMerger<Restaurant> objectMerger = new ObjectMerger<>(Restaurant.class);
+
+        objectMerger.merge(mapValues, restaurantToUpdate.get());
 
         return update(id, restaurantToUpdate.get());
-    }
-
-    public void merge(Map<String, Object> originData, Restaurant restaurantToUpdate) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        Restaurant restaurantOrigen = objectMapper.convertValue(originData, Restaurant.class);
-
-        originData.forEach((key, value) -> {
-            Field field = ReflectionUtils.findField(Restaurant.class, key);
-            if (field != null) {
-                field.setAccessible(true);
-
-                Object newValue = ReflectionUtils.getField(field, restaurantOrigen);
-
-                ReflectionUtils.setField(field, restaurantToUpdate, newValue);
-            }
-        });
     }
 }

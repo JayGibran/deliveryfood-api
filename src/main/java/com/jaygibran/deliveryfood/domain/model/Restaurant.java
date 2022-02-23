@@ -48,7 +48,6 @@ public class Restaurant {
     private BigDecimal feeDelivery;
 
     //    @JsonIgnoreProperties("hibernateLazyInitializer")
-    @JsonIgnore
     @ManyToOne //(fetch = FetchType.LAZY)
     @JoinColumn(name = "cuisine_id", nullable = false)
     private Cuisine cuisine;
