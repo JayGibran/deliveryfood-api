@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.reflect.Field;
@@ -41,60 +42,40 @@ public class RestaurantController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Restaurant> search(@PathVariable Long id) {
-        Optional<Restaurant> restaurant = this.restaurantRepository.findById(id);
-        if (restaurant.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(restaurant.get());
+    public Restaurant search(@PathVariable Long id) {
+        return this.restaurantRegistryService.findOrFail(id);
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody Restaurant restaurant) {
-        try {
-            Restaurant savedRestaurant = this.restaurantRegistryService.save(restaurant);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedRestaurant);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public Restaurant save(@RequestBody Restaurant restaurant) {
+        return this.restaurantRegistryService.save(restaurant);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Restaurant restaurant) {
-        Optional<Restaurant> restaurantToUpdate = this.restaurantRepository.findById(id);
-        if (restaurantToUpdate.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        BeanUtils.copyProperties(restaurant, restaurantToUpdate.get(), "id", "paymentMethods", "address", "dateCreated", "products");
-        try {
-            Restaurant updatedRestaurant = this.restaurantRegistryService.save(restaurantToUpdate.get());
-            return ResponseEntity.ok(updatedRestaurant);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public Restaurant update(@PathVariable Long id, @RequestBody Restaurant restaurant) {
+
+        Restaurant restaurantToUpdate = this.restaurantRegistryService.findOrFail(id);
+
+        BeanUtils.copyProperties(restaurant, restaurantToUpdate, "id", "paymentMethods", "address", "dateCreated", "products");
+
+        return this.restaurantRegistryService.save(restaurantToUpdate);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    public ResponseEntity<Restaurant> delete(@PathVariable Long id) {
-        try {
-            this.restaurantRegistryService.delete(id);
-            return ResponseEntity.noContent().build();
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public void delete(@PathVariable Long id) {
+        this.restaurantRegistryService.delete(id);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> merge(@PathVariable Long id, @RequestBody Map<String, Object> mapValues) {
-        Optional<Restaurant> restaurantToUpdate = this.restaurantRepository.findById(id);
-        if (restaurantToUpdate.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
+    public Restaurant merge(@PathVariable Long id, @RequestBody Map<String, Object> mapValues) {
+        Restaurant restaurantToUpdate = this.restaurantRegistryService.findOrFail(id);
+        
         ObjectMerger<Restaurant> objectMerger = new ObjectMerger<>(Restaurant.class);
 
-        objectMerger.merge(mapValues, restaurantToUpdate.get());
+        objectMerger.merge(mapValues, restaurantToUpdate);
 
-        return update(id, restaurantToUpdate.get());
+        return update(id, restaurantToUpdate);
     }
 }

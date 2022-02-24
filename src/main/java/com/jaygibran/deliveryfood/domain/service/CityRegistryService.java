@@ -15,6 +15,8 @@ import java.util.Optional;
 @Service
 public class CityRegistryService {
 
+    public static final String MSG_CITY_NOT_FOUND = "It doesn't exist any city with id: %d";
+    public static final String MSG_STATE_NOT_FOUND = "It doesn't exist any state with id: %d";
     private CityRepository cityRepository;
 
     private StateRepository stateRepository;
@@ -22,7 +24,7 @@ public class CityRegistryService {
     public City save(City city) {
         Long stateId = city.getState().getId();
         State state = stateRepository.findById(stateId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("It doesn't exist any state with id: %d", stateId)));
+                .orElseThrow(() -> new EntityNotFoundException(String.format(MSG_STATE_NOT_FOUND, stateId)));
         city.setState(state);
         return cityRepository.save(city);
     }
@@ -31,7 +33,13 @@ public class CityRegistryService {
         try {
             cityRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
-            throw new EntityNotFoundException(String.format("It doesn't exist any city with id: %d", id));
+            throw new EntityNotFoundException(String.format(MSG_CITY_NOT_FOUND, id));
         }
+    }
+
+    public City findOrFail(Long id) {
+        return this.cityRepository
+                .findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(String.format(MSG_CITY_NOT_FOUND, id)));
     }
 }

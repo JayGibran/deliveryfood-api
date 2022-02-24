@@ -28,4 +28,10 @@ public class StateRegistryService {
             throw new EntityInUseException(String.format("State of id %d can't be removed because is being used", id));
         }
     }
+
+    public State findOrFail(Long id) {
+        return this.stateRepository
+                .findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("It doesn't exist any state with id: %d", id)));
+    }
 }

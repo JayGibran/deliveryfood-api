@@ -15,6 +15,8 @@ import java.util.Optional;
 @Service
 public class RestaurantRegistryService {
 
+    public static final String MSG_RESTAURANT_NOT_FOUND = "It doesn't exist any Restaurant with id: %d";
+    public static final String MSG_CUISINE_NOT_FOUND = "It doesn't exist any Cuisine with id: %d";
     private RestaurantRepository restaurantRepository;
 
     private CuisineRepository cuisineRepository;
@@ -22,7 +24,7 @@ public class RestaurantRegistryService {
     public Restaurant save(Restaurant restaurant) {
         Long cuisineId = restaurant.getCuisine().getId();
         Cuisine cuisine = cuisineRepository.findById(cuisineId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("It doesn't exist any Cuisine with id: %d", cuisineId)));
+                .orElseThrow(() -> new EntityNotFoundException(String.format(MSG_CUISINE_NOT_FOUND, cuisineId)));
 
         restaurant.setCuisine(cuisine);
 
@@ -33,7 +35,12 @@ public class RestaurantRegistryService {
         try {
             this.restaurantRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
-            throw new EntityNotFoundException(String.format("It doesn't exist any Cuisine with id: %d", id));
+            throw new EntityNotFoundException(String.format(MSG_CUISINE_NOT_FOUND, id));
         }
+    }
+
+    public Restaurant findOrFail(Long id) {
+        return restaurantRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(String.format(MSG_RESTAURANT_NOT_FOUND, id)));
     }
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -35,46 +36,28 @@ public class CityController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<City> search(@PathVariable Long id) {
-        Optional<City> city = cityRepository.findById(id);
-        if (city.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(city.get());
+    public City search(@PathVariable Long id) {
+        return cityRegistryService.findOrFail(id);
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody City city) {
-        try {
-            City savedCity = cityRegistryService.save(city);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedCity);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public City save(@RequestBody City city) {
+        return cityRegistryService.save(city);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody City city) {
-        Optional<City> cityToUpdate = this.cityRepository.findById(id);
-        if (cityToUpdate.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        try {
-            BeanUtils.copyProperties(city, cityToUpdate.get(), "id");
-            City updatedCity = this.cityRegistryService.save(cityToUpdate.get());
-            return ResponseEntity.ok(updatedCity);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public City update(@PathVariable Long id, @RequestBody City city) {
+        City cityToUpdate = this.cityRegistryService.findOrFail(id);
+
+        BeanUtils.copyProperties(city, cityToUpdate, "id");
+
+        return this.cityRegistryService.save(cityToUpdate);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("{id}")
-    public ResponseEntity<City> delete(@PathVariable Long id) {
-        try {
-            this.cityRegistryService.delete(id);
-            return ResponseEntity.noContent().build();
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public void delete(@PathVariable Long id) {
+        this.cityRegistryService.delete(id);
     }
 }
