@@ -18,13 +18,11 @@ public class RestaurantRegistryService {
     public static final String MSG_RESTAURANT_NOT_FOUND = "It doesn't exist any Restaurant with id: %d";
     public static final String MSG_CUISINE_NOT_FOUND = "It doesn't exist any Cuisine with id: %d";
     private RestaurantRepository restaurantRepository;
-
-    private CuisineRepository cuisineRepository;
+    private CuisineRegistryService cuisineRegistryService;
 
     public Restaurant save(Restaurant restaurant) {
         Long cuisineId = restaurant.getCuisine().getId();
-        Cuisine cuisine = cuisineRepository.findById(cuisineId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format(MSG_CUISINE_NOT_FOUND, cuisineId)));
+        Cuisine cuisine = cuisineRegistryService.searchOrFail(cuisineId);
 
         restaurant.setCuisine(cuisine);
 

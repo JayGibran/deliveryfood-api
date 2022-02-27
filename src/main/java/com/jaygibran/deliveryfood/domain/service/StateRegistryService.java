@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class StateRegistryService {
 
+    public static final String MSG_NO_STATE_FOUND = "It doesn't exist any state with id: %d";
+    public static final String MSG_STATE_BEING_USED = "State of id %d can't be removed because is being used";
     private StateRepository stateRepository;
 
     public State save(State state) {
@@ -23,15 +25,15 @@ public class StateRegistryService {
         try {
             stateRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
-            throw new EntityNotFoundException(String.format("It doesn't exist any state with id: %d", id));
+            throw new EntityNotFoundException(String.format(MSG_NO_STATE_FOUND, id));
         } catch (DataIntegrityViolationException ex) {
-            throw new EntityInUseException(String.format("State of id %d can't be removed because is being used", id));
+            throw new EntityInUseException(String.format(MSG_STATE_BEING_USED, id));
         }
     }
 
     public State findOrFail(Long id) {
         return this.stateRepository
                 .findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("It doesn't exist any state with id: %d", id)));
+                .orElseThrow(() -> new EntityNotFoundException(String.format(MSG_NO_STATE_FOUND, id)));
     }
 }

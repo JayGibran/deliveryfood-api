@@ -16,16 +16,14 @@ import java.util.Optional;
 public class CityRegistryService {
 
     public static final String MSG_CITY_NOT_FOUND = "It doesn't exist any city with id: %d";
-    public static final String MSG_STATE_NOT_FOUND = "It doesn't exist any state with id: %d";
     private CityRepository cityRepository;
-
-    private StateRepository stateRepository;
+    private StateRegistryService stateRegistryService;
 
     public City save(City city) {
-        Long stateId = city.getState().getId();
-        State state = stateRepository.findById(stateId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format(MSG_STATE_NOT_FOUND, stateId)));
+        State state = stateRegistryService.findOrFail(city.getState().getId());
+
         city.setState(state);
+
         return cityRepository.save(city);
     }
 
