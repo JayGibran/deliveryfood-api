@@ -1,6 +1,7 @@
 package com.jaygibran.deliveryfood.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jaygibran.deliveryfood.domain.exception.BusinessException;
 import com.jaygibran.deliveryfood.domain.exception.EntityNotFoundException;
 import com.jaygibran.deliveryfood.domain.model.Restaurant;
 import com.jaygibran.deliveryfood.domain.repository.RestaurantRepository;
@@ -49,7 +50,11 @@ public class RestaurantController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public Restaurant save(@RequestBody Restaurant restaurant) {
-        return this.restaurantRegistryService.save(restaurant);
+        try {
+            return this.restaurantRegistryService.save(restaurant);
+        } catch (EntityNotFoundException e) {
+            throw new BusinessException(e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
@@ -59,7 +64,11 @@ public class RestaurantController {
 
         BeanUtils.copyProperties(restaurant, restaurantToUpdate, "id", "paymentMethods", "address", "dateCreated", "products");
 
-        return this.restaurantRegistryService.save(restaurantToUpdate);
+        try {
+            return this.restaurantRegistryService.save(restaurantToUpdate);
+        } catch (EntityNotFoundException e) {
+            throw new BusinessException(e.getMessage());
+        }
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -71,7 +80,7 @@ public class RestaurantController {
     @PatchMapping("/{id}")
     public Restaurant merge(@PathVariable Long id, @RequestBody Map<String, Object> mapValues) {
         Restaurant restaurantToUpdate = this.restaurantRegistryService.findOrFail(id);
-        
+
         ObjectMerger<Restaurant> objectMerger = new ObjectMerger<>(Restaurant.class);
 
         objectMerger.merge(mapValues, restaurantToUpdate);
