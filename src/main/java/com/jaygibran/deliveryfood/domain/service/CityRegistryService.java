@@ -1,5 +1,6 @@
 package com.jaygibran.deliveryfood.domain.service;
 
+import com.jaygibran.deliveryfood.domain.exception.CityNotFoundException;
 import com.jaygibran.deliveryfood.domain.exception.EntityNotFoundException;
 import com.jaygibran.deliveryfood.domain.model.City;
 import com.jaygibran.deliveryfood.domain.model.State;
@@ -15,7 +16,6 @@ import java.util.Optional;
 @Service
 public class CityRegistryService {
 
-    public static final String MSG_CITY_NOT_FOUND = "It doesn't exist any city with id: %d";
     private CityRepository cityRepository;
     private StateRegistryService stateRegistryService;
 
@@ -31,13 +31,13 @@ public class CityRegistryService {
         try {
             cityRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
-            throw new EntityNotFoundException(String.format(MSG_CITY_NOT_FOUND, id));
+            throw new CityNotFoundException(id);
         }
     }
 
     public City findOrFail(Long id) {
         return this.cityRepository
                 .findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(String.format(MSG_CITY_NOT_FOUND, id)));
+                .orElseThrow(() -> new CityNotFoundException(id));
     }
 }

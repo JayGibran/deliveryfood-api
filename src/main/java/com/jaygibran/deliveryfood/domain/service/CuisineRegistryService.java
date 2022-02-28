@@ -1,5 +1,6 @@
 package com.jaygibran.deliveryfood.domain.service;
 
+import com.jaygibran.deliveryfood.domain.exception.CuisineNotFoundException;
 import com.jaygibran.deliveryfood.domain.exception.EntityInUseException;
 import com.jaygibran.deliveryfood.domain.exception.EntityNotFoundException;
 import com.jaygibran.deliveryfood.domain.model.Cuisine;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class CuisineRegistryService {
 
-    public static final String MSG_CUISINE_NOT_FOUND = "It doesn't exist any cuisine with id: %d";
     public static final String MSG_CUISINE_BEING_USED = "Cuisine of id %d can't be removed because is being used";
     private CuisineRepository cuisineRepository;
 
@@ -25,7 +25,7 @@ public class CuisineRegistryService {
         try {
             this.cuisineRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
-            throw new EntityNotFoundException(String.format(MSG_CUISINE_NOT_FOUND, id));
+            throw new CuisineNotFoundException(id);
         } catch (DataIntegrityViolationException ex) {
             throw new EntityInUseException(String.format(MSG_CUISINE_BEING_USED, id));
         }
@@ -34,6 +34,6 @@ public class CuisineRegistryService {
     public Cuisine searchOrFail(Long id) {
         return this.cuisineRepository
                 .findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(String.format(MSG_CUISINE_NOT_FOUND, id)));
+                .orElseThrow(() -> new CuisineNotFoundException(id));
     }
 }

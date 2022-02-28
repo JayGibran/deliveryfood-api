@@ -2,6 +2,7 @@ package com.jaygibran.deliveryfood.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jaygibran.deliveryfood.domain.exception.BusinessException;
+import com.jaygibran.deliveryfood.domain.exception.CuisineNotFoundException;
 import com.jaygibran.deliveryfood.domain.exception.EntityNotFoundException;
 import com.jaygibran.deliveryfood.domain.model.Restaurant;
 import com.jaygibran.deliveryfood.domain.repository.RestaurantRepository;
@@ -52,21 +53,20 @@ public class RestaurantController {
     public Restaurant save(@RequestBody Restaurant restaurant) {
         try {
             return this.restaurantRegistryService.save(restaurant);
-        } catch (EntityNotFoundException e) {
+        } catch (CuisineNotFoundException e) {
             throw new BusinessException(e.getMessage());
         }
     }
 
     @PutMapping("/{id}")
     public Restaurant update(@PathVariable Long id, @RequestBody Restaurant restaurant) {
-
-        Restaurant restaurantToUpdate = this.restaurantRegistryService.findOrFail(id);
-
-        BeanUtils.copyProperties(restaurant, restaurantToUpdate, "id", "paymentMethods", "address", "dateCreated", "products");
-
         try {
+            Restaurant restaurantToUpdate = this.restaurantRegistryService.findOrFail(id);
+
+            BeanUtils.copyProperties(restaurant, restaurantToUpdate, "id", "paymentMethods", "address", "dateCreated", "products");
+            
             return this.restaurantRegistryService.save(restaurantToUpdate);
-        } catch (EntityNotFoundException e) {
+        } catch (CuisineNotFoundException e) {
             throw new BusinessException(e.getMessage());
         }
     }

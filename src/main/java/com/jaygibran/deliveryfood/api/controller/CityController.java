@@ -2,6 +2,7 @@ package com.jaygibran.deliveryfood.api.controller;
 
 import com.jaygibran.deliveryfood.domain.exception.BusinessException;
 import com.jaygibran.deliveryfood.domain.exception.EntityNotFoundException;
+import com.jaygibran.deliveryfood.domain.exception.StateNotFoundException;
 import com.jaygibran.deliveryfood.domain.model.City;
 import com.jaygibran.deliveryfood.domain.repository.CityRepository;
 import com.jaygibran.deliveryfood.domain.service.CityRegistryService;
@@ -46,19 +47,20 @@ public class CityController {
     public City save(@RequestBody City city) {
         try {
             return cityRegistryService.save(city);
-        } catch (EntityNotFoundException e) {
-            throw new BusinessException(e.getMessage());
+        } catch (StateNotFoundException e) {
+            throw new BusinessException(e.getMessage(), e);
         }
     }
 
     @PutMapping("/{id}")
     public City update(@PathVariable Long id, @RequestBody City city) {
-        City cityToUpdate = this.cityRegistryService.findOrFail(id);
-
-        BeanUtils.copyProperties(city, cityToUpdate, "id");
         try {
+            City cityToUpdate = this.cityRegistryService.findOrFail(id);
+
+            BeanUtils.copyProperties(city, cityToUpdate, "id");
+
             return this.cityRegistryService.save(cityToUpdate);
-        } catch (EntityNotFoundException e) {
+        } catch (StateNotFoundException e) {
             throw new BusinessException(e.getMessage());
         }
     }
