@@ -6,7 +6,8 @@ import lombok.Getter;
 public enum ApiErrorType {
     ENTITY_NOT_FOUND("/entity-not-found", "Entity not found"),
     ENTITY_IN_USE("/entity-in-user", "Entity in use"),
-    BUSINESS_EXCEPTION("/business-exception", "Business exception");
+    BUSINESS_EXCEPTION("/business-exception", "Business exception"),
+    MESSAGE_NOT_READABLE("/message-not-readable", "Message not readable");
 
     private String title;
     private String uri;

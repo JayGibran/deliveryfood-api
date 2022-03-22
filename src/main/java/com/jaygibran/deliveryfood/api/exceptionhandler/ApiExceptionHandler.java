@@ -6,6 +6,7 @@ import com.jaygibran.deliveryfood.domain.exception.EntityNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -15,6 +16,15 @@ import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+        String detail = "The body of request is invalid. Check syntax error";
+        ApiError apiError = createApiErrorBuilder(status, ApiErrorType.MESSAGE_NOT_READABLE, detail).build();
+
+        return handleExceptionInternal(ex, apiError, new HttpHeaders(), status, request);
+    }
 
     @ExceptionHandler(EntityNotFoundException.class)
     private ResponseEntity<?> handleEntityNotFound(EntityNotFoundException ex, WebRequest webRequest) {
@@ -61,7 +71,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     private ApiError.ApiErrorBuilder createApiErrorBuilder(HttpStatus status, ApiErrorType apiErrorType, String detail) {
         return ApiError.builder()
                 .status(status.value())
-                .type(apiErrorType.getTitle())
+                .type(apiErrorType.getUri())
                 .title(apiErrorType.getTitle())
                 .detail(detail);
     }
