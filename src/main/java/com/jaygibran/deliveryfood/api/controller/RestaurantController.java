@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
@@ -64,7 +65,7 @@ public class RestaurantController {
             Restaurant restaurantToUpdate = this.restaurantRegistryService.findOrFail(id);
 
             BeanUtils.copyProperties(restaurant, restaurantToUpdate, "id", "paymentMethods", "address", "dateCreated", "products");
-            
+
             return this.restaurantRegistryService.save(restaurantToUpdate);
         } catch (CuisineNotFoundException e) {
             throw new BusinessException(e.getMessage());
@@ -78,12 +79,12 @@ public class RestaurantController {
     }
 
     @PatchMapping("/{id}")
-    public Restaurant merge(@PathVariable Long id, @RequestBody Map<String, Object> mapValues) {
+    public Restaurant merge(@PathVariable Long id, @RequestBody Map<String, Object> mapValues, HttpServletRequest request) {
         Restaurant restaurantToUpdate = this.restaurantRegistryService.findOrFail(id);
 
         ObjectMerger<Restaurant> objectMerger = new ObjectMerger<>(Restaurant.class);
 
-        objectMerger.merge(mapValues, restaurantToUpdate);
+        objectMerger.merge(mapValues, restaurantToUpdate, request);
 
         return update(id, restaurantToUpdate);
     }
