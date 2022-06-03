@@ -8,6 +8,7 @@ import com.jaygibran.deliveryfood.domain.exception.BusinessException;
 import com.jaygibran.deliveryfood.domain.exception.EntityInUseException;
 import com.jaygibran.deliveryfood.domain.exception.EntityNotFoundException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.List;
@@ -39,9 +41,26 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, apiError, new HttpHeaders(), status, request);
     }
 
+    @Override
+    protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        if (ex instanceof MethodArgumentTypeMismatchException) {
+            return handleMethodArgumentTypeMismatch((MethodArgumentTypeMismatchException) ex, headers, status, request);
+
+        }
+        return super.handleTypeMismatch(ex, headers, status, request);
+    }
+
+    private ResponseEntity<Object> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        String errorMessage = String
+                .format("Url parameter '%s' received the value '%s' which is an invalid type. Fix it and send value consistent with type '%s'", ex.getName(), ex.getValue(), ex.getRequiredType().getSimpleName());
+        ApiError apiError = createApiErrorBuilder(status, ApiErrorType.INVALID_PARAMETER, errorMessage).build();
+        return handleExceptionInternal(ex, apiError, headers, status, request);
+    }
+
+
     private ResponseEntity<Object> handleInvalidFormatException(InvalidFormatException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         String path = joinPath(ex.getPath());
-        
+
         String detail = String
                 .format("Property '%s' received value '%s', which is a invalid type. Fix and send a valid value with type %s.", path, ex.getValue(), ex.getTargetType().getSimpleName());
         ApiError apiError = createApiErrorBuilder(status, ApiErrorType.MESSAGE_NOT_READABLE, detail).build();
@@ -89,6 +108,16 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         return handleExceptionInternal(ex, apiError, new HttpHeaders(), HttpStatus.CONFLICT, webRequest);
     }
+
+//    @ExceptionHandler
+//    private ResponseEntity<?> handleInvalidParameter(MethodArgumentTypeMismatchException exception, WebRequest webRequest) {
+//
+//        String errorMessage = String
+//                .format("Url parameter '%s' received the value '%s' which is an invalid type. Fix it and send value consistent with type '%s'", exception.getName(), exception.getValue(), exception.getRequiredType());
+//        ApiError apiError = createApiErrorBuilder(HttpStatus.BAD_REQUEST, ApiErrorType.INVALID_PARAMETER, errorMessage).build();
+//        return handleExceptionInternal(exception, apiError, new HttpHeaders(), HttpStatus.BAD_REQUEST, webRequest);
+//    }
+
 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {

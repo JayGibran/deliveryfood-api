@@ -7,7 +7,8 @@ public enum ApiErrorType {
     ENTITY_NOT_FOUND("/entity-not-found", "Entity not found"),
     ENTITY_IN_USE("/entity-in-user", "Entity in use"),
     BUSINESS_EXCEPTION("/business-exception", "Business exception"),
-    MESSAGE_NOT_READABLE("/message-not-readable", "Message not readable");
+    MESSAGE_NOT_READABLE("/message-not-readable", "Message not readable"),
+    INVALID_PARAMETER("/invalid-parameter", "Invalid Parameter");
 
     private String title;
     private String uri;
