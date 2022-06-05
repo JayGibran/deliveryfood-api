@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +52,7 @@ public class RestaurantController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Restaurant save(@RequestBody Restaurant restaurant) {
+    public Restaurant save(@RequestBody @Valid Restaurant restaurant) {
         try {
             return this.restaurantRegistryService.save(restaurant);
         } catch (CuisineNotFoundException e) {

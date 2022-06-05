@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -20,6 +21,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -59,6 +61,16 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         String detail = String.format("Resource %s, which you tried to access doesn't not exist", ex.getRequestURL());
         ApiError apiError = createApiErrorBuilder(status, ApiErrorType.RESOURCE_NOT_FOUND, detail)
+                .userMessage(detail)
+                .build();
+
+        return handleExceptionInternal(ex, apiError, new HttpHeaders(), status, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        String detail = String.format("One or two fields are invalid. Fill in correctly and try again.");
+        ApiError apiError = createApiErrorBuilder(status, ApiErrorType.INVALID_DATA, detail)
                 .userMessage(detail)
                 .build();
 
@@ -133,7 +145,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     private ResponseEntity<Object> handleUncaught(Exception ex, WebRequest webRequest) {
         ex.printStackTrace();
-        ApiError apiError = createApiErrorBuilder(HttpStatus.INTERNAL_SERVER_ERROR, ApiErrorType.SYSTEM_ERROR, GENERIC_ERROR_MSG).build();
+        ApiError apiError = createApiErrorBuilder(HttpStatus.INTERNAL_SERVER_ERROR, ApiErrorType.SYSTEM_ERROR, GENERIC_ERROR_MSG)
+                .userMessage(GENERIC_ERROR_MSG)
+                .build();
         return handleExceptionInternal(ex, apiError, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, webRequest);
     }
 

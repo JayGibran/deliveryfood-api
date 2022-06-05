@@ -9,7 +9,8 @@ public enum ApiErrorType {
     BUSINESS_EXCEPTION("/business-exception", "Business exception"),
     MESSAGE_NOT_READABLE("/message-not-readable", "Message not readable"),
     INVALID_PARAMETER("/invalid-parameter", "Invalid Parameter"),
-    SYSTEM_ERROR("/system-error", "System error");
+    SYSTEM_ERROR("/system-error", "System error"),
+    INVALID_DATA("/invalid-data", "Invalid data");
 
     private String title;
     private String uri;
