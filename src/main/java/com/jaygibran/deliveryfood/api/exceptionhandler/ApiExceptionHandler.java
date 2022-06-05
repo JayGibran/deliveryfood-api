@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.List;
@@ -48,6 +49,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         }
         return super.handleTypeMismatch(ex, headers, status, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        String detail = String.format("Resource %s, which you tried to access doesn't not exist", ex.getRequestURL());
+        ApiError apiError = createApiErrorBuilder(status, ApiErrorType.RESOURCE_NOT_FOUND, detail).build();
+
+        return handleExceptionInternal(ex, apiError, new HttpHeaders(), status, request);
     }
 
     private ResponseEntity<Object> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -88,7 +97,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(EntityNotFoundException.class)
     private ResponseEntity<?> handleEntityNotFound(EntityNotFoundException ex, WebRequest webRequest) {
 
-        ApiError apiError = createApiErrorBuilder(HttpStatus.NOT_FOUND, ApiErrorType.ENTITY_NOT_FOUND, ex.getMessage()).build();
+        ApiError apiError = createApiErrorBuilder(HttpStatus.NOT_FOUND, ApiErrorType.RESOURCE_NOT_FOUND, ex.getMessage()).build();
 
         return handleExceptionInternal(ex, apiError, new HttpHeaders(), HttpStatus.NOT_FOUND, webRequest);
     }
@@ -108,16 +117,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         return handleExceptionInternal(ex, apiError, new HttpHeaders(), HttpStatus.CONFLICT, webRequest);
     }
-
-//    @ExceptionHandler
-//    private ResponseEntity<?> handleInvalidParameter(MethodArgumentTypeMismatchException exception, WebRequest webRequest) {
-//
-//        String errorMessage = String
-//                .format("Url parameter '%s' received the value '%s' which is an invalid type. Fix it and send value consistent with type '%s'", exception.getName(), exception.getValue(), exception.getRequiredType());
-//        ApiError apiError = createApiErrorBuilder(HttpStatus.BAD_REQUEST, ApiErrorType.INVALID_PARAMETER, errorMessage).build();
-//        return handleExceptionInternal(exception, apiError, new HttpHeaders(), HttpStatus.BAD_REQUEST, webRequest);
-//    }
-
 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
