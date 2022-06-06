@@ -21,7 +21,7 @@ import java.util.List;
 @Entity
 public class Cuisine {
 
-    @NotNull(groups = Groups.RestaurantRegistry.class)
+    @NotNull(groups = Groups.CuisineId.class)
     @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

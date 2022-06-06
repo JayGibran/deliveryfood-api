@@ -21,11 +21,10 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.Valid;
-import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
+import javax.validation.groups.ConvertGroup;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -43,16 +42,17 @@ public class Restaurant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(groups = Groups.RestaurantRegistry.class)
+    @NotBlank
     @Column(nullable = false)
     private String name;
-    
-    @PositiveOrZero(groups = Groups.RestaurantRegistry.class)
+
+    @PositiveOrZero
     @Column(name = "fee_delivery", nullable = false)
     private BigDecimal feeDelivery;
 
     @Valid
-    @NotNull(groups = Groups.RestaurantRegistry.class)
+    @ConvertGroup(to = Groups.CuisineId.class)
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "cuisine_id", nullable = false)
     private Cuisine cuisine;

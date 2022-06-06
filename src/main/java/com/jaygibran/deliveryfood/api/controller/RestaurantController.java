@@ -54,7 +54,7 @@ public class RestaurantController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Restaurant save(@RequestBody @Validated(Groups.RestaurantRegistry.class) Restaurant restaurant) {
+    public Restaurant save(@RequestBody @Valid Restaurant restaurant) {
         try {
             return this.restaurantRegistryService.save(restaurant);
         } catch (CuisineNotFoundException e) {
