@@ -1,6 +1,7 @@
 package com.jaygibran.deliveryfood.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jaygibran.deliveryfood.api.Groups;
 import com.jaygibran.deliveryfood.domain.exception.BusinessException;
 import com.jaygibran.deliveryfood.domain.exception.CuisineNotFoundException;
 import com.jaygibran.deliveryfood.domain.exception.EntityNotFoundException;
@@ -13,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -52,7 +54,7 @@ public class RestaurantController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Restaurant save(@RequestBody @Valid Restaurant restaurant) {
+    public Restaurant save(@RequestBody @Validated(Groups.RestaurantRegistry.class) Restaurant restaurant) {
         try {
             return this.restaurantRegistryService.save(restaurant);
         } catch (CuisineNotFoundException e) {

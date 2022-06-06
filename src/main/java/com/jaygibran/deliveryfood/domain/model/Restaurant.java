@@ -1,6 +1,7 @@
 package com.jaygibran.deliveryfood.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.jaygibran.deliveryfood.api.Groups;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -19,7 +20,12 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.Valid;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -37,15 +43,17 @@ public class Restaurant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotBlank(groups = Groups.RestaurantRegistry.class)
     @Column(nullable = false)
     private String name;
-
+    
+    @PositiveOrZero(groups = Groups.RestaurantRegistry.class)
     @Column(name = "fee_delivery", nullable = false)
     private BigDecimal feeDelivery;
 
-    //    @JsonIgnoreProperties("hibernateLazyInitializer")
-    @ManyToOne //(fetch = FetchType.LAZY)
+    @Valid
+    @NotNull(groups = Groups.RestaurantRegistry.class)
+    @ManyToOne
     @JoinColumn(name = "cuisine_id", nullable = false)
     private Cuisine cuisine;
 

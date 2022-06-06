@@ -70,8 +70,19 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         String detail = String.format("One or two fields are invalid. Fill in correctly and try again.");
+
+        List<ApiError.Field> fields = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(fieldError -> ApiError.Field.builder()
+                        .name(fieldError.getField())
+                        .userMessage(fieldError.getDefaultMessage())
+                        .build()
+                )
+                .collect(Collectors.toList());
         ApiError apiError = createApiErrorBuilder(status, ApiErrorType.INVALID_DATA, detail)
                 .userMessage(detail)
+                .fields(fields)
                 .build();
 
         return handleExceptionInternal(ex, apiError, new HttpHeaders(), status, request);
