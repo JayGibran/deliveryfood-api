@@ -4,4 +4,7 @@ public interface Groups {
 
     interface CuisineId {
     }
+
+    interface StateId {
+    }
 }
