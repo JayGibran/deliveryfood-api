@@ -7,8 +7,11 @@ import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import com.jaygibran.deliveryfood.domain.exception.BusinessException;
 import com.jaygibran.deliveryfood.domain.exception.EntityInUseException;
 import com.jaygibran.deliveryfood.domain.exception.EntityNotFoundException;
+import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,12 +27,16 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
+@AllArgsConstructor
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     public static final String GENERIC_ERROR_MSG = "It happened an internal error. Try again and if error persists, get in touch with the admin.";
+
+    private final MessageSource messageSource;
 
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -74,10 +81,13 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         List<ApiError.Field> fields = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(fieldError -> ApiError.Field.builder()
-                        .name(fieldError.getField())
-                        .userMessage(fieldError.getDefaultMessage())
-                        .build()
+                .map(fieldError -> {
+                            String message = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+                            return ApiError.Field.builder()
+                                    .name(fieldError.getField())
+                                    .userMessage(message)
+                                    .build();
+                        }
                 )
                 .collect(Collectors.toList());
         ApiError apiError = createApiErrorBuilder(status, ApiErrorType.INVALID_DATA, detail)
