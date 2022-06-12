@@ -1,5 +1,6 @@
 package com.jaygibran.deliveryfood.api.controller;
 
+import com.jaygibran.deliveryfood.core.validation.ValidationException;
 import com.jaygibran.deliveryfood.domain.exception.BusinessException;
 import com.jaygibran.deliveryfood.domain.exception.CuisineNotFoundException;
 import com.jaygibran.deliveryfood.domain.model.Restaurant;
@@ -9,6 +10,8 @@ import com.jaygibran.deliveryfood.domain.util.ObjectMerger;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -33,6 +36,8 @@ public class RestaurantController {
     private RestaurantRepository restaurantRepository;
 
     private RestaurantRegistryService restaurantRegistryService;
+
+    private SmartValidator validator;
 
     @GetMapping
     public List<Restaurant> list() {
@@ -74,13 +79,24 @@ public class RestaurantController {
     }
 
     @PatchMapping("/{id}")
-    public Restaurant merge(@PathVariable Long id, @RequestBody Map<String, Object> mapValues, HttpServletRequest request) {
+    public Restaurant merge(@PathVariable Long id, @RequestBody Map<String, Object> fields, HttpServletRequest request) {
         Restaurant restaurantToUpdate = this.restaurantRegistryService.findOrFail(id);
 
         ObjectMerger<Restaurant> objectMerger = new ObjectMerger<>(Restaurant.class);
 
-        objectMerger.merge(mapValues, restaurantToUpdate, request);
+        objectMerger.merge(fields, restaurantToUpdate, request);
+
+        validate(restaurantToUpdate, "restaurant");
 
         return update(id, restaurantToUpdate);
+    }
+
+    private void validate(Restaurant restaurant, String objectName) {
+        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(restaurant, objectName);
+        validator.validate(restaurant, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException(bindingResult);
+        }
     }
 }

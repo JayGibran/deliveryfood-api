@@ -3,6 +3,7 @@ package com.jaygibran.deliveryfood.api.exceptionhandler;
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
+import com.jaygibran.deliveryfood.core.validation.ValidationException;
 import com.jaygibran.deliveryfood.domain.exception.BusinessException;
 import com.jaygibran.deliveryfood.domain.exception.EntityInUseException;
 import com.jaygibran.deliveryfood.domain.exception.EntityNotFoundException;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -74,9 +76,19 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        return handleValidationInternal(ex, ex.getBindingResult(), headers, status, request);
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    private ResponseEntity<?> handleValidationException(ValidationException ex, WebRequest request) {
+        return handleValidationInternal(ex, ex.getBindingResult(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    private ResponseEntity<Object> handleValidationInternal(Exception ex, BindingResult bindingResult, HttpHeaders headers,
+                                                            HttpStatus status, WebRequest request) {
         String detail = String.format("One or two fields are invalid. Fill in correctly and try again.");
 
-        List<ApiError.Object> problemObjects = ex.getBindingResult()
+        List<ApiError.Object> problemObjects = bindingResult
                 .getAllErrors()
                 .stream()
                 .map(objectError -> {
@@ -97,7 +109,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 .objects(problemObjects)
                 .build();
 
-        return handleExceptionInternal(ex, apiError, new HttpHeaders(), status, request);
+        return handleExceptionInternal(ex, apiError, headers, status, request);
     }
 
     private ResponseEntity<Object> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
