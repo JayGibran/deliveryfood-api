@@ -1,7 +1,7 @@
 package com.jaygibran.deliveryfood.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.jaygibran.deliveryfood.api.Groups;
+import com.jaygibran.deliveryfood.core.validation.Groups;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

@@ -1,7 +1,8 @@
 package com.jaygibran.deliveryfood.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.jaygibran.deliveryfood.api.Groups;
+import com.jaygibran.deliveryfood.core.validation.FeeDelivery;
+import com.jaygibran.deliveryfood.core.validation.Groups;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -47,7 +48,7 @@ public class Restaurant {
     private String name;
 
     @NotNull
-    @PositiveOrZero
+    @FeeDelivery
     @Column(name = "fee_delivery", nullable = false)
     private BigDecimal feeDelivery;
 

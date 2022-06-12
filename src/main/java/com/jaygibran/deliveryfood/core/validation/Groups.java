@@ -1,4 +1,4 @@
-package com.jaygibran.deliveryfood.api;
+package com.jaygibran.deliveryfood.core.validation;
 
 public interface Groups {
 
