@@ -1,7 +1,6 @@
 package com.jaygibran.deliveryfood.api.exceptionhandler;
 
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import com.jaygibran.deliveryfood.domain.exception.BusinessException;
@@ -16,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -24,10 +24,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -78,13 +76,17 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         String detail = String.format("One or two fields are invalid. Fill in correctly and try again.");
 
-        List<ApiError.Field> fields = ex.getBindingResult()
-                .getFieldErrors()
+        List<ApiError.Object> problemObjects = ex.getBindingResult()
+                .getAllErrors()
                 .stream()
-                .map(fieldError -> {
-                            String message = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
-                            return ApiError.Field.builder()
-                                    .name(fieldError.getField())
+                .map(objectError -> {
+                            String name = objectError.getObjectName();
+                            if (objectError instanceof FieldError) {
+                                name = ((FieldError) objectError).getField();
+                            }
+                            String message = messageSource.getMessage(objectError, LocaleContextHolder.getLocale());
+                            return ApiError.Object.builder()
+                                    .name(name)
                                     .userMessage(message)
                                     .build();
                         }
@@ -92,7 +94,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 .collect(Collectors.toList());
         ApiError apiError = createApiErrorBuilder(status, ApiErrorType.INVALID_DATA, detail)
                 .userMessage(detail)
-                .fields(fields)
+                .objects(problemObjects)
                 .build();
 
         return handleExceptionInternal(ex, apiError, new HttpHeaders(), status, request);
