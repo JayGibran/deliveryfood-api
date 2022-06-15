@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -22,6 +23,7 @@ public class CityRegistryService {
     private CityRepository cityRepository;
     private StateRegistryService stateRegistryService;
 
+    @Transactional
     public City save(City city) {
         State state = stateRegistryService.findOrFail(city.getState().getId());
 
@@ -30,6 +32,7 @@ public class CityRegistryService {
         return cityRepository.save(city);
     }
 
+    @Transactional
     public void delete(Long id) {
         try {
             cityRepository.deleteById(id);

@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @AllArgsConstructor
 @Service
@@ -17,10 +18,12 @@ public class StateRegistryService {
     public static final String MSG_STATE_BEING_USED = "State of id %d can't be removed because is being used";
     private StateRepository stateRepository;
 
+    @Transactional
     public State save(State state) {
         return stateRepository.save(state);
     }
 
+    @Transactional
     public void delete(Long id) {
         try {
             stateRepository.deleteById(id);

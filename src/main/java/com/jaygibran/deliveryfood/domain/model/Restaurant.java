@@ -1,6 +1,7 @@
 package com.jaygibran.deliveryfood.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.jaygibran.deliveryfood.core.validation.FeeDelivery;
 import com.jaygibran.deliveryfood.core.validation.Groups;
 import com.jaygibran.deliveryfood.core.validation.Multiple;
@@ -54,6 +55,7 @@ public class Restaurant {
     @Column(name = "fee_delivery", nullable = false)
     private BigDecimal feeDelivery;
 
+    @JsonIgnoreProperties(value = "name", allowGetters = true)
     @Valid
     @ConvertGroup(to = Groups.CuisineId.class)
     @NotNull

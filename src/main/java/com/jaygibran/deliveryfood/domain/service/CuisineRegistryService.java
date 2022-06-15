@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @AllArgsConstructor
 @Service
@@ -17,10 +18,12 @@ public class CuisineRegistryService {
     public static final String MSG_CUISINE_BEING_USED = "Cuisine of id %d can't be removed because is being used";
     private CuisineRepository cuisineRepository;
 
+    @Transactional
     public Cuisine save(Cuisine cuisine) {
         return this.cuisineRepository.save(cuisine);
     }
 
+    @Transactional
     public void delete(Long id) {
         try {
             this.cuisineRepository.deleteById(id);

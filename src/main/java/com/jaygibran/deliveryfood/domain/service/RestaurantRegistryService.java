@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @AllArgsConstructor
 @Service
@@ -19,6 +20,7 @@ public class RestaurantRegistryService {
     private RestaurantRepository restaurantRepository;
     private CuisineRegistryService cuisineRegistryService;
 
+    @Transactional
     public Restaurant save(Restaurant restaurant) {
         Long cuisineId = restaurant.getCuisine().getId();
         Cuisine cuisine = cuisineRegistryService.searchOrFail(cuisineId);
@@ -28,6 +30,7 @@ public class RestaurantRegistryService {
         return this.restaurantRepository.save(restaurant);
     }
 
+    @Transactional
     public void delete(Long id) {
         try {
             this.restaurantRepository.deleteById(id);
