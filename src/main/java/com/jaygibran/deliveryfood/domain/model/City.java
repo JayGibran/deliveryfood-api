@@ -1,5 +1,6 @@
 package com.jaygibran.deliveryfood.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.jaygibran.deliveryfood.core.validation.Groups;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,7 +30,7 @@ public class City {
     @NotBlank
     @Column(nullable = false)
     private String name;
-
+    
     @Valid
     @NotNull
     @ConvertGroup(to = Groups.StateId.class)

@@ -70,7 +70,6 @@ public class Order {
     @Column(columnDefinition = "datetime")
     private LocalDateTime dateCancelation;
 
-    @JsonIgnore
     @UpdateTimestamp
     @Column(columnDefinition = "datetime")
     private LocalDateTime dateDelivered;
