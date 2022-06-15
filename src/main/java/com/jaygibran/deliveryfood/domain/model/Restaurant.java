@@ -55,7 +55,6 @@ public class Restaurant {
     @Column(name = "fee_delivery", nullable = false)
     private BigDecimal feeDelivery;
 
-    @JsonIgnoreProperties(value = "name", allowGetters = true)
     @Valid
     @ConvertGroup(to = Groups.CuisineId.class)
     @NotNull
@@ -63,21 +62,17 @@ public class Restaurant {
     @JoinColumn(name = "cuisine_id", nullable = false)
     private Cuisine cuisine;
 
-    @JsonIgnore
     @Embedded
     private Address address;
 
-    @JsonIgnore
     @CreationTimestamp
     @Column(nullable = false, columnDefinition = "datetime")
     private LocalDateTime dateCreated;
 
-    @JsonIgnore
     @UpdateTimestamp
     @Column(nullable = false, columnDefinition = "datetime")
     private LocalDateTime dateUpdated;
 
-    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "restaurant_payment_method",
             joinColumns = @JoinColumn(name = "restaurant_id"),
@@ -85,7 +80,6 @@ public class Restaurant {
     @ToString.Exclude
     private List<PaymentMethod> paymentMethods = new ArrayList<>();
 
-    @JsonIgnore
     @OneToMany(mappedBy = "restaurant")
     @ToString.Exclude
     private List<Product> products;
