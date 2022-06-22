@@ -20,6 +20,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -60,19 +61,19 @@ public class Order {
 
     @CreationTimestamp
     @Column(nullable = false, columnDefinition = "datetime")
-    private LocalDateTime dateCreated;
+    private OffsetDateTime dateCreated;
 
     @UpdateTimestamp
     @Column(nullable = false, columnDefinition = "datetime")
-    private LocalDateTime dateUpdated;
+    private OffsetDateTime dateUpdated;
 
     @CreationTimestamp
     @Column(columnDefinition = "datetime")
-    private LocalDateTime dateCancelation;
+    private OffsetDateTime dateCancelation;
 
     @UpdateTimestamp
     @Column(columnDefinition = "datetime")
-    private LocalDateTime dateDelivered;
+    private OffsetDateTime dateDelivered;
 
     @OneToMany(mappedBy = "order")
     List<OrderItem> orderItems;
