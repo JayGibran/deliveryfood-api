@@ -1,8 +1,13 @@
 package com.jaygibran.deliveryfood.api.controller;
 
+import com.jaygibran.deliveryfood.api.assembler.RestaurantDTOAssembler;
+import com.jaygibran.deliveryfood.api.model.CuisineDTO;
+import com.jaygibran.deliveryfood.api.model.RestaurantDTO;
+import com.jaygibran.deliveryfood.api.model.input.RestaurantInput;
 import com.jaygibran.deliveryfood.core.validation.ValidationException;
 import com.jaygibran.deliveryfood.domain.exception.BusinessException;
 import com.jaygibran.deliveryfood.domain.exception.CuisineNotFoundException;
+import com.jaygibran.deliveryfood.domain.model.Cuisine;
 import com.jaygibran.deliveryfood.domain.model.Restaurant;
 import com.jaygibran.deliveryfood.domain.repository.RestaurantRepository;
 import com.jaygibran.deliveryfood.domain.service.RestaurantRegistryService;
@@ -27,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @RestController
@@ -37,36 +43,41 @@ public class RestaurantController {
 
     private RestaurantRegistryService restaurantRegistryService;
 
-    private SmartValidator validator;
+    private RestaurantDTOAssembler restaurantDTOAssembler;
 
     @GetMapping
-    public List<Restaurant> list() {
-        return this.restaurantRepository.findAll();
+    public List<RestaurantDTO> list() {
+        return restaurantDTOAssembler.toCollectionDTO(this.restaurantRepository.findAll());
     }
 
     @GetMapping("/{id}")
-    public Restaurant search(@PathVariable Long id) {
-        return this.restaurantRegistryService.findOrFail(id);
+    public RestaurantDTO search(@PathVariable Long id) {
+        Restaurant restaurant = this.restaurantRegistryService.findOrFail(id);
+
+        return restaurantDTOAssembler.toDTO(restaurant);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Restaurant save(@RequestBody @Valid Restaurant restaurant) {
+    public RestaurantDTO save(@RequestBody @Valid RestaurantInput restaurantInput) {
         try {
-            return this.restaurantRegistryService.save(restaurant);
+            Restaurant restaurant = toDomainObject(restaurantInput);
+            return restaurantDTOAssembler.toDTO(this.restaurantRegistryService.save(restaurant));
         } catch (CuisineNotFoundException e) {
             throw new BusinessException(e.getMessage());
         }
     }
 
     @PutMapping("/{id}")
-    public Restaurant update(@PathVariable Long id, @RequestBody @Valid Restaurant restaurant) {
+    public RestaurantDTO update(@PathVariable Long id, @RequestBody @Valid RestaurantInput restaurantInput) {
         try {
+            Restaurant restaurant = toDomainObject(restaurantInput);
+
             Restaurant restaurantToUpdate = this.restaurantRegistryService.findOrFail(id);
 
             BeanUtils.copyProperties(restaurant, restaurantToUpdate, "id", "paymentMethods", "address", "dateCreated", "products");
 
-            return this.restaurantRegistryService.save(restaurantToUpdate);
+            return restaurantDTOAssembler.toDTO(this.restaurantRegistryService.save(restaurantToUpdate));
         } catch (CuisineNotFoundException e) {
             throw new BusinessException(e.getMessage());
         }
@@ -78,25 +89,16 @@ public class RestaurantController {
         this.restaurantRegistryService.delete(id);
     }
 
-    @PatchMapping("/{id}")
-    public Restaurant merge(@PathVariable Long id, @RequestBody Map<String, Object> fields, HttpServletRequest request) {
-        Restaurant restaurantToUpdate = this.restaurantRegistryService.findOrFail(id);
+    private Restaurant toDomainObject(RestaurantInput restaurantInput) {
+        Restaurant restaurant = new Restaurant();
+        restaurant.setName(restaurantInput.getName());
+        restaurant.setFeeDelivery(restaurantInput.getDeliveryFee());
 
-        ObjectMerger<Restaurant> objectMerger = new ObjectMerger<>(Restaurant.class);
+        Cuisine cuisine = new Cuisine();
+        cuisine.setId(restaurantInput.getCuisine().getId());
 
-        objectMerger.merge(fields, restaurantToUpdate, request);
+        restaurant.setCuisine(cuisine);
 
-        validate(restaurantToUpdate, "restaurant");
-
-        return update(id, restaurantToUpdate);
-    }
-
-    private void validate(Restaurant restaurant, String objectName) {
-        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(restaurant, objectName);
-        validator.validate(restaurant, bindingResult);
-
-        if (bindingResult.hasErrors()) {
-            throw new ValidationException(bindingResult);
-        }
+        return restaurant;
     }
 }
