@@ -31,6 +31,7 @@ import javax.validation.constraints.PositiveOrZero;
 import javax.validation.groups.ConvertGroup;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -67,11 +68,11 @@ public class Restaurant {
 
     @CreationTimestamp
     @Column(nullable = false, columnDefinition = "datetime")
-    private LocalDateTime dateCreated;
+    private OffsetDateTime dateCreated;
 
     @UpdateTimestamp
     @Column(nullable = false, columnDefinition = "datetime")
-    private LocalDateTime dateUpdated;
+    private OffsetDateTime dateUpdated;
 
     @ManyToMany
     @JoinTable(name = "restaurant_payment_method",
