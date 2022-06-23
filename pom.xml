@@ -15,6 +15,7 @@
     <description>deliveryfood-api</description>
     <properties>
         <java.version>11</java.version>
+        <modelmapper.version>2.3.0</modelmapper.version>
     </properties>
     <dependencies>
         <dependency>
@@ -44,6 +45,11 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper-examples</artifactId>
+            <version>${modelmapper.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

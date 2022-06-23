@@ -5,25 +5,21 @@ import com.jaygibran.deliveryfood.api.model.RestaurantDTO;
 import com.jaygibran.deliveryfood.api.model.input.RestaurantInput;
 import com.jaygibran.deliveryfood.domain.model.Cuisine;
 import com.jaygibran.deliveryfood.domain.model.Restaurant;
+import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@AllArgsConstructor
 @Component
 public class RestaurantDTOAssembler {
 
-    public RestaurantDTO toDTO(Restaurant restaurant) {
-        CuisineDTO cuisineDTO = new CuisineDTO();
-        cuisineDTO.setId(restaurant.getCuisine().getId());
-        cuisineDTO.setName(restaurant.getCuisine().getName());
+    private final ModelMapper modelMapper;
 
-        RestaurantDTO restaurantDTO = new RestaurantDTO();
-        restaurantDTO.setId(restaurant.getId());
-        restaurantDTO.setName(restaurant.getName());
-        restaurantDTO.setDeliveryFee(restaurant.getFeeDelivery());
-        restaurantDTO.setCuisine(cuisineDTO);
-        return restaurantDTO;
+    public RestaurantDTO toDTO(Restaurant restaurant) {
+        return modelMapper.map(restaurant, RestaurantDTO.class);
     }
 
     public List<RestaurantDTO> toCollectionDTO(List<Restaurant> restaurants) {
