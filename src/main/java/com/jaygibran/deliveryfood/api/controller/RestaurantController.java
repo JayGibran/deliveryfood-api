@@ -1,6 +1,7 @@
 package com.jaygibran.deliveryfood.api.controller;
 
 import com.jaygibran.deliveryfood.api.assembler.RestaurantDTOAssembler;
+import com.jaygibran.deliveryfood.api.assembler.RestaurantInputDisassembler;
 import com.jaygibran.deliveryfood.api.model.CuisineDTO;
 import com.jaygibran.deliveryfood.api.model.RestaurantDTO;
 import com.jaygibran.deliveryfood.api.model.input.RestaurantInput;
@@ -45,6 +46,8 @@ public class RestaurantController {
 
     private RestaurantDTOAssembler restaurantDTOAssembler;
 
+    private RestaurantInputDisassembler restaurantInputDisassembler;
+
     @GetMapping
     public List<RestaurantDTO> list() {
         return restaurantDTOAssembler.toCollectionDTO(this.restaurantRepository.findAll());
@@ -61,7 +64,7 @@ public class RestaurantController {
     @PostMapping
     public RestaurantDTO save(@RequestBody @Valid RestaurantInput restaurantInput) {
         try {
-            Restaurant restaurant = toDomainObject(restaurantInput);
+            Restaurant restaurant = restaurantInputDisassembler.toDomainObject(restaurantInput);
             return restaurantDTOAssembler.toDTO(this.restaurantRegistryService.save(restaurant));
         } catch (CuisineNotFoundException e) {
             throw new BusinessException(e.getMessage());
@@ -71,7 +74,7 @@ public class RestaurantController {
     @PutMapping("/{id}")
     public RestaurantDTO update(@PathVariable Long id, @RequestBody @Valid RestaurantInput restaurantInput) {
         try {
-            Restaurant restaurant = toDomainObject(restaurantInput);
+            Restaurant restaurant = restaurantInputDisassembler.toDomainObject(restaurantInput);
 
             Restaurant restaurantToUpdate = this.restaurantRegistryService.findOrFail(id);
 
@@ -87,18 +90,5 @@ public class RestaurantController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         this.restaurantRegistryService.delete(id);
-    }
-
-    private Restaurant toDomainObject(RestaurantInput restaurantInput) {
-        Restaurant restaurant = new Restaurant();
-        restaurant.setName(restaurantInput.getName());
-        restaurant.setFeeDelivery(restaurantInput.getDeliveryFee());
-
-        Cuisine cuisine = new Cuisine();
-        cuisine.setId(restaurantInput.getCuisine().getId());
-
-        restaurant.setCuisine(cuisine);
-
-        return restaurant;
     }
 }
