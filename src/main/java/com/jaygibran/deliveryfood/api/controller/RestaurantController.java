@@ -74,13 +74,9 @@ public class RestaurantController {
     @PutMapping("/{id}")
     public RestaurantDTO update(@PathVariable Long id, @RequestBody @Valid RestaurantInput restaurantInput) {
         try {
-//            Restaurant restaurant = restaurantInputDisassembler.toDomainObject(restaurantInput);
-
             Restaurant restaurantToUpdate = this.restaurantRegistryService.findOrFail(id);
 
             restaurantInputDisassembler.copyToDomainObject(restaurantInput, restaurantToUpdate);
-
-//            BeanUtils.copyProperties(restaurant, restaurantToUpdate, "id", "paymentMethods", "address", "dateCreated", "products");
 
             return restaurantDTOAssembler.toDTO(this.restaurantRegistryService.save(restaurantToUpdate));
         } catch (CuisineNotFoundException e) {

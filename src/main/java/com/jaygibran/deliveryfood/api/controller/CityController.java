@@ -1,5 +1,9 @@
 package com.jaygibran.deliveryfood.api.controller;
 
+import com.jaygibran.deliveryfood.api.assembler.CityDTOAssembler;
+import com.jaygibran.deliveryfood.api.assembler.CityInputDisassembler;
+import com.jaygibran.deliveryfood.api.model.CityDTO;
+import com.jaygibran.deliveryfood.api.model.input.CityInput;
 import com.jaygibran.deliveryfood.domain.exception.BusinessException;
 import com.jaygibran.deliveryfood.domain.exception.StateNotFoundException;
 import com.jaygibran.deliveryfood.domain.model.City;
@@ -30,34 +34,40 @@ public class CityController {
 
     private CityRegistryService cityRegistryService;
 
+    private CityDTOAssembler cityDTOAssembler;
+
+    private CityInputDisassembler cityInputDisassembler;
+
     @GetMapping
-    public List<City> list() {
-        return cityRepository.findAll();
+    public List<CityDTO> list() {
+        return cityDTOAssembler.toCollectionDTO(cityRepository.findAll());
     }
 
     @GetMapping("/{id}")
-    public City search(@PathVariable Long id) {
-        return cityRegistryService.findOrFail(id);
+    public CityDTO search(@PathVariable Long id) {
+        return cityDTOAssembler.toDTO(cityRegistryService.findOrFail(id));
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public City save(@RequestBody @Valid City city) {
+    public CityDTO save(@RequestBody @Valid CityInput cityInput) {
         try {
-            return cityRegistryService.save(city);
+            City city = cityInputDisassembler.toDomain(cityInput);
+
+            return cityDTOAssembler.toDTO(cityRegistryService.save(city));
         } catch (StateNotFoundException e) {
             throw new BusinessException(e.getMessage(), e);
         }
     }
 
     @PutMapping("/{id}")
-    public City update(@PathVariable Long id, @RequestBody @Valid City city) {
+    public CityDTO update(@PathVariable Long id, @RequestBody @Valid CityInput cityInput) {
         try {
             City cityToUpdate = this.cityRegistryService.findOrFail(id);
 
-            BeanUtils.copyProperties(city, cityToUpdate, "id");
+            cityInputDisassembler.copyToDomainObject(cityInput, cityToUpdate);
 
-            return this.cityRegistryService.save(cityToUpdate);
+            return cityDTOAssembler.toDTO(this.cityRegistryService.save(cityToUpdate));
         } catch (StateNotFoundException e) {
             throw new BusinessException(e.getMessage());
         }

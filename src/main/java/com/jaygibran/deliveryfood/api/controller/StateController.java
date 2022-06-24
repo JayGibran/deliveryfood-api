@@ -1,5 +1,9 @@
 package com.jaygibran.deliveryfood.api.controller;
 
+import com.jaygibran.deliveryfood.api.assembler.StateDTOAssembler;
+import com.jaygibran.deliveryfood.api.assembler.StateInputDisassembler;
+import com.jaygibran.deliveryfood.api.model.StateDTO;
+import com.jaygibran.deliveryfood.api.model.input.StateInput;
 import com.jaygibran.deliveryfood.domain.exception.EntityInUseException;
 import com.jaygibran.deliveryfood.domain.exception.EntityNotFoundException;
 import com.jaygibran.deliveryfood.domain.model.City;
@@ -33,29 +37,36 @@ public class StateController {
 
     private StateRegistryService stateRegistryService;
 
+    private StateDTOAssembler stateDTOAssembler;
+
+    private StateInputDisassembler stateInputDisassembler;
+
     @GetMapping
-    public List<State> list() {
-        return this.stateRepository.findAll();
+    public List<StateDTO> list() {
+        return stateDTOAssembler.toCollectionDTO(this.stateRepository.findAll());
     }
 
     @GetMapping("/{id}")
-    public State search(@PathVariable Long id) {
-        return this.stateRegistryService.findOrFail(id);
+    public StateDTO search(@PathVariable Long id) {
+        return stateDTOAssembler.toDTO(this.stateRegistryService.findOrFail(id));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public State save(@RequestBody @Valid State state) {
-        return stateRegistryService.save(state);
+    public StateDTO save(@RequestBody @Valid StateInput stateInput) {
+
+        State state = stateInputDisassembler.toDomain(stateInput);
+
+        return stateDTOAssembler.toDTO(stateRegistryService.save(state));
     }
 
     @PutMapping("/{id}")
-    public State update(@PathVariable Long id, @RequestBody @Valid State state) {
+    public StateDTO update(@PathVariable Long id, @RequestBody @Valid StateInput stateInput) {
         State stateToUpdate = this.stateRegistryService.findOrFail(id);
 
-        BeanUtils.copyProperties(state, stateToUpdate, "id");
+        stateInputDisassembler.copyToDomainObject(stateInput, stateToUpdate);
 
-        return stateRegistryService.save(stateToUpdate);
+        return stateDTOAssembler.toDTO(stateRegistryService.save(stateToUpdate));
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

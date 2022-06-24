@@ -1,6 +1,10 @@
 package com.jaygibran.deliveryfood.api.controller;
 
 
+import com.jaygibran.deliveryfood.api.assembler.CuisineDTOAssembler;
+import com.jaygibran.deliveryfood.api.assembler.CuisineInputDisassembler;
+import com.jaygibran.deliveryfood.api.model.CuisineDTO;
+import com.jaygibran.deliveryfood.api.model.input.CuisineInput;
 import com.jaygibran.deliveryfood.domain.exception.EntityInUseException;
 import com.jaygibran.deliveryfood.domain.exception.EntityNotFoundException;
 import com.jaygibran.deliveryfood.domain.model.Cuisine;
@@ -35,29 +39,35 @@ public class CuisineController {
 
     private CuisineRepository cuisineRepository;
 
+    private CuisineDTOAssembler cuisineDTOAssembler;
+
+    private CuisineInputDisassembler cuisineInputDisassembler;
+
     @GetMapping
-    public List<Cuisine> list() {
-        return this.cuisineRepository.findAll();
+    public List<CuisineDTO> list() {
+        return cuisineDTOAssembler.toCollectionDTO(this.cuisineRepository.findAll());
     }
 
     @GetMapping("/{id}")
-    public Cuisine search(@PathVariable Long id) {
-        return cuisineRegistryService.searchOrFail(id);
+    public CuisineDTO search(@PathVariable Long id) {
+        return cuisineDTOAssembler.toDTO(cuisineRegistryService.searchOrFail(id));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cuisine add(@RequestBody @Valid Cuisine cuisine) {
-        return cuisineRegistryService.save(cuisine);
+    public CuisineDTO add(@RequestBody @Valid CuisineInput cuisineInput) {
+        Cuisine cuisine = cuisineInputDisassembler.toDomain(cuisineInput);
+
+        return cuisineDTOAssembler.toDTO(cuisineRegistryService.save(cuisine));
     }
 
     @PutMapping("/{id}")
-    public Cuisine update(@PathVariable Long id, @RequestBody @Valid Cuisine cuisine) {
+    public CuisineDTO update(@PathVariable Long id, @RequestBody @Valid CuisineInput cuisineInput) {
         Cuisine cuisineToUpdate = cuisineRegistryService.searchOrFail(id);
 
-        BeanUtils.copyProperties(cuisine, cuisineToUpdate, "id");
-
-        return this.cuisineRegistryService.save(cuisineToUpdate);
+        this.cuisineInputDisassembler.copyToDomainObject(cuisineInput, cuisineToUpdate);
+    
+        return cuisineDTOAssembler.toDTO(this.cuisineRegistryService.save(cuisineToUpdate));
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
