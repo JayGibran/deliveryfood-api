@@ -66,7 +66,7 @@ public class CuisineController {
         Cuisine cuisineToUpdate = cuisineRegistryService.searchOrFail(id);
 
         this.cuisineInputDisassembler.copyToDomainObject(cuisineInput, cuisineToUpdate);
-    
+
         return cuisineDTOAssembler.toDTO(this.cuisineRegistryService.save(cuisineToUpdate));
     }
 

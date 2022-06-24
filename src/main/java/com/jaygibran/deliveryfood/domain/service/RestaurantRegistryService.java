@@ -34,6 +34,7 @@ public class RestaurantRegistryService {
     public void delete(Long id) {
         try {
             this.restaurantRepository.deleteById(id);
+            this.restaurantRepository.flush();
         } catch (EmptyResultDataAccessException e) {
             throw new CuisineNotFoundException(id);
         } catch (DataIntegrityViolationException ex) {
