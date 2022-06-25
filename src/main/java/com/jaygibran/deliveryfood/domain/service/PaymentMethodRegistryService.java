@@ -1,6 +1,5 @@
 package com.jaygibran.deliveryfood.domain.service;
 
-import com.jaygibran.deliveryfood.domain.exception.CuisineNotFoundException;
 import com.jaygibran.deliveryfood.domain.exception.EntityInUseException;
 import com.jaygibran.deliveryfood.domain.exception.PaymentMethodNotFoundException;
 import com.jaygibran.deliveryfood.domain.model.PaymentMethod;
@@ -13,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @AllArgsConstructor
 @Service
-public class PaymentRegistryService {
+public class PaymentMethodRegistryService {
 
     public static final String MSG_PAYMENT_METHOD_BEING_USED = "Payment Method of id %d can't be removed because is being used";
     private final PaymentMethodRepository paymentMethodRepository;

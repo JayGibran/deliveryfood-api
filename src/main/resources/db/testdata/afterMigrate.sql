@@ -65,7 +65,8 @@ insert into payment_method(description) value ("Cash");
 
 insert into permission(id, name, description) value (1, "READ_RESTAURANT", "User can read restaurants");
 
-insert into group_(id, name) value (1, "Driver");
+insert into group_(id, name) value (1, "Cook");
+insert into group_(id, name) value (2, "Driver");
 
 insert into group_permission(group_id, permission_id) value (1, 1);
 
