@@ -31,6 +31,18 @@ public class RestaurantRegistryService {
     }
 
     @Transactional
+    public void activate(Long restaurantId) {
+        Restaurant restaurant = findOrFail(restaurantId);
+        restaurant.activate();
+    }
+
+    @Transactional
+    public void inactivate(Long restaurantId) {
+        Restaurant restaurant = findOrFail(restaurantId);
+        restaurant.inactivate();
+    }
+
+    @Transactional
     public void delete(Long id) {
         try {
             this.restaurantRepository.deleteById(id);

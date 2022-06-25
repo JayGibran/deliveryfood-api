@@ -43,17 +43,21 @@ alter table user auto_increment = 1;
 alter table user_group auto_increment = 1;
 
 insert into state(id, name) value (1, "Leinster");
+insert into state(id, name) value (2, "Munster");
 
 insert into city(name, state_id) value ("Dublin", 1);
+insert into city(name, state_id) value ("Cork", 2);
 
 insert into cuisine(id, name) value (1, "Thailand");
 insert into cuisine(id, name) value (2, "Indian");
 insert into cuisine(id, name) value (3, "Brazilian");
 insert into cuisine(id, name) value (4, "Italian");
 
-insert into restaurant(name, fee_delivery, cuisine_id, address_street, address_number, address_air_code, address_neighborhood, address_city_id, date_created, date_updated) value ("Thai Gourmet", 10, 1, "Pearse Street", "29", "D02 PP 50", "Grand canal dock", 1, utc_timestamp, utc_timestamp);
-insert into restaurant(name, fee_delivery, cuisine_id, date_created, date_updated) value ("Thai Delivery", 9.5, 2, utc_timestamp, utc_timestamp);
-insert into restaurant(name, fee_delivery, cuisine_id, date_created, date_updated) value ("Tuk Tuk Indian Food", 15, 2, utc_timestamp, utc_timestamp);
+insert into restaurant(name, fee_delivery, cuisine_id, address_street, address_number, address_air_code, address_neighborhood, address_city_id, date_created, date_updated, active) value ("Thai Gourmet", 10, 1, "Pearse Street", "29", "D02 PP 50", "Grand canal dock", 1, utc_timestamp, utc_timestamp, true);
+insert into restaurant(name, fee_delivery, cuisine_id, address_street, address_number, address_air_code, address_neighborhood, address_city_id, date_created, date_updated, active) value ("Thai Delivery", 9.5, 2, "Dame Street", "50", "D02 PP 150", "City Center", 1, utc_timestamp, utc_timestamp, true);
+insert into restaurant(name, fee_delivery, cuisine_id, date_created, date_updated, active) value ("Tuk Tuk Indian Food", 15, 2, utc_timestamp, utc_timestamp, true);
+insert into restaurant(name, fee_delivery, cuisine_id, address_street, address_number, address_air_code, address_neighborhood, address_city_id, date_created, date_updated, active) value ("BAH33º THE AUTHENTIC GAUCHO BBQ", 11, 3, "Dawson St", "Unit 3-5", "D02 X272", "Royal Hibernian Way", 1, utc_timestamp, utc_timestamp, true);
+
 
 insert into payment_method(description) value ("Credit card");
 insert into payment_method(description) value ("Debit card");

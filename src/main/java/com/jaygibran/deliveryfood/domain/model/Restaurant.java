@@ -1,11 +1,5 @@
 package com.jaygibran.deliveryfood.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.jaygibran.deliveryfood.core.validation.FeeDelivery;
-import com.jaygibran.deliveryfood.core.validation.Groups;
-import com.jaygibran.deliveryfood.core.validation.Multiple;
-import com.jaygibran.deliveryfood.core.validation.ValueZeroIncludeDescription;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -24,13 +18,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
-import javax.validation.groups.ConvertGroup;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,24 +35,20 @@ public class Restaurant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
     @Column(nullable = false)
     private String name;
 
-    @NotNull
-    @PositiveOrZero
     @Column(name = "fee_delivery", nullable = false)
     private BigDecimal feeDelivery;
 
-    @Valid
-    @ConvertGroup(to = Groups.CuisineId.class)
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "cuisine_id", nullable = false)
     private Cuisine cuisine;
 
     @Embedded
     private Address address;
+
+    private Boolean active = Boolean.TRUE;
 
     @CreationTimestamp
     @Column(nullable = false, columnDefinition = "datetime")
@@ -84,6 +68,14 @@ public class Restaurant {
     @OneToMany(mappedBy = "restaurant")
     @ToString.Exclude
     private List<Product> products;
+
+    public void activate() {
+        setActive(true);
+    }
+
+    public void inactivate() {
+        setActive(false);
+    }
 
     @Override
     public boolean equals(Object o) {

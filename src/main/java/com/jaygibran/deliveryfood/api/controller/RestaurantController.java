@@ -2,25 +2,17 @@ package com.jaygibran.deliveryfood.api.controller;
 
 import com.jaygibran.deliveryfood.api.assembler.RestaurantDTOAssembler;
 import com.jaygibran.deliveryfood.api.assembler.RestaurantInputDisassembler;
-import com.jaygibran.deliveryfood.api.model.CuisineDTO;
 import com.jaygibran.deliveryfood.api.model.RestaurantDTO;
 import com.jaygibran.deliveryfood.api.model.input.RestaurantInput;
-import com.jaygibran.deliveryfood.core.validation.ValidationException;
 import com.jaygibran.deliveryfood.domain.exception.BusinessException;
 import com.jaygibran.deliveryfood.domain.exception.CuisineNotFoundException;
-import com.jaygibran.deliveryfood.domain.model.Cuisine;
 import com.jaygibran.deliveryfood.domain.model.Restaurant;
 import com.jaygibran.deliveryfood.domain.repository.RestaurantRepository;
 import com.jaygibran.deliveryfood.domain.service.RestaurantRegistryService;
-import com.jaygibran.deliveryfood.domain.util.ObjectMerger;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,11 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @RestController
@@ -82,6 +71,18 @@ public class RestaurantController {
         } catch (CuisineNotFoundException e) {
             throw new BusinessException(e.getMessage());
         }
+    }
+
+    @PutMapping("/{restaurantId}/active")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void active(@PathVariable Long restaurantId) {
+        this.restaurantRegistryService.activate(restaurantId);
+    }
+
+    @DeleteMapping("/{restaurantId}/inactive")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void inactive(@PathVariable Long restaurantId) {
+        this.restaurantRegistryService.inactivate(restaurantId);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
