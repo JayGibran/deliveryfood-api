@@ -3,6 +3,7 @@ package com.jaygibran.deliveryfood.domain.service;
 import com.jaygibran.deliveryfood.domain.exception.CuisineNotFoundException;
 import com.jaygibran.deliveryfood.domain.exception.EntityInUseException;
 import com.jaygibran.deliveryfood.domain.exception.RestaurantNotFoundException;
+import com.jaygibran.deliveryfood.domain.model.City;
 import com.jaygibran.deliveryfood.domain.model.Cuisine;
 import com.jaygibran.deliveryfood.domain.model.Restaurant;
 import com.jaygibran.deliveryfood.domain.repository.RestaurantRepository;
@@ -19,13 +20,18 @@ public class RestaurantRegistryService {
     private static final String MSG_RESTAURANT_BEING_USED = "Restaurant of id %d can't be removed because is being used";
     private RestaurantRepository restaurantRepository;
     private CuisineRegistryService cuisineRegistryService;
+    private CityRegistryService cityRegistryService;
 
     @Transactional
     public Restaurant save(Restaurant restaurant) {
         Long cuisineId = restaurant.getCuisine().getId();
+        Long cityId = restaurant.getAddress().getCity().getId();
+
         Cuisine cuisine = cuisineRegistryService.searchOrFail(cuisineId);
+        City city = cityRegistryService.findOrFail(cityId);
 
         restaurant.setCuisine(cuisine);
+        restaurant.getAddress().setCity(city);
 
         return this.restaurantRepository.save(restaurant);
     }

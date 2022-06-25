@@ -5,6 +5,7 @@ import com.jaygibran.deliveryfood.api.assembler.RestaurantInputDisassembler;
 import com.jaygibran.deliveryfood.api.model.RestaurantDTO;
 import com.jaygibran.deliveryfood.api.model.input.RestaurantInput;
 import com.jaygibran.deliveryfood.domain.exception.BusinessException;
+import com.jaygibran.deliveryfood.domain.exception.CityNotFoundException;
 import com.jaygibran.deliveryfood.domain.exception.CuisineNotFoundException;
 import com.jaygibran.deliveryfood.domain.model.Restaurant;
 import com.jaygibran.deliveryfood.domain.repository.RestaurantRepository;
@@ -55,7 +56,7 @@ public class RestaurantController {
         try {
             Restaurant restaurant = restaurantInputDisassembler.toDomainObject(restaurantInput);
             return restaurantDTOAssembler.toDTO(this.restaurantRegistryService.save(restaurant));
-        } catch (CuisineNotFoundException e) {
+        } catch (CuisineNotFoundException | CityNotFoundException e) {
             throw new BusinessException(e.getMessage());
         }
     }
@@ -68,7 +69,7 @@ public class RestaurantController {
             restaurantInputDisassembler.copyToDomainObject(restaurantInput, restaurantToUpdate);
 
             return restaurantDTOAssembler.toDTO(this.restaurantRegistryService.save(restaurantToUpdate));
-        } catch (CuisineNotFoundException e) {
+        } catch (CuisineNotFoundException | CityNotFoundException e) {
             throw new BusinessException(e.getMessage());
         }
     }
