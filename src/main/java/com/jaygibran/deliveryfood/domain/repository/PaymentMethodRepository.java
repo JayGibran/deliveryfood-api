@@ -1,13 +1,12 @@
 package com.jaygibran.deliveryfood.domain.repository;
 
 import com.jaygibran.deliveryfood.domain.model.PaymentMethod;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface PaymentMethodRepository {
-
-    List<PaymentMethod> all();
-    PaymentMethod findById(Long id);
-    PaymentMethod save(PaymentMethod paymentMethod);
-    void delete (PaymentMethod paymentMethod);
+@Repository
+public interface PaymentMethodRepository extends JpaRepository<PaymentMethod, Long> {
+    
 }
