@@ -68,12 +68,11 @@ public class UserController {
     @PutMapping("/{id}/password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updatePassword(@PathVariable Long id, @RequestBody @Valid UserUpdatePasswordInput userUpdatePasswordInput) {
-        userRegistryService.updatePassword(id, userUpdatePasswordInput);
+        userRegistryService.updatePassword(id, userUpdatePasswordInput.getCurrentPassword(), userUpdatePasswordInput.getNewPassword());
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-
     public void delete(@PathVariable Long id) {
         userRegistryService.delete(id);
     }

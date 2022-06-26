@@ -1,6 +1,7 @@
 package com.jaygibran.deliveryfood.domain.service;
 
 import com.jaygibran.deliveryfood.api.model.input.UserUpdatePasswordInput;
+import com.jaygibran.deliveryfood.domain.exception.BusinessException;
 import com.jaygibran.deliveryfood.domain.exception.EntityInUseException;
 import com.jaygibran.deliveryfood.domain.exception.GroupNotFoundException;
 import com.jaygibran.deliveryfood.domain.exception.PasswordNotMatchException;
@@ -13,6 +14,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @AllArgsConstructor
 @Service
 public class UserRegistryService {
@@ -23,16 +26,22 @@ public class UserRegistryService {
 
     @Transactional
     public User save(User user) {
+        userRepository.detach(user);
+
+        Optional<User> userExists = userRepository.findByEmail(user.getEmail());
+        if (userExists.isPresent() && !userExists.get().equals(user)) {
+            throw new BusinessException(String.format("There was already a user created with this email '%s'", user.getEmail()));
+        }
         return userRepository.save(user);
     }
 
     @Transactional
-    public void updatePassword(Long id, UserUpdatePasswordInput userUpdatePasswordInput) {
+    public void updatePassword(Long id, String currentPassword, String newPassword) {
         User userToUpdate = findOrFail(id);
-        if (userToUpdate.passwordDoesNotMatch(userUpdatePasswordInput.getCurrentPassword())) {
-            throw new PasswordNotMatchException(userUpdatePasswordInput.getCurrentPassword());
+        if (userToUpdate.passwordDoesNotMatch(currentPassword)) {
+            throw new PasswordNotMatchException(currentPassword);
         }
-        userToUpdate.setPassword(userUpdatePasswordInput.getNewPassword());
+        userToUpdate.setPassword(newPassword);
     }
 
     @Transactional
