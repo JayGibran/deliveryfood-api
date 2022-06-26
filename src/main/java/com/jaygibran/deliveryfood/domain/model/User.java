@@ -26,6 +26,8 @@ public class User {
     @Id
     private Long id;
 
+    private String name;
+
     private String email;
 
     private String password;
@@ -36,7 +38,11 @@ public class User {
 
     @ManyToMany
     @JoinTable(joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "group_id"))
+            inverseJoinColumns = @JoinColumn(name = "group_id"), name = "user_group")
     private List<Group> groups;
+
+    public boolean passwordDoesNotMatch(String password) {
+        return !this.password.equals(password);
+    }
 
 }

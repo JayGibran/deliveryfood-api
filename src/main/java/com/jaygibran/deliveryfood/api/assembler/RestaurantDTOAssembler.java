@@ -1,9 +1,8 @@
 package com.jaygibran.deliveryfood.api.assembler;
 
-import com.jaygibran.deliveryfood.api.model.CuisineDTO;
 import com.jaygibran.deliveryfood.api.model.RestaurantDTO;
-import com.jaygibran.deliveryfood.api.model.input.RestaurantInput;
-import com.jaygibran.deliveryfood.domain.model.Cuisine;
+import com.jaygibran.deliveryfood.api.model.input.GroupInput;
+import com.jaygibran.deliveryfood.domain.model.Group;
 import com.jaygibran.deliveryfood.domain.model.Restaurant;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;

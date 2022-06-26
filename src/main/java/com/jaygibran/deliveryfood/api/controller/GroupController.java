@@ -1,9 +1,9 @@
 package com.jaygibran.deliveryfood.api.controller;
 
 import com.jaygibran.deliveryfood.api.assembler.GroupDTOAssembler;
+import com.jaygibran.deliveryfood.api.assembler.GroupInputDisassembler;
 import com.jaygibran.deliveryfood.api.model.GroupDTO;
 import com.jaygibran.deliveryfood.api.model.input.GroupInput;
-import com.jaygibran.deliveryfood.api.model.input.GroupInputDisassembler;
 import com.jaygibran.deliveryfood.domain.model.Group;
 import com.jaygibran.deliveryfood.domain.repository.GroupRepository;
 import com.jaygibran.deliveryfood.domain.service.GroupRegistryService;
