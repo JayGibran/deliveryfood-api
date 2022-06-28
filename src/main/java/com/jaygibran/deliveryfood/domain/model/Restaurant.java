@@ -21,8 +21,10 @@ import javax.persistence.OneToMany;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -63,7 +65,7 @@ public class Restaurant {
             joinColumns = @JoinColumn(name = "restaurant_id"),
             inverseJoinColumns = @JoinColumn(name = "payment_method_id"))
     @ToString.Exclude
-    private List<PaymentMethod> paymentMethods = new ArrayList<>();
+    private Set<PaymentMethod> paymentMethods = new HashSet<>();
 
     @OneToMany(mappedBy = "restaurant")
     @ToString.Exclude
@@ -75,6 +77,14 @@ public class Restaurant {
 
     public void inactivate() {
         setActive(false);
+    }
+
+    public boolean removePaymentMethod(PaymentMethod paymentMethod) {
+        return getPaymentMethods().remove(paymentMethod);
+    }
+
+    public boolean addPaymentMethod(PaymentMethod paymentMethod) {
+        return getPaymentMethods().add(paymentMethod);
     }
 
     @Override

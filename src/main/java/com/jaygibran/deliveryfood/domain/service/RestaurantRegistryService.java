@@ -5,6 +5,7 @@ import com.jaygibran.deliveryfood.domain.exception.EntityInUseException;
 import com.jaygibran.deliveryfood.domain.exception.RestaurantNotFoundException;
 import com.jaygibran.deliveryfood.domain.model.City;
 import com.jaygibran.deliveryfood.domain.model.Cuisine;
+import com.jaygibran.deliveryfood.domain.model.PaymentMethod;
 import com.jaygibran.deliveryfood.domain.model.Restaurant;
 import com.jaygibran.deliveryfood.domain.repository.RestaurantRepository;
 import lombok.AllArgsConstructor;
@@ -18,9 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class RestaurantRegistryService {
 
     private static final String MSG_RESTAURANT_BEING_USED = "Restaurant of id %d can't be removed because is being used";
-    private RestaurantRepository restaurantRepository;
-    private CuisineRegistryService cuisineRegistryService;
-    private CityRegistryService cityRegistryService;
+    private final RestaurantRepository restaurantRepository;
+    private final CuisineRegistryService cuisineRegistryService;
+    private final CityRegistryService cityRegistryService;
+    private final PaymentMethodRegistryService paymentMethodRegistryService;
 
     @Transactional
     public Restaurant save(Restaurant restaurant) {
@@ -58,6 +60,20 @@ public class RestaurantRegistryService {
         } catch (DataIntegrityViolationException ex) {
             throw new EntityInUseException(String.format(MSG_RESTAURANT_BEING_USED, id));
         }
+    }
+
+    @Transactional
+    public void disassociatePaymentMethod(Long restaurantId, Long paymentMethodId) {
+        Restaurant restaurant = findOrFail(restaurantId);
+        PaymentMethod paymentMethod = paymentMethodRegistryService.searchOrFail(paymentMethodId);
+        restaurant.removePaymentMethod(paymentMethod);
+    }
+
+    @Transactional
+    public void associatePaymentMethod(Long restaurantId, Long paymentMethodId) {
+        Restaurant restaurant = findOrFail(restaurantId);
+        PaymentMethod paymentMethod = paymentMethodRegistryService.searchOrFail(paymentMethodId);
+        restaurant.addPaymentMethod(paymentMethod);
     }
 
     public Restaurant findOrFail(Long id) {
