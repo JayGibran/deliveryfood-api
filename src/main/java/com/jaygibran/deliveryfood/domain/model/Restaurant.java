@@ -52,6 +52,8 @@ public class Restaurant {
 
     private Boolean active = Boolean.TRUE;
 
+    private Boolean open = Boolean.TRUE;
+
     @CreationTimestamp
     @Column(nullable = false, columnDefinition = "datetime")
     private OffsetDateTime dateCreated;
@@ -77,6 +79,14 @@ public class Restaurant {
 
     public void inactivate() {
         setActive(false);
+    }
+
+    public void opening() {
+        setOpen(true);
+    }
+
+    public void closing() {
+        setOpen(false);
     }
 
     public boolean removePaymentMethod(PaymentMethod paymentMethod) {
