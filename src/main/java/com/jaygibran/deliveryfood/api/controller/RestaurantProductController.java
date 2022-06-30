@@ -1,0 +1,73 @@
+package com.jaygibran.deliveryfood.api.controller;
+
+import com.jaygibran.deliveryfood.api.assembler.ProductDTOAssembler;
+import com.jaygibran.deliveryfood.api.assembler.ProductInputDisassembler;
+import com.jaygibran.deliveryfood.api.model.ProductDTO;
+import com.jaygibran.deliveryfood.api.model.input.ProductInput;
+import com.jaygibran.deliveryfood.domain.model.Product;
+import com.jaygibran.deliveryfood.domain.model.Restaurant;
+import com.jaygibran.deliveryfood.domain.service.ProductRegistryService;
+import com.jaygibran.deliveryfood.domain.service.RestaurantRegistryService;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
+import java.util.List;
+
+@AllArgsConstructor
+@RestController
+@RequestMapping("/restaurants/{restaurantId}/products")
+public class RestaurantProductController {
+
+    private final RestaurantRegistryService restaurantRegistryService;
+
+    private final ProductRegistryService productRegistryService;
+
+    private final ProductDTOAssembler productDTOAssembler;
+
+    private final ProductInputDisassembler productInputDisassembler;
+
+    @GetMapping
+    public List<ProductDTO> list(@PathVariable Long restaurantId) {
+        Restaurant restaurant = restaurantRegistryService.findOrFail(restaurantId);
+        return productDTOAssembler.toCollectionDTO(restaurant.getProducts());
+    }
+
+    @GetMapping("/{id}")
+    public ProductDTO search(@PathVariable Long restaurantId, @PathVariable Long id) {
+        Restaurant restaurant = restaurantRegistryService.findOrFail(restaurantId);
+
+        return productDTOAssembler.toDTO(productRegistryService.findOrFail(id, restaurant.getId()));
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping
+    public ProductDTO save(@PathVariable Long restaurantId, @RequestBody @Valid ProductInput productInput) {
+        Restaurant restaurant = restaurantRegistryService.findOrFail(restaurantId);
+
+        Product product = productInputDisassembler.toDomain(productInput);
+        product.setRestaurant(restaurant);
+
+        return productDTOAssembler.toDTO(productRegistryService.save(product));
+    }
+
+    @PutMapping("/{id}")
+    public ProductDTO update(@PathVariable Long restaurantId, @PathVariable Long id, @RequestBody @Valid ProductInput productInput) {
+        Restaurant restaurant = restaurantRegistryService.findOrFail(restaurantId);
+        Product productToUpdate = productRegistryService.findOrFail(id, restaurantId);
+
+        this.productInputDisassembler.copyToDomainObject(productInput, productToUpdate);
+
+        return productDTOAssembler.toDTO(productRegistryService.save(productToUpdate));
+    }
+
+
+}
