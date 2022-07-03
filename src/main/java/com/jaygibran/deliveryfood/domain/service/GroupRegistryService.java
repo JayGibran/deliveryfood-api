@@ -29,14 +29,14 @@ public class GroupRegistryService {
     public void associatePermission(Long groupId, Long permissionId) {
         Group group = findOrFail(groupId);
         Permission permission = permissionRegistryService.findOrFail(permissionId);
-        group.associatePermission(permission);
+        group.addPermission(permission);
     }
 
     @Transactional
     public void disassociatePermission(Long groupId, Long permissionId) {
         Group group = findOrFail(groupId);
         Permission permission = permissionRegistryService.findOrFail(permissionId);
-        group.disassociatePermission(permission);
+        group.removePermission(permission);
     }
 
     @Transactional

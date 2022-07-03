@@ -87,3 +87,7 @@ insert into product(name, price, description, active, restaurant_id) value ("Bar
 
 insert into user (name, email, password, date_created) value ("Jay Gibran", "jaydeliveryfoodapi@gmail.com", "123456789", utc_timestamp);
 insert into user(name, email, password, date_created) value ("Emiriam Caroline", "emiriamdeliveryfoodapi@gmail.com", "987654321", utc_timestamp);
+
+insert into user_group(user_id, group_id) value (1, 1);
+insert into user_group(user_id, group_id) value (1, 2);
+insert into user_group(user_id, group_id) value (2, 1);

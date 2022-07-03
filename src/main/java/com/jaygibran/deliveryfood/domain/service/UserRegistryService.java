@@ -6,6 +6,7 @@ import com.jaygibran.deliveryfood.domain.exception.EntityInUseException;
 import com.jaygibran.deliveryfood.domain.exception.GroupNotFoundException;
 import com.jaygibran.deliveryfood.domain.exception.PasswordNotMatchException;
 import com.jaygibran.deliveryfood.domain.exception.UserNotFoundException;
+import com.jaygibran.deliveryfood.domain.model.Group;
 import com.jaygibran.deliveryfood.domain.model.User;
 import com.jaygibran.deliveryfood.domain.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ public class UserRegistryService {
     public static final String MSG_USER_BEING_USED = "User of id %d can't be removed because is being used";
 
     private final UserRepository userRepository;
+    private final GroupRegistryService groupRegistryService;
 
     @Transactional
     public User save(User user) {
@@ -42,6 +44,20 @@ public class UserRegistryService {
             throw new PasswordNotMatchException(currentPassword);
         }
         userToUpdate.setPassword(newPassword);
+    }
+
+    @Transactional
+    public void associateGroup(Long userId, Long groupId) {
+        User user = findOrFail(userId);
+        Group group = groupRegistryService.findOrFail(groupId);
+        user.addGroup(group);
+    }
+
+    @Transactional
+    public void disassociateGroup(Long userId, Long groupId) {
+        User user = findOrFail(userId);
+        Group group = groupRegistryService.findOrFail(groupId);
+        user.removeGroup(group);
     }
 
     @Transactional

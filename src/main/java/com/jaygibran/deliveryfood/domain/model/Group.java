@@ -2,7 +2,6 @@ package com.jaygibran.deliveryfood.domain.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -35,11 +34,11 @@ public class Group {
             inverseJoinColumns = @JoinColumn(name = "permission_id"))
     private List<Permission> permissions;
 
-    public void associatePermission(Permission permission) {
+    public void addPermission(Permission permission) {
         this.permissions.add(permission);
     }
 
-    public void disassociatePermission(Permission permission) {
+    public void removePermission(Permission permission) {
         this.permissions.remove(permission);
     }
 }

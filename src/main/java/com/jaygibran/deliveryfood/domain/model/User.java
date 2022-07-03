@@ -45,4 +45,11 @@ public class User {
         return !this.password.equals(password);
     }
 
+    public void addGroup(Group group) {
+        this.groups.add(group);
+    }
+
+    public void removeGroup(Group group) {
+        this.groups.remove(group);
+    }
 }
