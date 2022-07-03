@@ -77,14 +77,14 @@ public class RestaurantRegistryService {
     @Transactional
     public void disassociatePaymentMethod(Long restaurantId, Long paymentMethodId) {
         Restaurant restaurant = findOrFail(restaurantId);
-        PaymentMethod paymentMethod = paymentMethodRegistryService.searchOrFail(paymentMethodId);
+        PaymentMethod paymentMethod = paymentMethodRegistryService.findOrFail(paymentMethodId);
         restaurant.removePaymentMethod(paymentMethod);
     }
 
     @Transactional
     public void associatePaymentMethod(Long restaurantId, Long paymentMethodId) {
         Restaurant restaurant = findOrFail(restaurantId);
-        PaymentMethod paymentMethod = paymentMethodRegistryService.searchOrFail(paymentMethodId);
+        PaymentMethod paymentMethod = paymentMethodRegistryService.findOrFail(paymentMethodId);
         restaurant.addPaymentMethod(paymentMethod);
     }
 

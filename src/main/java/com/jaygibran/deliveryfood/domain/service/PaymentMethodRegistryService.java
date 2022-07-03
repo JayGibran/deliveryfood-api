@@ -17,7 +17,7 @@ public class PaymentMethodRegistryService {
     public static final String MSG_PAYMENT_METHOD_BEING_USED = "Payment Method of id %d can't be removed because is being used";
     private final PaymentMethodRepository paymentMethodRepository;
 
-    public PaymentMethod searchOrFail(Long id) {
+    public PaymentMethod findOrFail(Long id) {
         return this.paymentMethodRepository
                 .findById(id)
                 .orElseThrow(() -> new PaymentMethodNotFoundException(id));

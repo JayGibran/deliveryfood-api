@@ -42,7 +42,7 @@ public class GroupController {
 
     @GetMapping("/{id}")
     public GroupDTO search(@PathVariable Long id) {
-        return groupDTOAssembler.toDTO(groupRegistryService.searchOrFail(id));
+        return groupDTOAssembler.toDTO(groupRegistryService.findOrFail(id));
     }
 
     @PostMapping
@@ -55,7 +55,7 @@ public class GroupController {
 
     @PutMapping("/{id}")
     public GroupDTO update(@PathVariable Long id, @RequestBody @Valid GroupInput groupInput) {
-        Group groupToUpdate = groupRegistryService.searchOrFail(id);
+        Group groupToUpdate = groupRegistryService.findOrFail(id);
 
         this.groupInputDisassembler.copyToDomainObject(groupInput, groupToUpdate);
 

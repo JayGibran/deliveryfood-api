@@ -34,4 +34,12 @@ public class Group {
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "permission_id"))
     private List<Permission> permissions;
+
+    public void associatePermission(Permission permission) {
+        this.permissions.add(permission);
+    }
+
+    public void disassociatePermission(Permission permission) {
+        this.permissions.remove(permission);
+    }
 }

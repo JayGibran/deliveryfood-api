@@ -42,7 +42,7 @@ public class PaymentMethodController {
 
     @GetMapping("/{id}")
     public PaymentMethodDTO search(@PathVariable Long id) {
-        return paymentMethodDTOAssembler.toDTO(paymentMethodRegistryService.searchOrFail(id));
+        return paymentMethodDTOAssembler.toDTO(paymentMethodRegistryService.findOrFail(id));
     }
 
     @PostMapping
@@ -55,7 +55,7 @@ public class PaymentMethodController {
 
     @PutMapping("/{id}")
     public PaymentMethodDTO update(@PathVariable Long id, @RequestBody @Valid PaymentMethodInput paymentMethodInput) {
-        PaymentMethod paymentMethodToUpdate = paymentMethodRegistryService.searchOrFail(id);
+        PaymentMethod paymentMethodToUpdate = paymentMethodRegistryService.findOrFail(id);
 
         this.paymentMethodDTODisassembler.copyToDomainObject(paymentMethodInput, paymentMethodToUpdate);
 

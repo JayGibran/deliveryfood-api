@@ -3,6 +3,7 @@ package com.jaygibran.deliveryfood.domain.service;
 import com.jaygibran.deliveryfood.domain.exception.EntityInUseException;
 import com.jaygibran.deliveryfood.domain.exception.GroupNotFoundException;
 import com.jaygibran.deliveryfood.domain.model.Group;
+import com.jaygibran.deliveryfood.domain.model.Permission;
 import com.jaygibran.deliveryfood.domain.repository.GroupRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -17,16 +18,25 @@ public class GroupRegistryService {
     public static final String MSG_GROUP_BEING_USED = "Group of id %d can't be removed because is being used";
 
     private final GroupRepository groupRepository;
-
-    public Group searchOrFail(Long id) {
-        return this.groupRepository
-                .findById(id)
-                .orElseThrow(() -> new GroupNotFoundException(id));
-    }
+    private final PermissionRegistryService permissionRegistryService;
 
     @Transactional
     public Group save(Group group) {
         return groupRepository.save(group);
+    }
+
+    @Transactional
+    public void associatePermission(Long groupId, Long permissionId) {
+        Group group = findOrFail(groupId);
+        Permission permission = permissionRegistryService.findOrFail(permissionId);
+        group.associatePermission(permission);
+    }
+
+    @Transactional
+    public void disassociatePermission(Long groupId, Long permissionId) {
+        Group group = findOrFail(groupId);
+        Permission permission = permissionRegistryService.findOrFail(permissionId);
+        group.disassociatePermission(permission);
     }
 
     @Transactional
@@ -39,5 +49,11 @@ public class GroupRegistryService {
         } catch (DataIntegrityViolationException ex) {
             throw new EntityInUseException(String.format(MSG_GROUP_BEING_USED, id));
         }
+    }
+
+    public Group findOrFail(Long id) {
+        return this.groupRepository
+                .findById(id)
+                .orElseThrow(() -> new GroupNotFoundException(id));
     }
 }

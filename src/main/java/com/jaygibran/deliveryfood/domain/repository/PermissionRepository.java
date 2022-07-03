@@ -1,13 +1,11 @@
 package com.jaygibran.deliveryfood.domain.repository;
 
 import com.jaygibran.deliveryfood.domain.model.Permission;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface PermissionRepository {
-
-    List<Permission> all();
-    Permission findById(Long id);
-    Permission save(Permission kitchen);
-    void delete (Permission kitchen);
+@Repository
+public interface PermissionRepository extends JpaRepository<Permission, Long> {
 }

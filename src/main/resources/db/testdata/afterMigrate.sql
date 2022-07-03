@@ -64,11 +64,16 @@ insert into payment_method(description) value ("Debit card");
 insert into payment_method(description) value ("Cash");
 
 insert into permission(id, name, description) value (1, "READ_RESTAURANT", "User can read restaurants");
+insert into permission(id, name, description) value (2, "EDIT_RESTAURANT", "User can edit restaurants");
+insert into permission(id, name, description) value (3, "ADD_PRODUCT", "User can add products");
 
 insert into group_(id, name) value (1, "Cook");
 insert into group_(id, name) value (2, "Driver");
 
 insert into group_permission(group_id, permission_id) value (1, 1);
+insert into group_permission(group_id, permission_id) value (1, 2);
+insert into group_permission(group_id, permission_id) value (2, 1);
+insert into group_permission(group_id, permission_id) value (2, 2);
 
 insert into restaurant_payment_method (restaurant_id, payment_method_id) value (1, 1), (1, 2), (1, 3), (2, 3), (3, 2), (3, 3), (4, 1), (4, 2), (4, 3);
 
