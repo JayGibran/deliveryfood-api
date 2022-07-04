@@ -1,5 +1,6 @@
 package com.jaygibran.deliveryfood.domain.service;
 
+import com.jaygibran.deliveryfood.domain.exception.BusinessException;
 import com.jaygibran.deliveryfood.domain.exception.CuisineNotFoundException;
 import com.jaygibran.deliveryfood.domain.exception.EntityInUseException;
 import com.jaygibran.deliveryfood.domain.exception.RestaurantNotFoundException;
@@ -14,6 +15,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @AllArgsConstructor
 @Service
@@ -50,6 +53,24 @@ public class RestaurantRegistryService {
     public void inactivate(Long restaurantId) {
         Restaurant restaurant = findOrFail(restaurantId);
         restaurant.inactivate();
+    }
+
+    @Transactional
+    public void activate(List<Long> restaurantIds) {
+        try {
+            restaurantIds.forEach(this::activate);
+        } catch (RestaurantNotFoundException e) {
+            throw new BusinessException(e.getMessage(), e);
+        }
+    }
+
+    @Transactional
+    public void inactivate(List<Long> restaurantIds) {
+        try {
+            restaurantIds.forEach(this::inactivate);
+        } catch (RestaurantNotFoundException e) {
+            throw new BusinessException(e.getMessage(), e);
+        }
     }
 
     @Transactional
