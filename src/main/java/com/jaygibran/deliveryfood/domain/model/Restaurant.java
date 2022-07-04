@@ -73,6 +73,13 @@ public class Restaurant {
     @ToString.Exclude
     private List<Product> products;
 
+    @ManyToMany
+    @JoinTable(name = "restaurant_user_responsible",
+            joinColumns = @JoinColumn(name = "restaurant_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @ToString.Exclude
+    private Set<User> users = new HashSet<>();
+
     public void activate() {
         setActive(true);
     }
@@ -95,6 +102,14 @@ public class Restaurant {
 
     public boolean addPaymentMethod(PaymentMethod paymentMethod) {
         return getPaymentMethods().add(paymentMethod);
+    }
+
+    public boolean addUserResponsible(User user) {
+        return getUsers().add(user);
+    }
+
+    public boolean removeUserResponsible(User user) {
+        return getUsers().remove(user);
     }
 
     @Override

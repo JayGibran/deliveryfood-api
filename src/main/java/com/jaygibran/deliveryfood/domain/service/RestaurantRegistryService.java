@@ -7,6 +7,7 @@ import com.jaygibran.deliveryfood.domain.model.City;
 import com.jaygibran.deliveryfood.domain.model.Cuisine;
 import com.jaygibran.deliveryfood.domain.model.PaymentMethod;
 import com.jaygibran.deliveryfood.domain.model.Restaurant;
+import com.jaygibran.deliveryfood.domain.model.User;
 import com.jaygibran.deliveryfood.domain.repository.RestaurantRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -23,6 +24,7 @@ public class RestaurantRegistryService {
     private final CuisineRegistryService cuisineRegistryService;
     private final CityRegistryService cityRegistryService;
     private final PaymentMethodRegistryService paymentMethodRegistryService;
+    private final UserRegistryService userRegistryService;
 
     @Transactional
     public Restaurant save(Restaurant restaurant) {
@@ -86,6 +88,20 @@ public class RestaurantRegistryService {
         Restaurant restaurant = findOrFail(restaurantId);
         PaymentMethod paymentMethod = paymentMethodRegistryService.findOrFail(paymentMethodId);
         restaurant.addPaymentMethod(paymentMethod);
+    }
+
+    @Transactional
+    public void associateUser(Long restaurantId, Long userId) {
+        Restaurant restaurant = findOrFail(restaurantId);
+        User user = userRegistryService.findOrFail(userId);
+        restaurant.addUserResponsible(user);
+    }
+
+    @Transactional
+    public void disassociateUser(Long restaurantId, Long userId) {
+        Restaurant restaurant = findOrFail(restaurantId);
+        User user = userRegistryService.findOrFail(userId);
+        restaurant.removeUserResponsible(user);
     }
 
     public Restaurant findOrFail(Long id) {

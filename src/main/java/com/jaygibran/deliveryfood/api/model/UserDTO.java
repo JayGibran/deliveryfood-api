@@ -10,6 +10,8 @@ import javax.validation.constraints.NotBlank;
 @Setter
 public class UserDTO {
 
+    private Long id;
+
     private String name;
 
     private String email;

@@ -40,7 +40,7 @@ public class User {
     @JoinTable(joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "group_id"), name = "user_group")
     private List<Group> groups;
-
+    
     public boolean passwordDoesNotMatch(String password) {
         return !this.password.equals(password);
     }

@@ -16,6 +16,8 @@ from permission;
 delete
 from product;
 delete
+from restaurant_user_responsible;
+delete
 from restaurant;
 delete
 from restaurant_payment_method;
@@ -58,7 +60,6 @@ insert into restaurant(name, fee_delivery, cuisine_id, address_street, address_n
 insert into restaurant(name, fee_delivery, cuisine_id, date_created, date_updated, active) value ("Tuk Tuk Indian Food", 15, 2, utc_timestamp, utc_timestamp, true);
 insert into restaurant(name, fee_delivery, cuisine_id, address_street, address_number, address_air_code, address_neighborhood, address_city_id, date_created, date_updated, active) value ("BAH33º THE AUTHENTIC GAUCHO BBQ", 11, 3, "Dawson St", "Unit 3-5", "D02 X272", "Royal Hibernian Way", 1, utc_timestamp, utc_timestamp, true);
 
-
 insert into payment_method(description) value ("Credit card");
 insert into payment_method(description) value ("Debit card");
 insert into payment_method(description) value ("Cash");
@@ -87,7 +88,17 @@ insert into product(name, price, description, active, restaurant_id) value ("Bar
 
 insert into user (name, email, password, date_created) value ("Jay Gibran", "jaydeliveryfoodapi@gmail.com", "123456789", utc_timestamp);
 insert into user(name, email, password, date_created) value ("Emiriam Caroline", "emiriamdeliveryfoodapi@gmail.com", "987654321", utc_timestamp);
+insert into user(name, email, password, date_created) value ("Maria Hosana", "mariadeliveryfoodapi@gmail.com", "123456", utc_timestamp);
 
 insert into user_group(user_id, group_id) value (1, 1);
 insert into user_group(user_id, group_id) value (1, 2);
 insert into user_group(user_id, group_id) value (2, 1);
+
+insert into restaurant_user_responsible(restaurant_id, user_id) value (1, 1);
+insert into restaurant_user_responsible(restaurant_id, user_id) value (1, 2);
+insert into restaurant_user_responsible(restaurant_id, user_id) value (2, 1);
+insert into restaurant_user_responsible(restaurant_id, user_id) value (2, 2);
+insert into restaurant_user_responsible(restaurant_id, user_id) value (3, 1);
+insert into restaurant_user_responsible(restaurant_id, user_id) value (3, 2);
+insert into restaurant_user_responsible(restaurant_id, user_id) value (4, 1);
+insert into restaurant_user_responsible(restaurant_id, user_id) value (4, 2);
