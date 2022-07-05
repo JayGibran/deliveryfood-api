@@ -1,7 +1,9 @@
 package com.jaygibran.deliveryfood.api.controller;
 
 import com.jaygibran.deliveryfood.api.assembler.OrderDTOAssembler;
+import com.jaygibran.deliveryfood.api.assembler.OrderSummarizedDTOAssembler;
 import com.jaygibran.deliveryfood.api.model.OrderDTO;
+import com.jaygibran.deliveryfood.api.model.OrderSummarizedDTO;
 import com.jaygibran.deliveryfood.domain.repository.OrderRepository;
 import com.jaygibran.deliveryfood.domain.service.OrderRegistryService;
 import lombok.AllArgsConstructor;
@@ -20,10 +22,11 @@ public class OrderController {
     private final OrderRepository orderRepository;
     private final OrderRegistryService orderRegistryService;
     private final OrderDTOAssembler orderDTOAssembler;
+    private final OrderSummarizedDTOAssembler orderSummarizedDTOAssembler;
 
     @GetMapping
-    public List<OrderDTO> list() {
-        return orderDTOAssembler.toCollectionDTO(orderRepository.findAll());
+    public List<OrderSummarizedDTO> list() {
+        return orderSummarizedDTOAssembler.toCollectionDTO(orderRepository.findAll());
     }
 
     @GetMapping("/{productId}")
