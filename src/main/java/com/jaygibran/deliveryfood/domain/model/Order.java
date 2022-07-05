@@ -11,6 +11,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -54,7 +56,8 @@ public class Order {
 
     private BigDecimal feeDelivery;
 
-    private OrderStatus orderStatus;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
 
     @Embedded
     private Address address;

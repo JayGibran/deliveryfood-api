@@ -27,6 +27,10 @@ delete
 from user;
 delete
 from user_group;
+delete
+from order_item;
+delete
+from order_;
 
 set
 foreign_key_checks = 1;
@@ -43,6 +47,10 @@ alter table restaurant_payment_method auto_increment = 1;
 alter table state auto_increment = 1;
 alter table user auto_increment = 1;
 alter table user_group auto_increment = 1;
+alter table restaurant_user_responsible auto_increment = 1;
+alter table order_item auto_increment = 1;
+alter table order_ auto_increment = 1;
+
 
 insert into state(id, name) value (1, "Leinster");
 insert into state(id, name) value (2, "Munster");
@@ -85,6 +93,7 @@ insert into product(name, price, description, active, restaurant_id) value ("Pic
 insert into product(name, price, description, active, restaurant_id) value ("Costela Gaúcha 12 horas", 29.90, "Juicy 12-Hour Slow-Cooked Beef Ribs accompanied by rustic potatoes and mixed salad.", true, 4);
 insert into product(name, price, description, active, restaurant_id) value ("Bife de Chorizo", 29.90, "10OZ of Striploin accompanied with rustic potatoes and a watercress and cherry tomato salad.", true, 4);
 insert into product(name, price, description, active, restaurant_id) value ("Barriga de Porco", 24.90, "10 OZ of Pork Belly accompanied with rustic potatoes and coleslaw..", true, 4);
+insert into product(name, price, description, active, restaurant_id) value ("Suco de Laranja", 5.00, "Suco de laranja Natural", true, 4);
 
 insert into user (name, email, password, date_created) value ("Jay Gibran", "jaydeliveryfoodapi@gmail.com", "123456789", utc_timestamp);
 insert into user(name, email, password, date_created) value ("Emiriam Caroline", "emiriamdeliveryfoodapi@gmail.com", "987654321", utc_timestamp);
@@ -102,3 +111,37 @@ insert into restaurant_user_responsible(restaurant_id, user_id) value (3, 1);
 insert into restaurant_user_responsible(restaurant_id, user_id) value (3, 2);
 insert into restaurant_user_responsible(restaurant_id, user_id) value (4, 1);
 insert into restaurant_user_responsible(restaurant_id, user_id) value (4, 2);
+
+insert into order_ (id, restaurant_id, user_id, payment_method_id, address_city_id, address_air_code,
+                    address_street, address_number, address_additional, address_neighborhood,
+                    status, date_created, date_updated, sub_total, fee_delivery, total)
+values (1, 4, 1, 1, 1, 'DD02 PP50', 'Pearse Street', '100', 'Upper Street', 'D2',
+        'CREATED', utc_timestamp, utc_timestamp, 34.90, 11, 45.90);
+
+insert into order_item (id, order_id, product_id, quantity, unit_price, total, note)
+values (1, 1, 8, 1, 5.00, 5.00, "No sugar");
+
+insert into order_item (id, order_id, product_id, quantity, unit_price, total, note)
+values (2, 1, 4, 1, 29.90, 29.90, "Middle ");
+
+insert into order_ (id, restaurant_id, user_id, payment_method_id, address_city_id, address_air_code,
+                    address_street, address_number, address_additional, address_neighborhood,
+                    status, date_created, date_updated, sub_total, fee_delivery, total)
+values (2, 1, 1, 1, 1, 'DD02 PP50', 'Pearse Street', '100', 'Upper Street', 'D2',
+        'CREATED', utc_timestamp, utc_timestamp, 12, 10, 22);
+
+insert into order_item (id, order_id, product_id, quantity, unit_price, total, note)
+values (3, 2, 1, 1, 12, 12, "Please hot soup and add napkins");
+
+
+
+--
+--
+-- insert into pedido (id, restaurante_id, usuario_cliente_id, forma_pagamento_id, endereco_cidade_id, endereco_cep,
+--                     endereco_logradouro, endereco_numero, endereco_complemento, endereco_bairro,
+--                     status, data_criacao, subtotal, taxa_frete, valor_total)
+-- values (2, 4, 1, 2, 1, '38400-111', 'Rua Acre', '300', 'Casa 2', 'Centro',
+--         'CRIADO', utc_timestamp, 79, 0, 79);
+
+-- insert into item_pedido (id, pedido_id, produto_id, quantidade, preco_unitario, preco_total, observacao)
+-- values (3, 2, 6, 1, 79, 79, 'Ao ponto');
