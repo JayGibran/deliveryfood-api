@@ -1,6 +1,7 @@
 package com.jaygibran.deliveryfood.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.jaygibran.deliveryfood.domain.exception.BusinessException;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -84,5 +85,28 @@ public class Order {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         this.total = this.subTotal.add(this.feeDelivery);
+    }
+
+    public void confirm() {
+        setStatus(OrderStatus.CONFIRMED);
+        setDateConfirmation(OffsetDateTime.now());
+    }
+
+    public void deliver() {
+        setStatus(OrderStatus.DELIVERED);
+        setDateDelivered(OffsetDateTime.now());
+    }
+
+    public void cancel() {
+        setStatus(OrderStatus.CANCELED);
+        setDateCancelation(OffsetDateTime.now());
+    }
+    
+    private void setStatus(OrderStatus newOrderStatus) {
+        if (getStatus().canNotChangeTo(newOrderStatus)) {
+            throw new BusinessException(String.format("Status of order %d can't be changed from %s to %s",
+                    getId(), getStatus().getDescription(), newOrderStatus.getDescription()));
+        }
+        this.status = newOrderStatus;
     }
 }

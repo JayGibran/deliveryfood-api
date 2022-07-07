@@ -18,37 +18,23 @@ import static com.jaygibran.deliveryfood.domain.model.OrderStatus.DELIVERED;
 @Service
 public class FlowOrderService {
 
-    public static final String ORDER_STATUS_ERROR_MSG = "Status of order %d can't be changed from %s to %s";
     private final OrderRegistryService orderRegistryService;
 
     @Transactional
     public void confirm(Long orderId) {
         Order order = orderRegistryService.findOrFail(orderId);
-
-        changeOrderStatusFromTo(order, CREATED, CONFIRMED);
+        order.confirm();
     }
 
     @Transactional
     public void deliver(Long orderId) {
         Order order = orderRegistryService.findOrFail(orderId);
-
-        changeOrderStatusFromTo(order, CONFIRMED, DELIVERED);
+        order.deliver();
     }
 
     @Transactional
     public void cancel(Long orderId) {
         Order order = orderRegistryService.findOrFail(orderId);
-
-        changeOrderStatusFromTo(order, CREATED, CANCELED);
-    }
-
-    private void changeOrderStatusFromTo(Order order, OrderStatus from, OrderStatus to) {
-        if (!order.getStatus().equals(from)) {
-            throw new BusinessException(String.format(ORDER_STATUS_ERROR_MSG,
-                    order.getId(), order.getStatus().getDescription(), to.getDescription()));
-        }
-
-        order.setStatus(to);
-        order.setDateConfirmation(OffsetDateTime.now());
+        order.cancel();
     }
 }
