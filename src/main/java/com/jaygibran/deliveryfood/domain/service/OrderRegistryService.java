@@ -45,7 +45,6 @@ public class OrderRegistryService {
 
         order.setFeeDelivery(order.getRestaurant().getFeeDelivery());
         order.calculateTotal();
-        order.setStatus(OrderStatus.CREATED);
 
         return orderRepository.save(order);
     }
@@ -78,5 +77,4 @@ public class OrderRegistryService {
             throw new BusinessException(String.format("Restaurant doesn't not accept payment method: %s", paymentMethod.getDescription()));
         }
     }
-
 }

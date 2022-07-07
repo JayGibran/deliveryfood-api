@@ -8,7 +8,7 @@ create table order_
     total                decimal(10, 2) not null,
     fee_delivery         decimal(10, 2) not null,
     date_created         datetime       not null,
-    date_updated         datetime       not null,
+    date_confirmation    datetime,
     date_cancelation     datetime,
     date_delivered       datetime,
     status               varchar(10)    not null,

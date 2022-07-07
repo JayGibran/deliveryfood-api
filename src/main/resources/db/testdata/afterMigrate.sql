@@ -114,9 +114,9 @@ insert into restaurant_user_responsible(restaurant_id, user_id) value (4, 2);
 
 insert into order_ (id, restaurant_id, user_id, payment_method_id, address_city_id, address_air_code,
                     address_street, address_number, address_additional, address_neighborhood,
-                    status, date_created, date_updated, sub_total, fee_delivery, total)
+                    status, date_created, sub_total, fee_delivery, total)
 values (1, 4, 1, 1, 1, 'DD02 PP50', 'Pearse Street', '100', 'Upper Street', 'D2',
-        'CREATED', utc_timestamp, utc_timestamp, 34.90, 11, 45.90);
+        'CREATED', utc_timestamp, 34.90, 11, 45.90);
 
 insert into order_item (id, order_id, product_id, quantity, unit_price, total, note)
 values (1, 1, 8, 1, 5.00, 5.00, "No sugar");
@@ -126,9 +126,9 @@ values (2, 1, 4, 1, 29.90, 29.90, "Middle ");
 
 insert into order_ (id, restaurant_id, user_id, payment_method_id, address_city_id, address_air_code,
                     address_street, address_number, address_additional, address_neighborhood,
-                    status, date_created, date_updated, sub_total, fee_delivery, total)
+                    status, date_created, sub_total, fee_delivery, total)
 values (2, 1, 1, 1, 1, 'DD02 PP50', 'Pearse Street', '100', 'Upper Street', 'D2',
-        'CREATED', utc_timestamp, utc_timestamp, 12, 10, 22);
+        'CREATED', utc_timestamp, 12, 10, 22);
 
 insert into order_item (id, order_id, product_id, quantity, unit_price, total, note)
 values (3, 2, 1, 1, 12, 12, "Please hot soup and add napkins");

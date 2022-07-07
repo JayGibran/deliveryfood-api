@@ -61,7 +61,7 @@ public class Order {
     private BigDecimal feeDelivery;
 
     @Enumerated(EnumType.STRING)
-    private OrderStatus status;
+    private OrderStatus status = OrderStatus.CREATED;
 
     @Embedded
     private Address address;
@@ -70,16 +70,8 @@ public class Order {
     @Column(nullable = false, columnDefinition = "datetime")
     private OffsetDateTime dateCreated;
 
-    @UpdateTimestamp
-    @Column(nullable = false, columnDefinition = "datetime")
-    private OffsetDateTime dateUpdated;
-
-    @CreationTimestamp
-    @Column(columnDefinition = "datetime")
+    private OffsetDateTime dateConfirmation;
     private OffsetDateTime dateCancelation;
-
-    @UpdateTimestamp
-    @Column(columnDefinition = "datetime")
     private OffsetDateTime dateDelivered;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
