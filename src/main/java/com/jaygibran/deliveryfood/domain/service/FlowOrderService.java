@@ -21,20 +21,20 @@ public class FlowOrderService {
     private final OrderRegistryService orderRegistryService;
 
     @Transactional
-    public void confirm(Long orderId) {
-        Order order = orderRegistryService.findOrFail(orderId);
+    public void confirm(String orderCode) {
+        Order order = orderRegistryService.findOrFail(orderCode);
         order.confirm();
     }
 
     @Transactional
-    public void deliver(Long orderId) {
-        Order order = orderRegistryService.findOrFail(orderId);
+    public void deliver(String orderCode) {
+        Order order = orderRegistryService.findOrFail(orderCode);
         order.deliver();
     }
 
     @Transactional
-    public void cancel(Long orderId) {
-        Order order = orderRegistryService.findOrFail(orderId);
+    public void cancel(String orderCode) {
+        Order order = orderRegistryService.findOrFail(orderCode);
         order.cancel();
     }
 }

@@ -24,6 +24,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -31,6 +32,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Data
@@ -42,6 +44,8 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String code;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -101,12 +105,17 @@ public class Order {
         setStatus(OrderStatus.CANCELED);
         setDateCancelation(OffsetDateTime.now());
     }
-    
+
     private void setStatus(OrderStatus newOrderStatus) {
         if (getStatus().canNotChangeTo(newOrderStatus)) {
             throw new BusinessException(String.format("Status of order %d can't be changed from %s to %s",
-                    getId(), getStatus().getDescription(), newOrderStatus.getDescription()));
+                    getCode(), getStatus().getDescription(), newOrderStatus.getDescription()));
         }
         this.status = newOrderStatus;
+    }
+
+    @PrePersist
+    private void generateCode() {
+        setCode(UUID.randomUUID().toString());
     }
 }

@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 public class OrderSummarizedDTO {
 
-    private Long id;
+    private String code;
     private BigDecimal subTotal;
     private BigDecimal total;
     private BigDecimal feeDelivery;

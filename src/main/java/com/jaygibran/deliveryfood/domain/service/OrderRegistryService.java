@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -30,10 +31,10 @@ public class OrderRegistryService {
     private final ProductRegistryService productRegistryService;
     private final UserRegistryService userRegistryService;
 
-    public Order findOrFail(Long orderId) {
+    public Order findOrFail(String orderCode) {
         return orderRepository
-                .findById(orderId)
-                .orElseThrow(() -> new OrderNotFoundException(orderId));
+                .findByCode(orderCode)
+                .orElseThrow(() -> new OrderNotFoundException(orderCode));
     }
 
     @Transactional

@@ -112,10 +112,10 @@ insert into restaurant_user_responsible(restaurant_id, user_id) value (3, 2);
 insert into restaurant_user_responsible(restaurant_id, user_id) value (4, 1);
 insert into restaurant_user_responsible(restaurant_id, user_id) value (4, 2);
 
-insert into order_ (id, restaurant_id, user_id, payment_method_id, address_city_id, address_air_code,
+insert into order_ (id, code, restaurant_id, user_id, payment_method_id, address_city_id, address_air_code,
                     address_street, address_number, address_additional, address_neighborhood,
                     status, date_created, sub_total, fee_delivery, total)
-values (1, 4, 1, 1, 1, 'DD02 PP50', 'Pearse Street', '100', 'Upper Street', 'D2',
+values (1, "7e5da0a6-eb51-4497-97ae-1f67388e6251", 4, 1, 1, 1, 'DD02 PP50', 'Pearse Street', '100', 'Upper Street', 'D2',
         'CREATED', utc_timestamp, 34.90, 11, 45.90);
 
 insert into order_item (id, order_id, product_id, quantity, unit_price, total, note)
@@ -124,24 +124,12 @@ values (1, 1, 8, 1, 5.00, 5.00, "No sugar");
 insert into order_item (id, order_id, product_id, quantity, unit_price, total, note)
 values (2, 1, 4, 1, 29.90, 29.90, "Middle ");
 
-insert into order_ (id, restaurant_id, user_id, payment_method_id, address_city_id, address_air_code,
+insert into order_ (id, code, restaurant_id, user_id, payment_method_id, address_city_id, address_air_code,
                     address_street, address_number, address_additional, address_neighborhood,
                     status, date_created, sub_total, fee_delivery, total)
-values (2, 1, 1, 1, 1, 'DD02 PP50', 'Pearse Street', '100', 'Upper Street', 'D2',
+values (2, "c2e06edf-a312-4e53-9190-6dd5a533bc82", 1, 1, 1, 1, 'DD02 PP50', 'Pearse Street', '100', 'Upper Street', 'D2',
         'CREATED', utc_timestamp, 12, 10, 22);
 
 insert into order_item (id, order_id, product_id, quantity, unit_price, total, note)
 values (3, 2, 1, 1, 12, 12, "Please hot soup and add napkins");
 
-
-
---
---
--- insert into pedido (id, restaurante_id, usuario_cliente_id, forma_pagamento_id, endereco_cidade_id, endereco_cep,
---                     endereco_logradouro, endereco_numero, endereco_complemento, endereco_bairro,
---                     status, data_criacao, subtotal, taxa_frete, valor_total)
--- values (2, 4, 1, 2, 1, '38400-111', 'Rua Acre', '300', 'Casa 2', 'Centro',
---         'CRIADO', utc_timestamp, 79, 0, 79);
-
--- insert into item_pedido (id, pedido_id, produto_id, quantidade, preco_unitario, preco_total, observacao)
--- values (3, 2, 6, 1, 79, 79, 'Ao ponto');

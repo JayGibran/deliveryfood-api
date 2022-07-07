@@ -44,9 +44,9 @@ public class OrderController {
         return orderSummarizedDTOAssembler.toCollectionDTO(orderRepository.findAll());
     }
 
-    @GetMapping("/{productId}")
-    public OrderDTO search(@PathVariable Long productId) {
-        return orderDTOAssembler.toDTO(orderRegistryService.findOrFail(productId));
+    @GetMapping("/{orderCode}")
+    public OrderDTO search(@PathVariable String orderCode) {
+        return orderDTOAssembler.toDTO(orderRegistryService.findOrFail(orderCode));
     }
 
     @ResponseStatus(HttpStatus.CREATED)

@@ -26,7 +26,7 @@ import java.util.List;
 @Setter
 public class OrderDTO {
 
-    private Long id;
+    private String code;
 
     private BigDecimal subTotal;
 
