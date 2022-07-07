@@ -124,4 +124,8 @@ public class Restaurant {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    public boolean doesNotAcceptPaymentMethod(PaymentMethod paymentMethod) {
+        return getPaymentMethods().stream().noneMatch(item -> item.getId().equals(paymentMethod.getId()));
+    }
 }

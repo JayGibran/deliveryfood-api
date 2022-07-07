@@ -1,6 +1,10 @@
 package com.jaygibran.deliveryfood.domain.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
@@ -14,10 +18,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.math.BigDecimal;
 
-@Getter
-@Setter
-@ToString
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Data
 @Entity
 public class OrderItem {
 
@@ -40,4 +44,19 @@ public class OrderItem {
     @ManyToOne
     @JoinColumn(nullable = false)
     private Product product;
+
+    public void calculateItemTotal() {
+        BigDecimal unitPrice = getUnitPrice();
+        Integer quantity = this.getQuantity();
+
+        if (unitPrice == null) {
+            unitPrice = BigDecimal.ZERO;
+        }
+
+        if (quantity == null) {
+            quantity = 0;
+        }
+
+        this.setTotal(unitPrice.multiply(new BigDecimal(quantity)));
+    }
 }

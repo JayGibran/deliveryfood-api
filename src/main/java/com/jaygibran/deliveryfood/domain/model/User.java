@@ -1,7 +1,10 @@
 package com.jaygibran.deliveryfood.domain.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Column;
@@ -16,7 +19,9 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-@EqualsAndHashCode
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Data
 @Entity
 public class User {
@@ -40,7 +45,7 @@ public class User {
     @JoinTable(joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "group_id"), name = "user_group")
     private List<Group> groups;
-    
+
     public boolean passwordDoesNotMatch(String password) {
         return !this.password.equals(password);
     }
