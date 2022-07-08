@@ -1,9 +1,11 @@
 package com.jaygibran.deliveryfood.api.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.jaygibran.deliveryfood.api.assembler.RestaurantDTOAssembler;
 import com.jaygibran.deliveryfood.api.assembler.RestaurantInputDisassembler;
 import com.jaygibran.deliveryfood.api.model.RestaurantDTO;
 import com.jaygibran.deliveryfood.api.model.input.RestaurantInput;
+import com.jaygibran.deliveryfood.api.model.view.RestaurantView;
 import com.jaygibran.deliveryfood.domain.exception.BusinessException;
 import com.jaygibran.deliveryfood.domain.exception.CityNotFoundException;
 import com.jaygibran.deliveryfood.domain.exception.CuisineNotFoundException;
@@ -12,6 +14,7 @@ import com.jaygibran.deliveryfood.domain.repository.RestaurantRepository;
 import com.jaygibran.deliveryfood.domain.service.RestaurantRegistryService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,10 +42,33 @@ public class RestaurantController {
 
     private RestaurantInputDisassembler restaurantInputDisassembler;
 
+    @JsonView(RestaurantView.Summary.class)
     @GetMapping
     public List<RestaurantDTO> list() {
         return restaurantDTOAssembler.toCollectionDTO(this.restaurantRepository.findAll());
     }
+
+    @JsonView(RestaurantView.OnlyNames.class)
+    @GetMapping(params = "projection=only-names")
+    public List<RestaurantDTO> listOnlyNames() {
+        return restaurantDTOAssembler.toCollectionDTO(this.restaurantRepository.findAll());
+    }
+
+//    @GetMapping
+//    public MappingJacksonValue list(@RequestParam(required = false) String projection) {
+//        List<Restaurant> restaurants = this.restaurantRepository.findAll();
+//        List<RestaurantDTO> restaurantDTOS = restaurantDTOAssembler.toCollectionDTO(restaurants);
+//
+//        MappingJacksonValue restaurantsWrapper = new MappingJacksonValue(restaurantDTOS);
+//        restaurantsWrapper.setSerializationView(RestaurantView.Summary.class);
+//        if ("only-name".equals(projection)) {
+//            restaurantsWrapper.setSerializationView(RestaurantView.OnlyNames.class);
+//        } else if ("complete".equals(projection)) {
+//            restaurantsWrapper.setSerializationView(null);
+//        }
+//
+//        return restaurantsWrapper;
+//    }
 
     @GetMapping("/{id}")
     public RestaurantDTO search(@PathVariable Long id) {
