@@ -43,26 +43,7 @@ public class OrderController {
     private final OrderDTOAssembler orderDTOAssembler;
     private final OrderSummarizedDTOAssembler orderSummarizedDTOAssembler;
     private final OrderInputDisassembler orderInputDisassembler;
-
-//    @GetMapping
-//    public MappingJacksonValue list(@RequestParam(required = false) String fields) {
-//        List<Order> orders = orderRepository.findAll();
-//        List<OrderSummarizedDTO> orderSummarizedDTOS = orderSummarizedDTOAssembler.toCollectionDTO(orders);
-//
-//        MappingJacksonValue ordersWrapper = new MappingJacksonValue(orderSummarizedDTOS);
-//
-//        SimpleFilterProvider filterProvider = new SimpleFilterProvider();
-//        filterProvider.addFilter("orderFilter", SimpleBeanPropertyFilter.serializeAll());
-//
-//        if (StringUtils.isNotBlank(fields)) {
-//            filterProvider.addFilter("orderFilter", SimpleBeanPropertyFilter.filterOutAllExcept(fields.split(",")));
-//        }
-//
-//        ordersWrapper.setFilters(filterProvider);
-//
-//        return ordersWrapper;
-//    }
-
+    
     @GetMapping
     public List<OrderSummarizedDTO> list() {
         return orderSummarizedDTOAssembler.toCollectionDTO(orderRepository.findAll());

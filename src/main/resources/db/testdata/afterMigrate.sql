@@ -94,6 +94,7 @@ insert into product(name, price, description, active, restaurant_id) value ("Cos
 insert into product(name, price, description, active, restaurant_id) value ("Bife de Chorizo", 29.90, "10OZ of Striploin accompanied with rustic potatoes and a watercress and cherry tomato salad.", true, 4);
 insert into product(name, price, description, active, restaurant_id) value ("Barriga de Porco", 24.90, "10 OZ of Pork Belly accompanied with rustic potatoes and coleslaw..", true, 4);
 insert into product(name, price, description, active, restaurant_id) value ("Suco de Laranja", 5.00, "Suco de laranja Natural", true, 4);
+insert into product(name, price, description, active, restaurant_id) value ("Coca cola", 3.00, "Refrigerante", false, 4);
 
 insert into user (name, email, password, date_created) value ("Jay Gibran", "jaydeliveryfoodapi@gmail.com", "123456789", utc_timestamp);
 insert into user(name, email, password, date_created) value ("Emiriam Caroline", "emiriamdeliveryfoodapi@gmail.com", "987654321", utc_timestamp);

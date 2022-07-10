@@ -6,6 +6,7 @@ import com.jaygibran.deliveryfood.api.model.ProductDTO;
 import com.jaygibran.deliveryfood.api.model.input.ProductInput;
 import com.jaygibran.deliveryfood.domain.model.Product;
 import com.jaygibran.deliveryfood.domain.model.Restaurant;
+import com.jaygibran.deliveryfood.domain.repository.ProductRepository;
 import com.jaygibran.deliveryfood.domain.service.ProductRegistryService;
 import com.jaygibran.deliveryfood.domain.service.RestaurantRegistryService;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,10 +37,20 @@ public class RestaurantProductController {
 
     private final ProductInputDisassembler productInputDisassembler;
 
+    private final ProductRepository productRepository;
+
     @GetMapping
-    public List<ProductDTO> list(@PathVariable Long restaurantId) {
+    public List<ProductDTO> list(@PathVariable Long restaurantId, @RequestParam(required = false) boolean includeInactives) {
         Restaurant restaurant = restaurantRegistryService.findOrFail(restaurantId);
-        return productDTOAssembler.toCollectionDTO(restaurant.getProducts());
+
+        List<Product> products;
+        if (includeInactives) {
+            products = productRepository.findAllByRestaurant(restaurant);
+        } else {
+            products = productRepository.findActivesByRestaurant(restaurant);
+        }
+
+        return productDTOAssembler.toCollectionDTO(products);
     }
 
     @GetMapping("/{id}")
