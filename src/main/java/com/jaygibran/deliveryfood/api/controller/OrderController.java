@@ -16,7 +16,9 @@ import com.jaygibran.deliveryfood.domain.exception.RestaurantNotFoundException;
 import com.jaygibran.deliveryfood.domain.model.Order;
 import com.jaygibran.deliveryfood.domain.model.User;
 import com.jaygibran.deliveryfood.domain.repository.OrderRepository;
+import com.jaygibran.deliveryfood.domain.repository.filter.OrderFilter;
 import com.jaygibran.deliveryfood.domain.service.OrderRegistryService;
+import com.jaygibran.deliveryfood.infrastructure.repository.spec.OrderSpecs;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -43,10 +45,10 @@ public class OrderController {
     private final OrderDTOAssembler orderDTOAssembler;
     private final OrderSummarizedDTOAssembler orderSummarizedDTOAssembler;
     private final OrderInputDisassembler orderInputDisassembler;
-    
+
     @GetMapping
-    public List<OrderSummarizedDTO> list() {
-        return orderSummarizedDTOAssembler.toCollectionDTO(orderRepository.findAll());
+    public List<OrderSummarizedDTO> search(OrderFilter orderFilter) {
+        return orderSummarizedDTOAssembler.toCollectionDTO(orderRepository.findAll(OrderSpecs.usingFilter(orderFilter)));
     }
 
     @GetMapping("/{orderCode}")
