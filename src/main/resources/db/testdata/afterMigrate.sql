@@ -62,6 +62,11 @@ insert into cuisine(id, name) value (1, "Thailand");
 insert into cuisine(id, name) value (2, "Indian");
 insert into cuisine(id, name) value (3, "Brazilian");
 insert into cuisine(id, name) value (4, "Italian");
+insert into cuisine(id, name) value (5, "Japan");
+insert into cuisine(id, name) value (6, "Korean");
+insert into cuisine(id, name) value (7, "French");
+insert into cuisine(id, name) value (8, "Greek");
+insert into cuisine(id, name) value (9, "Irish");
 
 insert into restaurant(name, fee_delivery, cuisine_id, address_street, address_number, address_air_code, address_neighborhood, address_city_id, date_created, date_updated, active) value ("Thai Gourmet", 10, 1, "Pearse Street", "29", "D02 PP 50", "Grand canal dock", 1, utc_timestamp, utc_timestamp, true);
 insert into restaurant(name, fee_delivery, cuisine_id, address_street, address_number, address_air_code, address_neighborhood, address_city_id, date_created, date_updated, active) value ("Thai Delivery", 9.5, 2, "Dame Street", "50", "D02 PP 150", "City Center", 1, utc_timestamp, utc_timestamp, true);
