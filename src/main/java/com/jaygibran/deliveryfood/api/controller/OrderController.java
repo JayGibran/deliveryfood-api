@@ -9,6 +9,7 @@ import com.jaygibran.deliveryfood.api.model.OrderDTO;
 import com.jaygibran.deliveryfood.api.model.OrderSummarizedDTO;
 import com.jaygibran.deliveryfood.api.model.input.OrderInput;
 import com.jaygibran.deliveryfood.api.model.input.OrderInputDisassembler;
+import com.jaygibran.deliveryfood.core.data.PageableTranslator;
 import com.jaygibran.deliveryfood.domain.exception.BusinessException;
 import com.jaygibran.deliveryfood.domain.exception.CityNotFoundException;
 import com.jaygibran.deliveryfood.domain.exception.PaymentMethodNotFoundException;
@@ -38,6 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @RestController
@@ -52,6 +54,8 @@ public class OrderController {
 
     @GetMapping
     public Page<OrderSummarizedDTO> search(OrderFilter orderFilter, Pageable pageable) {
+        pageable = translatePageable(pageable);
+
         Page<Order> orderPages = orderRepository.findAll(OrderSpecs.usingFilter(orderFilter), pageable);
 
         List<OrderSummarizedDTO> orderSummarizedDTOS = orderSummarizedDTOAssembler.toCollectionDTO(orderPages.getContent());
@@ -77,5 +81,16 @@ public class OrderController {
         } catch (RestaurantNotFoundException | PaymentMethodNotFoundException | CityNotFoundException | ProductNotFoundException e) {
             throw new BusinessException(e.getMessage());
         }
+    }
+
+    private Pageable translatePageable(Pageable apiPageable) {
+        var map = Map.of(
+                "code", "code",
+                "user.name", "user.name",
+                "restaurant.name", "restaurant.name",
+                "total", "total"
+        );
+
+        return PageableTranslator.translate(apiPageable, map);
     }
 }
