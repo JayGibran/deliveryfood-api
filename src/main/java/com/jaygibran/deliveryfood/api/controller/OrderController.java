@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.jaygibran.deliveryfood.api.assembler.OrderDTOAssembler;
 import com.jaygibran.deliveryfood.api.assembler.OrderSummarizedDTOAssembler;
+import com.jaygibran.deliveryfood.api.model.CuisineDTO;
 import com.jaygibran.deliveryfood.api.model.OrderDTO;
 import com.jaygibran.deliveryfood.api.model.OrderSummarizedDTO;
 import com.jaygibran.deliveryfood.api.model.input.OrderInput;
@@ -21,6 +22,9 @@ import com.jaygibran.deliveryfood.domain.service.OrderRegistryService;
 import com.jaygibran.deliveryfood.infrastructure.repository.spec.OrderSpecs;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,8 +51,14 @@ public class OrderController {
     private final OrderInputDisassembler orderInputDisassembler;
 
     @GetMapping
-    public List<OrderSummarizedDTO> search(OrderFilter orderFilter) {
-        return orderSummarizedDTOAssembler.toCollectionDTO(orderRepository.findAll(OrderSpecs.usingFilter(orderFilter)));
+    public Page<OrderSummarizedDTO> search(OrderFilter orderFilter, Pageable pageable) {
+        Page<Order> orderPages = orderRepository.findAll(OrderSpecs.usingFilter(orderFilter), pageable);
+
+        List<OrderSummarizedDTO> orderSummarizedDTOS = orderSummarizedDTOAssembler.toCollectionDTO(orderPages.getContent());
+
+        Page<OrderSummarizedDTO> cuisineDTOPage = new PageImpl<>(orderSummarizedDTOS, pageable, orderPages.getTotalElements());
+
+        return cuisineDTOPage;
     }
 
     @GetMapping("/{orderCode}")
