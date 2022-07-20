@@ -6,7 +6,6 @@ import com.jaygibran.deliveryfood.domain.model.OrderStatus;
 import com.jaygibran.deliveryfood.domain.model.dto.DailySale;
 import com.jaygibran.deliveryfood.domain.service.SaleQueryService;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,12 +26,24 @@ public class SaleQueryServiceImpl implements SaleQueryService {
     private EntityManager entityManager;
 
     @Override
-    public List<DailySale> queryDailySale(DailySaleFilter filter) {
+    public List<DailySale> queryDailySale(DailySaleFilter filter, String timeOffSet) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<DailySale> query = builder.createQuery(DailySale.class);
         Root<Order> root = query.from(Order.class);
-
         var predicates = new ArrayList<Predicate>();
+
+        Expression<LocalDate> functionConvertTzDateCreated = builder
+                .function("convert_tz", LocalDate.class, root.get("dateCreated"),
+                        builder.literal("+00:00"), builder.literal(timeOffSet));
+
+        Expression<LocalDate> functionDatedDateCreated = builder
+                .function("date", LocalDate.class, functionConvertTzDateCreated);
+
+        CompoundSelection<DailySale> selection = builder
+                .construct(DailySale.class,
+                        functionDatedDateCreated,
+                        builder.count(root.get("id")),
+                        builder.sum(root.get("total")));
 
         predicates.add(root.get("status").in(OrderStatus.CONFIRMED, OrderStatus.DELIVERED));
 
@@ -47,15 +58,6 @@ public class SaleQueryServiceImpl implements SaleQueryService {
         if (filter.getDateCreatedFinish() != null) {
             predicates.add(builder.lessThanOrEqualTo(root.get("dateCreated"), filter.getDateCreatedFinish()));
         }
-
-        Expression<LocalDate> functionDatedDateCreated = builder
-                .function("date", LocalDate.class, root.get("dateCreated"));
-
-        CompoundSelection<DailySale> selection = builder
-                .construct(DailySale.class,
-                        functionDatedDateCreated,
-                        builder.count(root.get("id")),
-                        builder.sum(root.get("total")));
 
         query.select(selection);
         query.groupBy(functionDatedDateCreated);

@@ -13,6 +13,6 @@ import java.util.Date;
 public class DailySale {
 
     private Date date;
-    private Long totalSale;
+    private Long totalSales;
     private BigDecimal totalBilled;
 }

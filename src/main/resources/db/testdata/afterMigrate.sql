@@ -187,8 +187,8 @@ values (10, 5, 14, 1, 9.50, 9.50, "");
 
 insert into order_ (id, code, restaurant_id, user_id, payment_method_id, address_city_id, address_air_code,
                     address_street, address_number, address_additional, address_neighborhood,
-                    status, date_created, sub_total, fee_delivery, total)
-values (6, "e41251af-fdbc-4a0a-b0e2-d9d89c07c5fe", 3, 1, 1, 1, 'DD02 PP50', 'Pearse Street', '100', 'Upper Street', 'D2', 'DELIVERED', "2022-07-16", 15, 15, 30);
+                    status, date_created, date_confirmation, date_delivered, sub_total, fee_delivery, total)
+values (6, "e41251af-fdbc-4a0a-b0e2-d9d89c07c5fe", 3, 1, 1, 1, 'DD02 PP50', 'Pearse Street', '100', 'Upper Street', 'D2', 'DELIVERED', "2022-07-16 00:00", "2022-07-16 00:30", "2022-07-16 02:00", 15, 15, 30);
 
 insert into order_item (id, order_id, product_id, quantity, unit_price, total, note)
 values (11, 6, 3, 1, 15, 15, "Tasty");
