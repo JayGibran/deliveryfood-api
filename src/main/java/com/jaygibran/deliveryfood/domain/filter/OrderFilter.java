@@ -1,4 +1,4 @@
-package com.jaygibran.deliveryfood.domain.repository.filter;
+package com.jaygibran.deliveryfood.domain.filter;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,7 +1,7 @@
 package com.jaygibran.deliveryfood.infrastructure.repository.spec;
 
 import com.jaygibran.deliveryfood.domain.model.Order;
-import com.jaygibran.deliveryfood.domain.repository.filter.OrderFilter;
+import com.jaygibran.deliveryfood.domain.filter.OrderFilter;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Predicate;

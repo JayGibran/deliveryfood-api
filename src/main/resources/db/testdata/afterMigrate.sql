@@ -143,7 +143,7 @@ values (2, 1, 4, 1, 29.90, 29.90, "Middle ");
 insert into order_ (id, code, restaurant_id, user_id, payment_method_id, address_city_id, address_air_code,
                     address_street, address_number, address_additional, address_neighborhood,
                     status, date_created, sub_total, fee_delivery, total)
-values (2, "c2e06edf-a312-4e53-9190-6dd5a533bc82", 1, 1, 1, 1, 'DD02 PP50', 'Pearse Street', '100', 'Upper Street', 'D2', 'CREATED', utc_timestamp, 12, 10, 22);
+values (2, "c2e06edf-a312-4e53-9190-6dd5a533bc82", 1, 1, 1, 1, 'DD02 PP50', 'Pearse Street', '100', 'Upper Street', 'D2', 'DELIVERED', utc_timestamp, 12, 10, 22);
 
 insert into order_item (id, order_id, product_id, quantity, unit_price, total, note)
 values (3, 2, 1, 1, 12, 12, "Please hot soup and add napkins");
@@ -152,7 +152,7 @@ values (3, 2, 1, 1, 12, 12, "Please hot soup and add napkins");
 insert into order_ (id, code, restaurant_id, user_id, payment_method_id, address_city_id, address_air_code,
                     address_street, address_number, address_additional, address_neighborhood,
                     status, date_created, sub_total, fee_delivery, total)
-values (3, "3d3ee5ee-fb51-4d84-9549-e88084ee5fb9", 2, 1, 1, 1, 'DD02 PP50', 'Pearse Street', '100', 'Upper Street', 'D2', 'CREATED', utc_timestamp, 10, 9.5, 19.5);
+values (3, "3d3ee5ee-fb51-4d84-9549-e88084ee5fb9", 2, 1, 1, 1, 'DD02 PP50', 'Pearse Street', '100', 'Upper Street', 'D2', 'DELIVERED', utc_timestamp, 10, 9.5, 19.5);
 
 insert into order_item (id, order_id, product_id, quantity, unit_price, total, note)
 values (4, 3, 2, 1, 10, 10, "Please not so spicy");
@@ -160,7 +160,7 @@ values (4, 3, 2, 1, 10, 10, "Please not so spicy");
 insert into order_ (id, code, restaurant_id, user_id, payment_method_id, address_city_id, address_air_code,
                     address_street, address_number, address_additional, address_neighborhood,
                     status, date_created, sub_total, fee_delivery, total)
-values (4, "632e4a4e-76ec-4acc-967c-fafc0d8aedcd", 5, 1, 1, 1, 'DD02 PP50', 'Pearse Street', '100', 'Upper Street', 'D2', 'CREATED', utc_timestamp, 42, 8, 50);
+values (4, "632e4a4e-76ec-4acc-967c-fafc0d8aedcd", 5, 1, 1, 1, 'DD02 PP50', 'Pearse Street', '100', 'Upper Street', 'D2', 'DELIVERED', utc_timestamp, 42, 8, 50);
 
 insert into order_item (id, order_id, product_id, quantity, unit_price, total, note)
 values (5, 4, 10, 1, 8.50, 8.50, "");
@@ -171,3 +171,24 @@ values (6, 4, 12, 1, 24, 24, "");
 insert into order_item (id, order_id, product_id, quantity, unit_price, total, note)
 values (7, 4, 14, 1, 9.50, 9.50, "");
 
+insert into order_ (id, code, restaurant_id, user_id, payment_method_id, address_city_id, address_air_code,
+                    address_street, address_number, address_additional, address_neighborhood,
+                    status, date_created, sub_total, fee_delivery, total)
+values (5, "6d2a35ac-06d7-11ed-b939-0242ac120002", 5, 1, 1, 1, 'DD02 PP50', 'Pearse Street', '100', 'Upper Street', 'D2', 'DELIVERED', "2022-07-16", 42, 8, 50);
+
+insert into order_item (id, order_id, product_id, quantity, unit_price, total, note)
+values (8, 5, 10, 1, 8.50, 8.50, "");
+
+insert into order_item (id, order_id, product_id, quantity, unit_price, total, note)
+values (9, 5, 12, 1, 24, 24, "");
+
+insert into order_item (id, order_id, product_id, quantity, unit_price, total, note)
+values (10, 5, 14, 1, 9.50, 9.50, "");
+
+insert into order_ (id, code, restaurant_id, user_id, payment_method_id, address_city_id, address_air_code,
+                    address_street, address_number, address_additional, address_neighborhood,
+                    status, date_created, sub_total, fee_delivery, total)
+values (6, "e41251af-fdbc-4a0a-b0e2-d9d89c07c5fe", 3, 1, 1, 1, 'DD02 PP50', 'Pearse Street', '100', 'Upper Street', 'D2', 'DELIVERED', "2022-07-16", 15, 15, 30);
+
+insert into order_item (id, order_id, product_id, quantity, unit_price, total, note)
+values (11, 6, 3, 1, 15, 15, "Tasty");
