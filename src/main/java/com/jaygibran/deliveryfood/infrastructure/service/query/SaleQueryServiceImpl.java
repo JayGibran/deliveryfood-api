@@ -1,4 +1,4 @@
-package com.jaygibran.deliveryfood.infrastructure.service;
+package com.jaygibran.deliveryfood.infrastructure.service.query;
 
 import com.jaygibran.deliveryfood.domain.filter.DailySaleFilter;
 import com.jaygibran.deliveryfood.domain.model.Order;
