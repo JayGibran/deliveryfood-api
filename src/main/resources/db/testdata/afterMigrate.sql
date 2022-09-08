@@ -31,6 +31,8 @@ delete
 from order_item;
 delete
 from order_;
+delete
+from product_photo;
 
 set
 foreign_key_checks = 1;
