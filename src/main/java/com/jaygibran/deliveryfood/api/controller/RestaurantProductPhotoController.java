@@ -9,6 +9,7 @@ import com.jaygibran.deliveryfood.domain.service.CatalogProductPhotoService;
 import com.jaygibran.deliveryfood.domain.service.ProductRegistryService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,5 +45,10 @@ public class RestaurantProductPhotoController {
         photo.setSize(file.getSize());
 
         return productPhotoDTOAssembler.toDTO(catalogProductPhotoService.save(photo, file.getInputStream()));
+    }
+
+    @GetMapping
+    public ProductPhotoDTO search(@PathVariable Long restaurantId, @PathVariable Long productId) {
+        return productPhotoDTOAssembler.toDTO(catalogProductPhotoService.findOrFail(restaurantId, productId));
     }
 }

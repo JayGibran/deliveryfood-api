@@ -1,11 +1,12 @@
 package com.jaygibran.deliveryfood.domain.service;
 
+import com.jaygibran.deliveryfood.domain.exception.ProductPhotoNotFoundException;
 import com.jaygibran.deliveryfood.domain.model.ProductPhoto;
 import com.jaygibran.deliveryfood.domain.repository.ProductRepository;
+import com.jaygibran.deliveryfood.domain.service.PhotoStorageService.NewPhoto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.jaygibran.deliveryfood.domain.service.PhotoStorageService.NewPhoto;
 
 import java.io.InputStream;
 import java.util.Optional;
@@ -44,5 +45,10 @@ public class CatalogProductPhotoService {
         photoStorageService.replace(existingFileName, newPhoto);
 
         return productPhotoSaved;
+    }
+
+    public ProductPhoto findOrFail(Long restaurantId, Long productId) {
+        return productRepository.findProductById(restaurantId, productId)
+                .orElseThrow(() -> new ProductPhotoNotFoundException(productId, restaurantId));
     }
 }

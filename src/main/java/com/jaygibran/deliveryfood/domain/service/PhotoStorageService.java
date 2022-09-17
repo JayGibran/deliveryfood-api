@@ -8,6 +8,8 @@ import java.util.UUID;
 
 public interface PhotoStorageService {
 
+    InputStream recover(String fileName);
+
     void storage(NewPhoto newPhoto);
 
     void remove(String fileName);
@@ -18,7 +20,7 @@ public interface PhotoStorageService {
 
     default void replace(String existingFileName, NewPhoto newPhoto) {
         this.storage(newPhoto);
-        
+
         if (existingFileName != null) {
             this.remove(existingFileName);
         }
