@@ -79,6 +79,4 @@ public class RestaurantProductController {
 
         return productDTOAssembler.toDTO(productRegistryService.save(productToUpdate));
     }
-
-
 }
