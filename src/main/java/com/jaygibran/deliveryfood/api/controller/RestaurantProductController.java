@@ -73,7 +73,6 @@ public class RestaurantProductController {
 
     @PutMapping("/{id}")
     public ProductDTO update(@PathVariable Long restaurantId, @PathVariable Long id, @RequestBody @Valid ProductInput productInput) {
-        Restaurant restaurant = restaurantRegistryService.findOrFail(restaurantId);
         Product productToUpdate = productRegistryService.findOrFail(id, restaurantId);
 
         this.productInputDisassembler.copyToDomainObject(productInput, productToUpdate);
