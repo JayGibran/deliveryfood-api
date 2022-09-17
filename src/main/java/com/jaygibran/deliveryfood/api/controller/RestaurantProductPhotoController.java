@@ -28,9 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
 import java.util.List;
-import java.util.UUID;
 
 @AllArgsConstructor
 @RestController
@@ -64,7 +62,7 @@ public class RestaurantProductPhotoController {
     }
 
     @GetMapping
-    public ResponseEntity<InputStreamResource> producesPhoto(@PathVariable Long restaurantId, @PathVariable
+    public ResponseEntity<InputStreamResource> produces(@PathVariable Long restaurantId, @PathVariable
             Long productId, @RequestHeader(name = "accept") String acceptHeader) throws HttpMediaTypeNotAcceptableException {
         try {
 
