@@ -1,6 +1,8 @@
 package com.jaygibran.deliveryfood.infrastructure.service.storage;
 
+import com.jaygibran.deliveryfood.core.storage.StorageProperties;
 import com.jaygibran.deliveryfood.domain.service.PhotoStorageService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
@@ -12,11 +14,11 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+@AllArgsConstructor
 @Service
 public class LocalStorageService implements PhotoStorageService {
 
-    @Value("${deliveryfood.storage.local.directory-photos}")
-    private Path directoryPhotos;
+    private final StorageProperties storageProperties;
 
     @Override
     public InputStream recover(String fileName) {
@@ -50,6 +52,6 @@ public class LocalStorageService implements PhotoStorageService {
     }
 
     private Path getFilePath(String nameFile) {
-        return directoryPhotos.resolve(Path.of(nameFile));
+        return storageProperties.getLocal().getDirectoryPhotos().resolve(Path.of(nameFile));
     }
 }
