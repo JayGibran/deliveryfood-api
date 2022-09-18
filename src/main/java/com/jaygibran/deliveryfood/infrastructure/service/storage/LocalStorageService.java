@@ -15,7 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 @AllArgsConstructor
-@Service
+//@Service
 public class LocalStorageService implements PhotoStorageService {
 
     private final StorageProperties storageProperties;
