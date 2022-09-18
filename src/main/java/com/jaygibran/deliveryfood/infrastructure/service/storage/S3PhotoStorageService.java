@@ -14,7 +14,6 @@ import java.io.InputStream;
 import java.net.URL;
 
 @AllArgsConstructor
-@Service
 public class S3PhotoStorageService implements PhotoStorageService {
 
     private final AmazonS3 amazonS3;
