@@ -30,6 +30,7 @@ public interface PhotoStorageService {
     @Builder
     class NewPhoto {
         private String fileName;
+        private String contentType;
         private InputStream inputStream;
     }
 }
