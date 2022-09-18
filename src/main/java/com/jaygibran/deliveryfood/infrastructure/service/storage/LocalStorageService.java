@@ -21,10 +21,13 @@ public class LocalStorageService implements PhotoStorageService {
     private final StorageProperties storageProperties;
 
     @Override
-    public InputStream recover(String fileName) {
+    public RecoveredPhoto recover(String fileName) {
         Path filePath = getFilePath(fileName);
         try {
-            return Files.newInputStream(filePath);
+            RecoveredPhoto recoveredPhoto = RecoveredPhoto.builder()
+                    .inputStream(Files.newInputStream(filePath))
+                    .build();
+            return recoveredPhoto;
         } catch (IOException e) {
             throw new StorageException("It was not possible to recover file", e);
         }

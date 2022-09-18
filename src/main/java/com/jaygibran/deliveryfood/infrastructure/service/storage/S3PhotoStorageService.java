@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
+import java.net.URL;
 
 @AllArgsConstructor
 @Service
@@ -20,8 +21,16 @@ public class S3PhotoStorageService implements PhotoStorageService {
     private final StorageProperties storageProperties;
 
     @Override
-    public InputStream recover(String fileName) {
-        return null;
+    public RecoveredPhoto recover(String fileName) {
+        String pathFile = getPathFile(fileName);
+
+        URL url = amazonS3.getUrl(storageProperties.getS3().getBucket(), pathFile);
+
+        RecoveredPhoto recoveredPhoto = RecoveredPhoto.builder()
+                .url(url.toString())
+                .build();
+
+        return recoveredPhoto;
     }
 
     @Override
