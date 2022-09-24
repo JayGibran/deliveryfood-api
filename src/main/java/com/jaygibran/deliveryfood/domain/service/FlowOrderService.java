@@ -19,7 +19,8 @@ public class FlowOrderService {
 
         EmailService.Message message = EmailService.Message.builder()
                 .subject(String.format("%s - Order confirmed", order.getRestaurant().getName()))
-                .body(String.format("Order of code <strong> %s </strong> was confirmed!", order.getCode()))
+                .body("order-confirmed.html")
+                .variable("order", order)
                 .recipient(order.getUser().getEmail())
                 .build();
 

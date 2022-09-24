@@ -108,7 +108,7 @@ public class Order {
 
     private void setStatus(OrderStatus newOrderStatus) {
         if (getStatus().canNotChangeTo(newOrderStatus)) {
-            throw new BusinessException(String.format("Status of order %d can't be changed from %s to %s",
+            throw new BusinessException(String.format("Status of order %s can't be changed from %s to %s",
                     getCode(), getStatus().getDescription(), newOrderStatus.getDescription()));
         }
         this.status = newOrderStatus;
