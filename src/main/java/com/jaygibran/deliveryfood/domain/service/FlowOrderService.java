@@ -1,29 +1,29 @@
 package com.jaygibran.deliveryfood.domain.service;
 
-import com.jaygibran.deliveryfood.domain.exception.BusinessException;
 import com.jaygibran.deliveryfood.domain.model.Order;
-import com.jaygibran.deliveryfood.domain.model.OrderStatus;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.OffsetDateTime;
-
-import static com.jaygibran.deliveryfood.domain.model.OrderStatus.CANCELED;
-import static com.jaygibran.deliveryfood.domain.model.OrderStatus.CONFIRMED;
-import static com.jaygibran.deliveryfood.domain.model.OrderStatus.CREATED;
-import static com.jaygibran.deliveryfood.domain.model.OrderStatus.DELIVERED;
 
 @AllArgsConstructor
 @Service
 public class FlowOrderService {
 
     private final OrderRegistryService orderRegistryService;
+    private final EmailService emailService;
 
     @Transactional
     public void confirm(String orderCode) {
         Order order = orderRegistryService.findOrFail(orderCode);
         order.confirm();
+
+        EmailService.Message message = EmailService.Message.builder()
+                .subject(String.format("%s - Order confirmed", order.getRestaurant().getName()))
+                .body(String.format("Order of code <strong> %s </strong> was confirmed!", order.getCode()))
+                .recipient(order.getUser().getEmail())
+                .build();
+
+        emailService.send(message);
     }
 
     @Transactional
