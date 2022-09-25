@@ -1,6 +1,8 @@
 package com.jaygibran.deliveryfood.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.jaygibran.deliveryfood.domain.event.OrderCanceledEvent;
+import com.jaygibran.deliveryfood.domain.event.OrderConfirmedEvent;
 import com.jaygibran.deliveryfood.domain.exception.BusinessException;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,6 +12,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.domain.AbstractAggregateRoot;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -34,11 +37,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Data
 @Entity
 @Table(name = "order_")
-public class Order {
+public class Order extends AbstractAggregateRoot<Order> {
 
     @EqualsAndHashCode.Include
     @Id
@@ -94,6 +97,7 @@ public class Order {
     public void confirm() {
         setStatus(OrderStatus.CONFIRMED);
         setDateConfirmation(OffsetDateTime.now());
+        registerEvent(new OrderConfirmedEvent(this));
     }
 
     public void deliver() {
@@ -104,6 +108,8 @@ public class Order {
     public void cancel() {
         setStatus(OrderStatus.CANCELED);
         setDateCancelation(OffsetDateTime.now());
+
+        registerEvent(new OrderCanceledEvent(this));
     }
 
     private void setStatus(OrderStatus newOrderStatus) {

@@ -1,6 +1,7 @@
 package com.jaygibran.deliveryfood.domain.service;
 
 import com.jaygibran.deliveryfood.domain.model.Order;
+import com.jaygibran.deliveryfood.domain.repository.OrderRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,21 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class FlowOrderService {
 
     private final OrderRegistryService orderRegistryService;
-    private final EmailService emailService;
+    private final OrderRepository orderRepository;
 
     @Transactional
     public void confirm(String orderCode) {
         Order order = orderRegistryService.findOrFail(orderCode);
         order.confirm();
-
-        EmailService.Message message = EmailService.Message.builder()
-                .subject(String.format("%s - Order confirmed", order.getRestaurant().getName()))
-                .body("order-confirmed.html")
-                .variable("order", order)
-                .recipient(order.getUser().getEmail())
-                .build();
-
-        emailService.send(message);
+        
+        orderRepository.save(order);
     }
 
     @Transactional
@@ -37,5 +31,7 @@ public class FlowOrderService {
     public void cancel(String orderCode) {
         Order order = orderRegistryService.findOrFail(orderCode);
         order.cancel();
+
+        orderRepository.save(order);
     }
 }
