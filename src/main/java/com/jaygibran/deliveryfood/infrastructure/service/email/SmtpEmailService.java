@@ -2,6 +2,7 @@ package com.jaygibran.deliveryfood.infrastructure.service.email;
 
 import com.jaygibran.deliveryfood.core.email.EmailProperties;
 import com.jaygibran.deliveryfood.domain.service.EmailService;
+import com.jaygibran.deliveryfood.domain.util.EmailUtils;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -20,12 +21,12 @@ public class SmtpEmailService implements EmailService {
 
     private final JavaMailSender mailSender;
     private final EmailProperties emailProperties;
-    private final Configuration freemarkerConfig;
-
+    private final EmailUtils emailUtils;
+    
     @Override
     public void send(Message message) {
         try {
-            String body = processTemplate(message);
+            String body = emailUtils.processTemplate(message);
 
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
@@ -37,17 +38,6 @@ public class SmtpEmailService implements EmailService {
             mailSender.send(mimeMessage);
         } catch (Exception e) {
             throw new EmailException("It was not possible sent e-mail", e);
-        }
-    }
-
-    private String processTemplate(Message message) {
-
-        try {
-            Template template = freemarkerConfig.getTemplate(message.getBody());
-
-            return FreeMarkerTemplateUtils.processTemplateIntoString(template, message.getVariables());
-        } catch (Exception e) {
-            throw new EmailException("It was not possible process email template", e);
         }
     }
 }
