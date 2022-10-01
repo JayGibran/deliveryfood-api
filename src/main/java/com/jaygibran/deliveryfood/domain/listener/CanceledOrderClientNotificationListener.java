@@ -10,13 +10,13 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @RequiredArgsConstructor
 @Component
 public class CanceledOrderClientNotificationListener {
-    
+
     private final EmailService emailService;
-    
+
     @TransactionalEventListener
-    public void whenCanceledOrder(OrderCanceledEvent orderCanceledEvent){
+    public void whenCanceledOrder(OrderCanceledEvent orderCanceledEvent) {
         Order order = orderCanceledEvent.getOrder();
-        
+
         EmailService.Message message = EmailService.Message.builder()
                 .subject(String.format("%s - Order canceled", order.getRestaurant().getName()))
                 .body("order-canceled.html")

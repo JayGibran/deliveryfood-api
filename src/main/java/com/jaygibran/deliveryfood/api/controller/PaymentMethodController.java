@@ -8,7 +8,9 @@ import com.jaygibran.deliveryfood.domain.model.PaymentMethod;
 import com.jaygibran.deliveryfood.domain.repository.PaymentMethodRepository;
 import com.jaygibran.deliveryfood.domain.service.PaymentMethodRegistryService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +22,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.time.Duration;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @AllArgsConstructor
 @RestController
@@ -36,13 +40,19 @@ public class PaymentMethodController {
     private final PaymentMethodDTODisassembler paymentMethodDTODisassembler;
 
     @GetMapping
-    public List<PaymentMethodDTO> list() {
-        return paymentMethodDTOAssembler.toCollectionDTO(this.paymentMethodRepository.findAll());
+    public ResponseEntity<List<PaymentMethodDTO>> list() {
+        List<PaymentMethodDTO> paymentMethodDTOS = paymentMethodDTOAssembler.toCollectionDTO(this.paymentMethodRepository.findAll());
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(paymentMethodDTOS);
     }
 
     @GetMapping("/{id}")
-    public PaymentMethodDTO search(@PathVariable Long id) {
-        return paymentMethodDTOAssembler.toDTO(paymentMethodRegistryService.findOrFail(id));
+    public ResponseEntity<PaymentMethodDTO> search(@PathVariable Long id) {
+        PaymentMethodDTO paymentMethodDTO = paymentMethodDTOAssembler.toDTO(paymentMethodRegistryService.findOrFail(id));
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(paymentMethodDTO);
     }
 
     @PostMapping
