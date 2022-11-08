@@ -2,7 +2,9 @@ package com.jaygibran.deliveryfood.core.openapi;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -14,6 +16,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 
 @EnableWebMvc
 @Configuration
+@Import(BeanValidatorPluginsConfiguration.class)
 public class SpringFoxConfig {
 
     @Bean
@@ -22,7 +25,6 @@ public class SpringFoxConfig {
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.jaygibran.deliveryfood.api"))
                 .paths(PathSelectors.any())
-//                .paths(PathSelectors.ant("/restaurants/*"))
                 .build().apiInfo(apiInfo());
     }
 

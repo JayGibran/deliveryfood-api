@@ -17,7 +17,7 @@ import javax.validation.groups.ConvertGroup;
 @Setter
 public class CityInput {
 
-    @ApiModelProperty(example = "Dublin")
+    @ApiModelProperty(example = "Dublin", required = true)
     @NotBlank
     private String name;
 
