@@ -2,6 +2,7 @@ package com.jaygibran.deliveryfood.api.model.input;
 
 import com.jaygibran.deliveryfood.core.validation.Groups;
 import com.jaygibran.deliveryfood.domain.model.State;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +17,7 @@ import javax.validation.groups.ConvertGroup;
 @Setter
 public class CityInput {
 
+    @ApiModelProperty(example = "Dublin")
     @NotBlank
     private String name;
 
