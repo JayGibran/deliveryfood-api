@@ -2,6 +2,7 @@ package com.jaygibran.deliveryfood.api.controller;
 
 import com.jaygibran.deliveryfood.api.assembler.CityDTOAssembler;
 import com.jaygibran.deliveryfood.api.assembler.CityInputDisassembler;
+import com.jaygibran.deliveryfood.api.controller.openapi.CityControllerOpenApi;
 import com.jaygibran.deliveryfood.api.exceptionhandler.Problem;
 import com.jaygibran.deliveryfood.api.model.CityDTO;
 import com.jaygibran.deliveryfood.api.model.input.CityInput;
@@ -32,11 +33,10 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 
-@Api(tags = "Cities")
 @AllArgsConstructor
 @RestController
 @RequestMapping("/cities")
-public class CityController {
+public class CityController implements CityControllerOpenApi {
 
     private CityRepository cityRepository;
 
@@ -46,29 +46,19 @@ public class CityController {
 
     private CityInputDisassembler cityInputDisassembler;
 
-    @ApiOperation("List cities")
     @GetMapping
     public List<CityDTO> list() {
         return cityDTOAssembler.toCollectionDTO(cityRepository.findAll());
     }
 
-    @ApiOperation("Search city by id")
-    @ApiResponses({
-            @ApiResponse(responseCode = "400", description = "Invalid City Id", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Problem.class))),
-            @ApiResponse(responseCode = "404", description = "City does not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Problem.class)))
-    })
     @GetMapping("/{id}")
-    public CityDTO search(@ApiParam(value = "City id", example = "1") @PathVariable Long id) {
+    public CityDTO search(@PathVariable Long id) {
         return cityDTOAssembler.toDTO(cityRegistryService.findOrFail(id));
     }
 
-    @ApiOperation("Registry city")
-    @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "City was registered"),
-    })
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public CityDTO save(@ApiParam(name = "body", value = "Representation of a new city") @RequestBody @Valid CityInput cityInput) {
+    public CityDTO save(@RequestBody @Valid CityInput cityInput) {
         try {
             City city = cityInputDisassembler.toDomain(cityInput);
 
@@ -78,14 +68,9 @@ public class CityController {
         }
     }
 
-    @ApiOperation("Update city by id")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "City was updated"),
-            @ApiResponse(responseCode = "404", description = "City was not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Problem.class))),
-    })
     @PutMapping("/{id}")
-    public CityDTO update(@ApiParam(value = "City id", example = "1") @PathVariable Long id,
-                          @ApiParam(name = "body", value = "Representation of a city with new data") @RequestBody @Valid CityInput cityInput) {
+    public CityDTO update(@PathVariable Long id,
+                          @RequestBody @Valid CityInput cityInput) {
         try {
             City cityToUpdate = this.cityRegistryService.findOrFail(id);
 
