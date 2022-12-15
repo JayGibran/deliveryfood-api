@@ -1,5 +1,7 @@
 package com.jaygibran.deliveryfood.core.openapi;
 
+import com.fasterxml.classmate.TypeResolver;
+import com.jaygibran.deliveryfood.api.exceptionhandler.ApiError;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -28,6 +30,9 @@ public class SpringFoxConfig {
 
     @Bean
     public Docket apiDocket() {
+
+        var typeResolver = new TypeResolver();
+
         return new Docket(DocumentationType.OAS_30)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.jaygibran.deliveryfood.api"))
@@ -38,6 +43,7 @@ public class SpringFoxConfig {
                 .globalResponses(HttpMethod.POST, globalPostPutResponseMessages())
                 .globalResponses(HttpMethod.PUT, globalPostPutResponseMessages())
                 .globalResponses(HttpMethod.DELETE, globalDeleteResponseMessages())
+                .additionalModels(typeResolver.resolve(ApiError.class))
                 .apiInfo(apiInfo());
     }
 
