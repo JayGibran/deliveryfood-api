@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +29,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/cuisines")
+@RequestMapping(path = "/cuisines", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CuisineController {
 
     private CuisineRegistryService cuisineRegistryService;

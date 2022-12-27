@@ -9,6 +9,7 @@ import com.jaygibran.deliveryfood.domain.repository.GroupRepository;
 import com.jaygibran.deliveryfood.domain.service.GroupRegistryService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,7 +25,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/groups")
+@RequestMapping(path = "/groups", produces = MediaType.APPLICATION_JSON_VALUE)
 public class GroupController {
 
     private GroupRegistryService groupRegistryService;
