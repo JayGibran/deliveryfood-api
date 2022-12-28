@@ -2,7 +2,7 @@ package com.jaygibran.deliveryfood.api.controller;
 
 import com.jaygibran.deliveryfood.api.assembler.CityDTOAssembler;
 import com.jaygibran.deliveryfood.api.assembler.CityInputDisassembler;
-import com.jaygibran.deliveryfood.api.controller.openapi.CityControllerOpenApi;
+import com.jaygibran.deliveryfood.api.openapi.controller.CityControllerOpenApi;
 import com.jaygibran.deliveryfood.api.exceptionhandler.Problem;
 import com.jaygibran.deliveryfood.api.model.CityDTO;
 import com.jaygibran.deliveryfood.api.model.input.CityInput;
@@ -11,7 +11,6 @@ import com.jaygibran.deliveryfood.domain.exception.StateNotFoundException;
 import com.jaygibran.deliveryfood.domain.model.City;
 import com.jaygibran.deliveryfood.domain.repository.CityRepository;
 import com.jaygibran.deliveryfood.domain.service.CityRegistryService;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.media.Content;

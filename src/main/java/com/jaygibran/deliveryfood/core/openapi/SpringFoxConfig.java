@@ -2,10 +2,14 @@ package com.jaygibran.deliveryfood.core.openapi;
 
 import com.fasterxml.classmate.TypeResolver;
 import com.jaygibran.deliveryfood.api.exceptionhandler.Problem;
-import com.jaygibran.deliveryfood.core.openapi.model.PageableModelOpenApi;
+import com.jaygibran.deliveryfood.api.model.CuisineDTO;
+import com.jaygibran.deliveryfood.api.openapi.model.CuisinesModelOpenApi;
+import com.jaygibran.deliveryfood.api.openapi.model.PageableModelOpenApi;
+import com.jaygibran.deliveryfood.domain.model.Cuisine;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -17,9 +21,11 @@ import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RepresentationBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseBuilder;
+import springfox.documentation.schema.AlternateTypeRules;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.service.Response;
+import springfox.documentation.service.Tag;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
@@ -49,7 +55,12 @@ public class SpringFoxConfig {
                 .globalResponses(HttpMethod.DELETE, globalDeleteResponseMessages())
                 .additionalModels(typeResolver.resolve(Problem.class))
                 .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
-                .apiInfo(apiInfo());
+                .alternateTypeRules(AlternateTypeRules.newRule(
+                        typeResolver.resolve(Page.class, CuisineDTO.class),
+                        CuisinesModelOpenApi.class))
+                .apiInfo(apiInfo())
+                .tags(new Tag("Cities", "Manage cities"),
+                        new Tag("Groups", "Manage user groups"));
     }
 
     private ApiInfo apiInfo() {

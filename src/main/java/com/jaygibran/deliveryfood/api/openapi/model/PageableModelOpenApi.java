@@ -1,4 +1,4 @@
-package com.jaygibran.deliveryfood.core.openapi.model;
+package com.jaygibran.deliveryfood.api.openapi.model;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

@@ -4,6 +4,7 @@ import com.jaygibran.deliveryfood.api.assembler.GroupDTOAssembler;
 import com.jaygibran.deliveryfood.api.assembler.GroupInputDisassembler;
 import com.jaygibran.deliveryfood.api.model.GroupDTO;
 import com.jaygibran.deliveryfood.api.model.input.GroupInput;
+import com.jaygibran.deliveryfood.api.openapi.controller.GroupControllerOpenApi;
 import com.jaygibran.deliveryfood.domain.model.Group;
 import com.jaygibran.deliveryfood.domain.repository.GroupRepository;
 import com.jaygibran.deliveryfood.domain.service.GroupRegistryService;
@@ -26,7 +27,7 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping(path = "/groups", produces = MediaType.APPLICATION_JSON_VALUE)
-public class GroupController {
+public class GroupController implements GroupControllerOpenApi {
 
     private GroupRegistryService groupRegistryService;
 

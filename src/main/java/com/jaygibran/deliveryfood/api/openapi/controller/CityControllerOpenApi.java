@@ -1,4 +1,4 @@
-package com.jaygibran.deliveryfood.api.controller.openapi;
+package com.jaygibran.deliveryfood.api.openapi.controller;
 
 import com.jaygibran.deliveryfood.api.exceptionhandler.Problem;
 import com.jaygibran.deliveryfood.api.model.CityDTO;
