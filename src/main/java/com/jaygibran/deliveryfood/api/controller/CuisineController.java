@@ -5,6 +5,7 @@ import com.jaygibran.deliveryfood.api.assembler.CuisineDTOAssembler;
 import com.jaygibran.deliveryfood.api.assembler.CuisineInputDisassembler;
 import com.jaygibran.deliveryfood.api.model.CuisineDTO;
 import com.jaygibran.deliveryfood.api.model.input.CuisineInput;
+import com.jaygibran.deliveryfood.api.openapi.controller.CuisineControllerOpenApi;
 import com.jaygibran.deliveryfood.domain.model.Cuisine;
 import com.jaygibran.deliveryfood.domain.repository.CuisineRepository;
 import com.jaygibran.deliveryfood.domain.service.CuisineRegistryService;
@@ -30,7 +31,7 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping(path = "/cuisines", produces = MediaType.APPLICATION_JSON_VALUE)
-public class CuisineController {
+public class CuisineController implements CuisineControllerOpenApi {
 
     private CuisineRegistryService cuisineRegistryService;
 
@@ -46,9 +47,7 @@ public class CuisineController {
 
         List<CuisineDTO> cuisineDTOS = cuisineDTOAssembler.toCollectionDTO(cuisinePages.getContent());
 
-        Page<CuisineDTO> cuisineDTOPage = new PageImpl<>(cuisineDTOS, pageable, cuisinePages.getTotalElements());
-
-        return cuisineDTOPage;
+        return new PageImpl<>(cuisineDTOS, pageable, cuisinePages.getTotalElements());
     }
 
     @GetMapping("/{id}")
