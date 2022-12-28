@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -54,14 +55,16 @@ public class SpringFoxConfig {
                 .globalResponses(HttpMethod.PUT, globalPostPutResponseMessages())
                 .globalResponses(HttpMethod.DELETE, globalDeleteResponseMessages())
                 .additionalModels(typeResolver.resolve(Problem.class))
+                .ignoredParameterTypes(ServletWebRequest.class)
                 .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
                 .alternateTypeRules(AlternateTypeRules.newRule(
                         typeResolver.resolve(Page.class, CuisineDTO.class),
                         CuisinesModelOpenApi.class))
                 .apiInfo(apiInfo())
-                .tags(new Tag("Cities", "Manage cities"),
-                        new Tag("Groups", "Manage user groups"),
-                        new Tag("Cuisines", "Manage cuisines"));
+                .tags(new Tag("Cities", "Management of cities"),
+                        new Tag("Groups", "Management of user groups"),
+                        new Tag("Cuisines", "Management of cuisines"),
+                        new Tag("Payment Methods", "Management of payment methods"));
     }
 
     private ApiInfo apiInfo() {

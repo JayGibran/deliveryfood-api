@@ -22,7 +22,7 @@ public interface CuisineControllerOpenApi {
     @ApiOperation(value = "Search cuisine by id", response = CuisineDTO.class)
     @ApiResponses({
             @ApiResponse(responseCode = "400", description = "Invalid Cuisine Id", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Problem.class))),
-            @ApiResponse(responseCode = "404", description = "Cuisines does not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Problem.class)))
+            @ApiResponse(responseCode = "404", description = "Cuisine does not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Problem.class)))
     })
     CuisineDTO search(@ApiParam(value = "Cuisine id", example = "1") Long id);
 

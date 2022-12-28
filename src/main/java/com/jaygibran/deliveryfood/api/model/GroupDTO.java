@@ -1,5 +1,6 @@
 package com.jaygibran.deliveryfood.api.model;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,6 +8,9 @@ import lombok.Setter;
 @Setter
 public class GroupDTO {
 
+    @ApiModelProperty(example = "1")
     public Long id;
+
+    @ApiModelProperty(example = "Manager")
     public String name;
 }
