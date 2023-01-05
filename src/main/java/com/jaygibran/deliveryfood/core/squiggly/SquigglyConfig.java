@@ -1,12 +1,15 @@
 package com.jaygibran.deliveryfood.core.squiggly;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.bohnman.squiggly.Squiggly;
 import com.github.bohnman.squiggly.web.RequestSquigglyContextProvider;
 import com.github.bohnman.squiggly.web.SquigglyRequestFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.Arrays;
 
 @Configuration
 public class SquigglyConfig {
@@ -15,9 +18,11 @@ public class SquigglyConfig {
     public FilterRegistrationBean<SquigglyRequestFilter> squigglyRequestFilter(ObjectMapper objectMapper) {
         Squiggly.init(objectMapper, new RequestSquigglyContextProvider());
 
+        var urlPatterns = Arrays.asList("/orders/**", "/restaurants/**");
         var filterRegistration = new FilterRegistrationBean<SquigglyRequestFilter>();
         filterRegistration.setFilter(new SquigglyRequestFilter());
         filterRegistration.setOrder(1);
+        filterRegistration.setUrlPatterns(urlPatterns);
 
         return filterRegistration;
     }

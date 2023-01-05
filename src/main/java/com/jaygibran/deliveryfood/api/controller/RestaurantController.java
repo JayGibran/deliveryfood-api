@@ -12,6 +12,7 @@ import com.jaygibran.deliveryfood.domain.exception.CuisineNotFoundException;
 import com.jaygibran.deliveryfood.domain.model.Restaurant;
 import com.jaygibran.deliveryfood.domain.repository.RestaurantRepository;
 import com.jaygibran.deliveryfood.domain.service.RestaurantRegistryService;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.json.MappingJacksonValue;
@@ -43,12 +44,14 @@ public class RestaurantController {
 
     private RestaurantInputDisassembler restaurantInputDisassembler;
 
+    @ApiOperation(value = "List restaurants")
     @JsonView(RestaurantView.Summary.class)
     @GetMapping
     public List<RestaurantDTO> list() {
         return restaurantDTOAssembler.toCollectionDTO(this.restaurantRepository.findAll());
     }
 
+    @ApiOperation(value = "List restaurants", hidden = true)
     @JsonView(RestaurantView.OnlyNames.class)
     @GetMapping(params = "projection=only-names")
     public List<RestaurantDTO> listOnlyNames() {

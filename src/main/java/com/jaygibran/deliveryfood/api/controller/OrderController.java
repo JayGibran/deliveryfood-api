@@ -6,6 +6,7 @@ import com.jaygibran.deliveryfood.api.model.OrderDTO;
 import com.jaygibran.deliveryfood.api.model.OrderSummarizedDTO;
 import com.jaygibran.deliveryfood.api.model.input.OrderInput;
 import com.jaygibran.deliveryfood.api.model.input.OrderInputDisassembler;
+import com.jaygibran.deliveryfood.api.openapi.controller.OrderControllerOpenApi;
 import com.jaygibran.deliveryfood.core.data.PageableTranslator;
 import com.jaygibran.deliveryfood.domain.exception.BusinessException;
 import com.jaygibran.deliveryfood.domain.exception.CityNotFoundException;
@@ -18,11 +19,14 @@ import com.jaygibran.deliveryfood.domain.repository.OrderRepository;
 import com.jaygibran.deliveryfood.domain.filter.OrderFilter;
 import com.jaygibran.deliveryfood.domain.service.OrderRegistryService;
 import com.jaygibran.deliveryfood.infrastructure.repository.spec.OrderSpecs;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,8 +41,8 @@ import java.util.Map;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/orders")
-public class OrderController {
+@RequestMapping(path = "/orders", produces = MediaType.APPLICATION_JSON_VALUE)
+public class OrderController implements OrderControllerOpenApi {
 
     private final OrderRepository orderRepository;
     private final OrderRegistryService orderRegistryService;
@@ -54,9 +58,7 @@ public class OrderController {
 
         List<OrderSummarizedDTO> orderSummarizedDTOS = orderSummarizedDTOAssembler.toCollectionDTO(orderPages.getContent());
 
-        Page<OrderSummarizedDTO> cuisineDTOPage = new PageImpl<>(orderSummarizedDTOS, pageable, orderPages.getTotalElements());
-
-        return cuisineDTOPage;
+        return new PageImpl<>(orderSummarizedDTOS, pageable, orderPages.getTotalElements());
     }
 
     @GetMapping("/{orderCode}")

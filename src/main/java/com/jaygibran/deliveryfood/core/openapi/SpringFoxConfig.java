@@ -1,11 +1,13 @@
 package com.jaygibran.deliveryfood.core.openapi;
 
 import com.fasterxml.classmate.TypeResolver;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.jaygibran.deliveryfood.api.exceptionhandler.Problem;
 import com.jaygibran.deliveryfood.api.model.CuisineDTO;
+import com.jaygibran.deliveryfood.api.model.OrderSummarizedDTO;
 import com.jaygibran.deliveryfood.api.openapi.model.CuisinesModelOpenApi;
+import com.jaygibran.deliveryfood.api.openapi.model.OrderSummarizedOpenApi;
 import com.jaygibran.deliveryfood.api.openapi.model.PageableModelOpenApi;
-import com.jaygibran.deliveryfood.domain.model.Cuisine;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -28,6 +30,7 @@ import springfox.documentation.service.Contact;
 import springfox.documentation.service.Response;
 import springfox.documentation.service.Tag;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.json.JacksonModuleRegistrar;
 import springfox.documentation.spring.web.plugins.Docket;
 
 import java.util.Arrays;
@@ -54,17 +57,27 @@ public class SpringFoxConfig {
                 .globalResponses(HttpMethod.POST, globalPostPutResponseMessages())
                 .globalResponses(HttpMethod.PUT, globalPostPutResponseMessages())
                 .globalResponses(HttpMethod.DELETE, globalDeleteResponseMessages())
+//                .globalRequestParameters(Collections.singletonList(new RequestParameterBuilder()
+//                        .name("fields")
+//                        .description("Property name to filter on response, separated by comma")
+//                        .in(ParameterType.QUERY)
+//                        .query(q -> q.model(m -> m.scalarModel(ScalarType.STRING)))
+//                        .build()))
                 .additionalModels(typeResolver.resolve(Problem.class))
                 .ignoredParameterTypes(ServletWebRequest.class)
                 .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
                 .alternateTypeRules(AlternateTypeRules.newRule(
                         typeResolver.resolve(Page.class, CuisineDTO.class),
                         CuisinesModelOpenApi.class))
+                .alternateTypeRules(AlternateTypeRules.newRule(
+                        typeResolver.resolve(Page.class, OrderSummarizedDTO.class),
+                        OrderSummarizedOpenApi.class))
                 .apiInfo(apiInfo())
                 .tags(new Tag("Cities", "Management of cities"),
                         new Tag("Groups", "Management of user groups"),
                         new Tag("Cuisines", "Management of cuisines"),
-                        new Tag("Payment Methods", "Management of payment methods"));
+                        new Tag("Payment Methods", "Management of payment methods"),
+                        new Tag("Orders", "Management of orders"));
     }
 
     private ApiInfo apiInfo() {
@@ -136,5 +149,10 @@ public class SpringFoxConfig {
                         .description("Internal Server Error")
                         .build()
         );
+    }
+
+    @Bean
+    public JacksonModuleRegistrar springFoxJacksonConfig() {
+        return objectMapper -> objectMapper.registerModule(new JavaTimeModule());
     }
 }
