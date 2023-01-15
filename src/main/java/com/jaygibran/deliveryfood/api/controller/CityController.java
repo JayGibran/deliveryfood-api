@@ -1,5 +1,6 @@
 package com.jaygibran.deliveryfood.api.controller;
 
+import com.jaygibran.deliveryfood.api.ResourceUriHelper;
 import com.jaygibran.deliveryfood.api.assembler.CityDTOAssembler;
 import com.jaygibran.deliveryfood.api.assembler.CityInputDisassembler;
 import com.jaygibran.deliveryfood.api.openapi.controller.CityControllerOpenApi;
@@ -18,6 +19,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,8 +32,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 
 @AllArgsConstructor
@@ -62,7 +70,11 @@ public class CityController implements CityControllerOpenApi {
         try {
             City city = cityInputDisassembler.toDomain(cityInput);
 
-            return cityDTOAssembler.toDTO(cityRegistryService.save(city));
+            CityDTO cityDTO = cityDTOAssembler.toDTO(cityRegistryService.save(city));
+
+            ResourceUriHelper.addUriInResponseHeader(cityDTO.getId());
+            
+            return cityDTO;
         } catch (StateNotFoundException e) {
             throw new BusinessException(e.getMessage(), e);
         }
