@@ -6,12 +6,15 @@ import com.jaygibran.deliveryfood.api.assembler.RestaurantInputDisassembler;
 import com.jaygibran.deliveryfood.api.model.RestaurantDTO;
 import com.jaygibran.deliveryfood.api.model.input.RestaurantInput;
 import com.jaygibran.deliveryfood.api.model.view.RestaurantView;
+import com.jaygibran.deliveryfood.api.openapi.model.RestaurantBasicModelOpenApi;
 import com.jaygibran.deliveryfood.domain.exception.BusinessException;
 import com.jaygibran.deliveryfood.domain.exception.CityNotFoundException;
 import com.jaygibran.deliveryfood.domain.exception.CuisineNotFoundException;
 import com.jaygibran.deliveryfood.domain.model.Restaurant;
 import com.jaygibran.deliveryfood.domain.repository.RestaurantRepository;
 import com.jaygibran.deliveryfood.domain.service.RestaurantRegistryService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -44,7 +47,9 @@ public class RestaurantController {
 
     private RestaurantInputDisassembler restaurantInputDisassembler;
 
-    @ApiOperation(value = "List restaurants")
+    @ApiOperation(value = "List restaurants", response = RestaurantBasicModelOpenApi.class)
+    @ApiImplicitParams(@ApiImplicitParam(name = "projection", paramType = "query", type = "string",
+            value = "Orders projection name", allowableValues = "only-names"))
     @JsonView(RestaurantView.Summary.class)
     @GetMapping
     public List<RestaurantDTO> list() {
