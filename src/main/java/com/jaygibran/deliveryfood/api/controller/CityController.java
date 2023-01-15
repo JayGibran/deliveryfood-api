@@ -20,6 +20,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -41,6 +43,8 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+
 @AllArgsConstructor
 @RestController
 @RequestMapping(path = "/cities", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -61,7 +65,20 @@ public class CityController implements CityControllerOpenApi {
 
     @GetMapping("/{id}")
     public CityDTO search(@PathVariable Long id) {
-        return cityDTOAssembler.toDTO(cityRegistryService.findOrFail(id));
+        CityDTO cityDTO = cityDTOAssembler.toDTO(cityRegistryService.findOrFail(id));
+
+        cityDTO.add(linkTo(CityController.class)
+                .slash(cityDTO.getId())
+                .withSelfRel());
+
+        cityDTO.add(linkTo(CityController.class)
+                .withRel("/cities"));
+
+        cityDTO.add(linkTo(StateController.class)
+                .slash(cityDTO.getState().getId())
+                .withSelfRel());
+
+        return cityDTO;
     }
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -73,7 +90,7 @@ public class CityController implements CityControllerOpenApi {
             CityDTO cityDTO = cityDTOAssembler.toDTO(cityRegistryService.save(city));
 
             ResourceUriHelper.addUriInResponseHeader(cityDTO.getId());
-            
+
             return cityDTO;
         } catch (StateNotFoundException e) {
             throw new BusinessException(e.getMessage(), e);

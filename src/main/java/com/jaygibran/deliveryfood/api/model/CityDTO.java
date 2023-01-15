@@ -5,6 +5,7 @@ import com.jaygibran.deliveryfood.domain.model.State;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
@@ -16,7 +17,7 @@ import javax.validation.groups.ConvertGroup;
 
 @Getter
 @Setter
-public class CityDTO {
+public class CityDTO extends RepresentationModel<CityDTO> {
 
     @ApiModelProperty(example = "1")
     private Long id;
