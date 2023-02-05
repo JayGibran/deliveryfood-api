@@ -1,27 +1,48 @@
 package com.jaygibran.deliveryfood.api.assembler;
 
+import com.jaygibran.deliveryfood.api.controller.CityController;
+import com.jaygibran.deliveryfood.api.controller.StateController;
 import com.jaygibran.deliveryfood.api.model.CityDTO;
 import com.jaygibran.deliveryfood.domain.model.City;
-import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @Component
-public class CityDTOAssembler {
+public class CityDTOAssembler extends RepresentationModelAssemblerSupport<City, CityDTO> {
 
     private final ModelMapper modelMapper;
 
-    public CityDTO toDTO(City city) {
-        return modelMapper.map(city, CityDTO.class);
+    public CityDTOAssembler(ModelMapper modelMapper) {
+        super(CityController.class, CityDTO.class);
+        this.modelMapper = modelMapper;
+    }
+    
+    @Override
+    public CityDTO toModel(City city) {
+        CityDTO cityDTO = modelMapper.map(city, CityDTO.class);
+        
+        cityDTO.add(linkTo(methodOn(CityController.class).search(cityDTO.getId()))
+                .withSelfRel());
+        
+        cityDTO.add(linkTo(methodOn(CityController.class).list())
+                .withRel("cities"));
+        
+        cityDTO.add(linkTo(methodOn(StateController.class).search(cityDTO.getState().getId()))
+                .withSelfRel());
+
+        return cityDTO;
     }
 
-    public List<CityDTO> toCollectionDTO(List<City> cities) {
-        return cities.stream()
-                .map(city -> toDTO(city))
-                .collect(Collectors.toList());
+    @Override
+    public CollectionModel<CityDTO> toCollectionModel(Iterable<? extends City> entities) {
+        return super.toCollectionModel(entities).add(linkTo(CityController.class).withSelfRel());
     }
 }

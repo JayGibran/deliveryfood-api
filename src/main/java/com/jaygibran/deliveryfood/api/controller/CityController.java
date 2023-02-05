@@ -19,11 +19,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
-import org.springframework.core.io.Resource;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,13 +31,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -62,51 +53,12 @@ public class CityController implements CityControllerOpenApi {
 
     @GetMapping
     public CollectionModel<CityDTO> list() {
-        List<CityDTO> citiesDTO = cityDTOAssembler.toCollectionDTO(cityRepository.findAll());
-        
-        citiesDTO.forEach(cityDTO -> {
-            cityDTO.add(linkTo(methodOn(CityController.class).search(cityDTO.getId()))
-                    .withSelfRel());
-            
-            cityDTO.add(linkTo(methodOn(CityController.class).list())
-                    .withRel("cities"));
-
-            cityDTO.add(linkTo(methodOn(StateController.class).search(cityDTO.getState().getId()))
-                    .withSelfRel());
-        });
-        
-        CollectionModel<CityDTO> citiesCollectionModel = CollectionModel.of(citiesDTO);
-        
-        citiesCollectionModel.add(linkTo(CityController.class).withSelfRel());
-        
-        return citiesCollectionModel;
+        return cityDTOAssembler.toCollectionModel(cityRepository.findAll());
     }
 
     @GetMapping("/{id}")
     public CityDTO search(@PathVariable Long id) {
-        CityDTO cityDTO = cityDTOAssembler.toDTO(cityRegistryService.findOrFail(id));
-        
-        cityDTO.add(linkTo(methodOn(CityController.class).search(cityDTO.getId()))
-                .withSelfRel());
-        
-//        cityDTO.add(linkTo(CityController.class)
-//                .slash(cityDTO.getId())
-//                .withSelfRel());
-
-        cityDTO.add(linkTo(methodOn(CityController.class).list())
-                .withRel("cities"));
-
-//        cityDTO.add(linkTo(CityController.class)
-//                .withRel("/cities"));
-
-        cityDTO.add(linkTo(methodOn(StateController.class).search(cityDTO.getState().getId()))
-                .withSelfRel());
-
-//        cityDTO.add(linkTo(StateController.class)
-//                .slash(cityDTO.getState().getId())
-//                .withSelfRel());
-
-        return cityDTO;
+        return cityDTOAssembler.toModel(cityRegistryService.findOrFail(id));
     }
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -115,7 +67,7 @@ public class CityController implements CityControllerOpenApi {
         try {
             City city = cityInputDisassembler.toDomain(cityInput);
 
-            CityDTO cityDTO = cityDTOAssembler.toDTO(cityRegistryService.save(city));
+            CityDTO cityDTO = cityDTOAssembler.toModel(cityRegistryService.save(city));
 
             ResourceUriHelper.addUriInResponseHeader(cityDTO.getId());
 
@@ -133,7 +85,7 @@ public class CityController implements CityControllerOpenApi {
 
             cityInputDisassembler.copyToDomainObject(cityInput, cityToUpdate);
 
-            return cityDTOAssembler.toDTO(this.cityRegistryService.save(cityToUpdate));
+            return cityDTOAssembler.toModel(this.cityRegistryService.save(cityToUpdate));
         } catch (StateNotFoundException e) {
             throw new BusinessException(e.getMessage());
         }
