@@ -44,6 +44,7 @@ import java.net.URI;
 import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @AllArgsConstructor
 @RestController
@@ -66,17 +67,26 @@ public class CityController implements CityControllerOpenApi {
     @GetMapping("/{id}")
     public CityDTO search(@PathVariable Long id) {
         CityDTO cityDTO = cityDTOAssembler.toDTO(cityRegistryService.findOrFail(id));
+        
+        cityDTO.add(linkTo(methodOn(CityController.class).search(cityDTO.getId()))
+                .withSelfRel());
+        
+//        cityDTO.add(linkTo(CityController.class)
+//                .slash(cityDTO.getId())
+//                .withSelfRel());
 
-        cityDTO.add(linkTo(CityController.class)
-                .slash(cityDTO.getId())
+        cityDTO.add(linkTo(methodOn(CityController.class).list())
+                .withRel("cities"));
+
+//        cityDTO.add(linkTo(CityController.class)
+//                .withRel("/cities"));
+
+        cityDTO.add(linkTo(methodOn(StateController.class).search(cityDTO.getState().getId()))
                 .withSelfRel());
 
-        cityDTO.add(linkTo(CityController.class)
-                .withRel("/cities"));
-
-        cityDTO.add(linkTo(StateController.class)
-                .slash(cityDTO.getState().getId())
-                .withSelfRel());
+//        cityDTO.add(linkTo(StateController.class)
+//                .slash(cityDTO.getState().getId())
+//                .withSelfRel());
 
         return cityDTO;
     }

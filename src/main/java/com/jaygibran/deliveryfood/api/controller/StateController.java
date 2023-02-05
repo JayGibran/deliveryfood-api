@@ -13,6 +13,7 @@ import com.jaygibran.deliveryfood.domain.service.StateRegistryService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +31,7 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/states")
+@RequestMapping(path = "/states", produces = MediaType.APPLICATION_JSON_VALUE)
 public class StateController {
 
     private StateRepository stateRepository;
