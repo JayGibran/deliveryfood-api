@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @AllArgsConstructor
 @RestController
 @RequestMapping("/restaurants/{restaurantId}/responsible")
@@ -29,7 +32,9 @@ public class RestaurantUserController {
     @GetMapping
     public CollectionModel<UserDTO> list(@PathVariable Long restaurantId) {
         Restaurant restaurant = restaurantRegistryService.findOrFail(restaurantId);
-        return userDTOAssembler.toCollectionModel(restaurant.getUsers());
+        return userDTOAssembler.toCollectionModel(restaurant.getUsers())
+                .removeLinks()
+                .add(linkTo(methodOn(RestaurantUserController.class).list(restaurantId)).withSelfRel());
     }
 
     @PutMapping("/{userId}")

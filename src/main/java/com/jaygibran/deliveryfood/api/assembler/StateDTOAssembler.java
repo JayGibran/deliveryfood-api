@@ -1,28 +1,40 @@
 package com.jaygibran.deliveryfood.api.assembler;
 
-import com.jaygibran.deliveryfood.api.model.RestaurantDTO;
+import com.jaygibran.deliveryfood.api.controller.StateController;
 import com.jaygibran.deliveryfood.api.model.StateDTO;
-import com.jaygibran.deliveryfood.domain.model.Restaurant;
 import com.jaygibran.deliveryfood.domain.model.State;
-import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.server.core.Relation;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
-@AllArgsConstructor
+@Relation(collectionRelation = "states")
 @Component
-public class StateDTOAssembler {
+public class StateDTOAssembler  extends RepresentationModelAssemblerSupport<State, StateDTO> {
 
     private final ModelMapper modelMapper;
 
-    public StateDTO toDTO(State state) {
-        return modelMapper.map(state, StateDTO.class);
+    public StateDTOAssembler(ModelMapper modelMapper) {
+        super(StateController.class, StateDTO.class);
+        this.modelMapper = modelMapper;
     }
+    
+    @Override
+    public StateDTO toModel(State state) {
+        StateDTO stateDTO = createModelWithId(state.getId(), state);
+        
+        modelMapper.map(state, stateDTO);
 
-    public List<StateDTO> toCollectionDTO(List<State> states) {
-        return states.stream().map(state -> toDTO(state))
-                .collect(Collectors.toList());
+        stateDTO.add(linkTo(StateController.class).withRel("states"));
+        
+        return stateDTO;
+    }
+    
+    @Override
+    public CollectionModel<StateDTO> toCollectionModel(Iterable<? extends State> states) {
+        return super.toCollectionModel(states).add(linkTo(StateController.class).withSelfRel());
     }
 }
