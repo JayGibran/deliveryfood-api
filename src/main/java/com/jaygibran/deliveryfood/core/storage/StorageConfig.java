@@ -30,6 +30,11 @@ public class StorageConfig {
                 .withRegion(storageProperties.getS3().getRegion())
                 .build();
     }
+    
+    @Bean
+    public AmazonS3 localAmazonS3(){
+        return AmazonS3ClientBuilder.standard().build();
+    }
 
     @Bean
     public PhotoStorageService photoStorageService(AmazonS3 amazonS3) {
