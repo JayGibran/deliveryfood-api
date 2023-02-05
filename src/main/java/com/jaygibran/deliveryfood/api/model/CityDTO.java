@@ -1,20 +1,12 @@
 package com.jaygibran.deliveryfood.api.model;
 
-import com.jaygibran.deliveryfood.core.validation.Groups;
-import com.jaygibran.deliveryfood.domain.model.State;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.groups.ConvertGroup;
-
+@Relation(collectionRelation = "cities")
 @Getter
 @Setter
 public class CityDTO extends RepresentationModel<CityDTO> {

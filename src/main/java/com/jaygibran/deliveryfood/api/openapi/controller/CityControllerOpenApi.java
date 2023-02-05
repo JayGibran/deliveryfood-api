@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.hateoas.CollectionModel;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.List;
 public interface CityControllerOpenApi {
 
     @ApiOperation("List cities")
-    List<CityDTO> list();
+    CollectionModel<CityDTO> list();
 
     @ApiOperation(value = "Search city by id", response = City.class)
     @ApiResponses({

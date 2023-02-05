@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpHeaders;
@@ -60,8 +61,25 @@ public class CityController implements CityControllerOpenApi {
     private CityInputDisassembler cityInputDisassembler;
 
     @GetMapping
-    public List<CityDTO> list() {
-        return cityDTOAssembler.toCollectionDTO(cityRepository.findAll());
+    public CollectionModel<CityDTO> list() {
+        List<CityDTO> citiesDTO = cityDTOAssembler.toCollectionDTO(cityRepository.findAll());
+        
+        citiesDTO.forEach(cityDTO -> {
+            cityDTO.add(linkTo(methodOn(CityController.class).search(cityDTO.getId()))
+                    .withSelfRel());
+            
+            cityDTO.add(linkTo(methodOn(CityController.class).list())
+                    .withRel("cities"));
+
+            cityDTO.add(linkTo(methodOn(StateController.class).search(cityDTO.getState().getId()))
+                    .withSelfRel());
+        });
+        
+        CollectionModel<CityDTO> citiesCollectionModel = CollectionModel.of(citiesDTO);
+        
+        citiesCollectionModel.add(linkTo(CityController.class).withSelfRel());
+        
+        return citiesCollectionModel;
     }
 
     @GetMapping("/{id}")
