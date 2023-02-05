@@ -1,11 +1,11 @@
 package com.jaygibran.deliveryfood.api.controller;
 
 import com.jaygibran.deliveryfood.api.assembler.UserDTOAssembler;
-import com.jaygibran.deliveryfood.api.model.PaymentMethodDTO;
 import com.jaygibran.deliveryfood.api.model.UserDTO;
 import com.jaygibran.deliveryfood.domain.model.Restaurant;
 import com.jaygibran.deliveryfood.domain.service.RestaurantRegistryService;
 import lombok.AllArgsConstructor;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,9 +27,9 @@ public class RestaurantUserController {
     private UserDTOAssembler userDTOAssembler;
 
     @GetMapping
-    public List<UserDTO> list(@PathVariable Long restaurantId) {
+    public CollectionModel<UserDTO> list(@PathVariable Long restaurantId) {
         Restaurant restaurant = restaurantRegistryService.findOrFail(restaurantId);
-        return userDTOAssembler.toCollectionDTO(restaurant.getUsers());
+        return userDTOAssembler.toCollectionModel(restaurant.getUsers());
     }
 
     @PutMapping("/{userId}")

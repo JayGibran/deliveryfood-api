@@ -10,7 +10,9 @@ import com.jaygibran.deliveryfood.domain.model.User;
 import com.jaygibran.deliveryfood.domain.repository.UserRepository;
 import com.jaygibran.deliveryfood.domain.service.UserRegistryService;
 import lombok.AllArgsConstructor;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +28,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/users")
+@RequestMapping(path = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
 
     private final UserRepository userRepository;
@@ -38,13 +40,13 @@ public class UserController {
     private final UserInputDisassembler userInputDisassembler;
 
     @GetMapping
-    public List<UserDTO> list() {
-        return userDTOAssembler.toCollectionDTO(this.userRepository.findAll());
+    public CollectionModel<UserDTO> list() {
+        return userDTOAssembler.toCollectionModel(this.userRepository.findAll());
     }
 
     @GetMapping("/{id}")
     public UserDTO search(@PathVariable Long id) {
-        return userDTOAssembler.toDTO(this.userRegistryService.findOrFail(id));
+        return userDTOAssembler.toModel(this.userRegistryService.findOrFail(id));
     }
 
     @PostMapping
@@ -53,7 +55,7 @@ public class UserController {
 
         User user = userInputDisassembler.toDomain(userInput);
 
-        return userDTOAssembler.toDTO(userRegistryService.save(user));
+        return userDTOAssembler.toModel(userRegistryService.save(user));
     }
 
     @PutMapping("/{id}")
@@ -62,7 +64,7 @@ public class UserController {
 
         userInputDisassembler.copyToDomainObject(userUpdateInput, userToUpdate);
 
-        return userDTOAssembler.toDTO(userRegistryService.save(userToUpdate));
+        return userDTOAssembler.toModel(userRegistryService.save(userToUpdate));
     }
 
     @PutMapping("/{id}/password")
