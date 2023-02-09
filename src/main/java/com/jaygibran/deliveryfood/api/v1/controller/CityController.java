@@ -7,6 +7,7 @@ import com.jaygibran.deliveryfood.api.v1.assembler.CityInputDisassembler;
 import com.jaygibran.deliveryfood.api.v1.model.CityDTO;
 import com.jaygibran.deliveryfood.api.v1.model.input.CityInput;
 import com.jaygibran.deliveryfood.api.v1.openapi.controller.CityControllerOpenApi;
+import com.jaygibran.deliveryfood.core.web.DeliveryFoodMediaTypes;
 import com.jaygibran.deliveryfood.domain.exception.BusinessException;
 import com.jaygibran.deliveryfood.domain.exception.StateNotFoundException;
 import com.jaygibran.deliveryfood.domain.model.City;
@@ -46,18 +47,18 @@ public class CityController implements CityControllerOpenApi {
 
     private CityInputDisassembler cityInputDisassembler;
 
-    @GetMapping(produces = "application/vnd.deliveryfood.v1+json")
+    @GetMapping(produces = DeliveryFoodMediaTypes.V1_APPLICATION_JSON_VALUE)
     public CollectionModel<CityDTO> list() {
         return cityDTOAssembler.toCollectionModel(cityRepository.findAll());
     }
 
-    @GetMapping(path = "/{id}", produces = "application/vnd.deliveryfood.v1+json")
+    @GetMapping(path = "/{id}", produces = DeliveryFoodMediaTypes.V1_APPLICATION_JSON_VALUE)
     public CityDTO search(@PathVariable Long id) {
         return cityDTOAssembler.toModel(cityRegistryService.findOrFail(id));
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping(produces = "application/vnd.deliveryfood.v1+json")
+    @PostMapping(produces = DeliveryFoodMediaTypes.V1_APPLICATION_JSON_VALUE)
     public CityDTO save(@RequestBody @Valid CityInput cityInput) {
         try {
             City city = cityInputDisassembler.toDomain(cityInput);
@@ -72,7 +73,7 @@ public class CityController implements CityControllerOpenApi {
         }
     }
 
-    @PutMapping(path = "/{id}", produces = "application/vnd.deliveryfood.v1+json")
+    @PutMapping(path = "/{id}", produces = DeliveryFoodMediaTypes.V1_APPLICATION_JSON_VALUE)
     public CityDTO update(@PathVariable Long id,
                           @RequestBody @Valid CityInput cityInput) {
         try {

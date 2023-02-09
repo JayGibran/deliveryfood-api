@@ -11,6 +11,7 @@ public class DeliveryFoodHalConfiguration {
     public HalConfiguration globalPolicy() {
         return new HalConfiguration()
                 .withMediaType(MediaType.APPLICATION_JSON)
-                .withMediaType(DeliveryFoodMediaTypes.V1_APPLICATION_JSON);
+                .withMediaType(DeliveryFoodMediaTypes.V1_APPLICATION_JSON)
+                .withMediaType(DeliveryFoodMediaTypes.V2_APPLICATION_JSON);
     }
 }
