@@ -39,7 +39,7 @@ import java.util.Map;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping(path = "/orders", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/v1/orders", produces = MediaType.APPLICATION_JSON_VALUE)
 public class OrderController implements OrderControllerOpenApi {
 
     private final OrderRepository orderRepository;
@@ -72,7 +72,8 @@ public class OrderController implements OrderControllerOpenApi {
             order.setUser(User.builder().id(1L).build());
 
             return orderDTOAssembler.toDTO(orderRegistryService.placeOrder(order));
-        } catch (RestaurantNotFoundException | PaymentMethodNotFoundException | CityNotFoundException | ProductNotFoundException e) {
+        } catch (RestaurantNotFoundException | PaymentMethodNotFoundException | CityNotFoundException |
+                 ProductNotFoundException e) {
             throw new BusinessException(e.getMessage());
         }
     }

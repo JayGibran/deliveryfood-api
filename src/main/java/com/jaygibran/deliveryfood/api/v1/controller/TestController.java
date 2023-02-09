@@ -5,6 +5,7 @@ import com.jaygibran.deliveryfood.domain.model.Restaurant;
 import com.jaygibran.deliveryfood.domain.repository.CuisineRepository;
 import com.jaygibran.deliveryfood.domain.repository.RestaurantRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +16,7 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/test")
+@RequestMapping(path = "/v1/test", produces = MediaType.APPLICATION_JSON_VALUE)
 public class TestController {
 
     private final RestaurantRepository restaurantRepository;

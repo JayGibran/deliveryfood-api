@@ -26,7 +26,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping(path = "/groups", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/v1/groups", produces = MediaType.APPLICATION_JSON_VALUE)
 public class GroupController implements GroupControllerOpenApi {
 
     private GroupRegistryService groupRegistryService;

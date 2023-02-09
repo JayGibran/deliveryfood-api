@@ -25,7 +25,7 @@ import javax.validation.Valid;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping(path = "/states", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/v1/states", produces = MediaType.APPLICATION_JSON_VALUE)
 public class StateController {
 
     private StateRepository stateRepository;

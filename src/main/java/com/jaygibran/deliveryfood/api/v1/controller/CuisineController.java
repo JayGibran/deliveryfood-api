@@ -30,7 +30,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping(path = "/cuisines", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/v1/cuisines", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CuisineController implements CuisineControllerOpenApi {
 
     private CuisineRegistryService cuisineRegistryService;

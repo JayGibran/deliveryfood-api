@@ -19,7 +19,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping(path = "/users/{userId}/groups", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/v1/users/{userId}/groups", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserGroupController {
 
     private UserRegistryService userRegistryService;

@@ -17,7 +17,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping(path = "/statistics")
+@RequestMapping(path = "/v1/statistics", produces = MediaType.APPLICATION_JSON_VALUE)
 public class StatisticController {
 
     private final SaleQueryService saleQueryService;

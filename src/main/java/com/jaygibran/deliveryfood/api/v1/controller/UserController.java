@@ -27,7 +27,7 @@ import javax.validation.Valid;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping(path = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/v1/users", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
 
     private final UserRepository userRepository;

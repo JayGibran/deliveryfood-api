@@ -7,6 +7,7 @@ import com.jaygibran.deliveryfood.domain.service.RestaurantRegistryService;
 import lombok.AllArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +21,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/restaurants/{restaurantId}/responsible")
+@RequestMapping(path = "/v1/restaurants/{restaurantId}/responsible", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestaurantUserController {
 
     private RestaurantRegistryService restaurantRegistryService;

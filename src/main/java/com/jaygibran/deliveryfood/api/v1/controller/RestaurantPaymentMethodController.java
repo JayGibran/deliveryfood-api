@@ -6,6 +6,7 @@ import com.jaygibran.deliveryfood.domain.model.Restaurant;
 import com.jaygibran.deliveryfood.domain.service.RestaurantRegistryService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +19,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/restaurants/{restaurantId}/payment-methods")
+@RequestMapping(path = "/v1/restaurants/{restaurantId}/payment-methods", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestaurantPaymentMethodController {
 
     private RestaurantRegistryService restaurantRegistryService;

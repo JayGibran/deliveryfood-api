@@ -6,6 +6,7 @@ import com.jaygibran.deliveryfood.domain.model.Group;
 import com.jaygibran.deliveryfood.domain.service.GroupRegistryService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +19,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/groups/{groupId}/permissions")
+@RequestMapping(path = "/v1/groups/{groupId}/permissions", produces = MediaType.APPLICATION_JSON_VALUE)
 public class GroupPermissionController {
 
     private GroupRegistryService groupRegistryService;

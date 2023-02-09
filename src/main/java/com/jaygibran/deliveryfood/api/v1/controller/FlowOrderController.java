@@ -3,6 +3,7 @@ package com.jaygibran.deliveryfood.api.v1.controller;
 import com.jaygibran.deliveryfood.domain.service.FlowOrderService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/orders/{orderCode}")
+@RequestMapping(path = "/v1/orders/{orderCode}", produces = MediaType.APPLICATION_JSON_VALUE)
 public class FlowOrderController {
 
     private final FlowOrderService flowOrderService;

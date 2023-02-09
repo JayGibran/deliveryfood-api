@@ -33,7 +33,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/restaurants/{restaurantId}/products/{productId}/photo")
+@RequestMapping(path = "/v1/restaurants/{restaurantId}/products/{productId}/photo")
 public class RestaurantProductPhotoController {
 
     private final CatalogProductPhotoService catalogProductPhotoService;
@@ -63,8 +63,7 @@ public class RestaurantProductPhotoController {
     }
 
     @GetMapping
-    public ResponseEntity<?> produces(@PathVariable Long restaurantId, @PathVariable
-            Long productId, @RequestHeader(name = "accept") String acceptHeader) throws HttpMediaTypeNotAcceptableException {
+    public ResponseEntity<?> produces(@PathVariable Long restaurantId, @PathVariable Long productId, @RequestHeader(name = "accept") String acceptHeader) throws HttpMediaTypeNotAcceptableException {
         try {
 
             ProductPhoto productPhoto = catalogProductPhotoService.findOrFail(restaurantId, productId);
