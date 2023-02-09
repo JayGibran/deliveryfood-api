@@ -5,7 +5,6 @@ import com.jaygibran.deliveryfood.api.v2.assembler.CityDTOAssemblerV2;
 import com.jaygibran.deliveryfood.api.v2.assembler.CityInputDisassemblerV2;
 import com.jaygibran.deliveryfood.api.v2.model.CityDTOV2;
 import com.jaygibran.deliveryfood.api.v2.model.input.CityInputV2;
-import com.jaygibran.deliveryfood.core.web.DeliveryFoodMediaTypes;
 import com.jaygibran.deliveryfood.domain.exception.BusinessException;
 import com.jaygibran.deliveryfood.domain.exception.StateNotFoundException;
 import com.jaygibran.deliveryfood.domain.model.City;
@@ -14,6 +13,7 @@ import com.jaygibran.deliveryfood.domain.service.CityRegistryService;
 import lombok.AllArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +27,7 @@ import javax.validation.Valid;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping(path = "/cities")
+@RequestMapping(path = "/v2/cities", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CityControllerV2 {
 
     private CityRepository cityRepository;
@@ -38,18 +38,18 @@ public class CityControllerV2 {
 
     private CityInputDisassemblerV2 cityInputDisassembler;
 
-    @GetMapping(produces = DeliveryFoodMediaTypes.V2_APPLICATION_JSON_VALUE)
+    @GetMapping
     public CollectionModel<CityDTOV2> list() {
         return cityDTOAssembler.toCollectionModel(cityRepository.findAll());
     }
 
-    @GetMapping(path = "/{id}", produces = DeliveryFoodMediaTypes.V2_APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/{id}")
     public CityDTOV2 search(@PathVariable Long id) {
         return cityDTOAssembler.toModel(cityRegistryService.findOrFail(id));
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping(produces = DeliveryFoodMediaTypes.V2_APPLICATION_JSON_VALUE)
+    @PostMapping
     public CityDTOV2 save(@RequestBody @Valid CityInputV2 cityInput) {
         try {
             City city = cityInputDisassembler.toDomain(cityInput);
@@ -64,7 +64,7 @@ public class CityControllerV2 {
         }
     }
 
-    @PutMapping(path = "/{id}", produces = DeliveryFoodMediaTypes.V2_APPLICATION_JSON_VALUE)
+    @PutMapping(path = "/{id}")
     public CityDTOV2 update(@PathVariable Long id,
                             @RequestBody @Valid CityInputV2 cityInput) {
         try {

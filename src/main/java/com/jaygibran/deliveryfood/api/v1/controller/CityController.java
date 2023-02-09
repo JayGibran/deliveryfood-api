@@ -7,7 +7,6 @@ import com.jaygibran.deliveryfood.api.v1.assembler.CityInputDisassembler;
 import com.jaygibran.deliveryfood.api.v1.model.CityDTO;
 import com.jaygibran.deliveryfood.api.v1.model.input.CityInput;
 import com.jaygibran.deliveryfood.api.v1.openapi.controller.CityControllerOpenApi;
-import com.jaygibran.deliveryfood.core.web.DeliveryFoodMediaTypes;
 import com.jaygibran.deliveryfood.domain.exception.BusinessException;
 import com.jaygibran.deliveryfood.domain.exception.StateNotFoundException;
 import com.jaygibran.deliveryfood.domain.model.City;
@@ -22,6 +21,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,7 +36,7 @@ import javax.validation.Valid;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping(path = "/cities")
+@RequestMapping(path = "/v1/cities", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CityController implements CityControllerOpenApi {
 
     private CityRepository cityRepository;
@@ -47,18 +47,18 @@ public class CityController implements CityControllerOpenApi {
 
     private CityInputDisassembler cityInputDisassembler;
 
-    @GetMapping(produces = DeliveryFoodMediaTypes.V1_APPLICATION_JSON_VALUE)
+    @GetMapping
     public CollectionModel<CityDTO> list() {
         return cityDTOAssembler.toCollectionModel(cityRepository.findAll());
     }
 
-    @GetMapping(path = "/{id}", produces = DeliveryFoodMediaTypes.V1_APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/{id}")
     public CityDTO search(@PathVariable Long id) {
         return cityDTOAssembler.toModel(cityRegistryService.findOrFail(id));
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping(produces = DeliveryFoodMediaTypes.V1_APPLICATION_JSON_VALUE)
+    @PostMapping
     public CityDTO save(@RequestBody @Valid CityInput cityInput) {
         try {
             City city = cityInputDisassembler.toDomain(cityInput);
@@ -73,7 +73,7 @@ public class CityController implements CityControllerOpenApi {
         }
     }
 
-    @PutMapping(path = "/{id}", produces = DeliveryFoodMediaTypes.V1_APPLICATION_JSON_VALUE)
+    @PutMapping(path = "/{id}")
     public CityDTO update(@PathVariable Long id,
                           @RequestBody @Valid CityInput cityInput) {
         try {

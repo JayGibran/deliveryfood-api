@@ -1,6 +1,6 @@
 package com.jaygibran.deliveryfood.api.v2.assembler;
 
-import com.jaygibran.deliveryfood.api.v1.controller.CityController;
+import com.jaygibran.deliveryfood.api.v2.DeliveryFoodLinksV2;
 import com.jaygibran.deliveryfood.api.v2.controller.CityControllerV2;
 import com.jaygibran.deliveryfood.api.v2.model.CityDTOV2;
 import com.jaygibran.deliveryfood.domain.model.City;
@@ -10,28 +10,29 @@ import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSuppor
 import org.springframework.stereotype.Component;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
 public class CityDTOAssemblerV2 extends RepresentationModelAssemblerSupport<City, CityDTOV2> {
 
     private final ModelMapper modelMapper;
 
-    public CityDTOAssemblerV2(ModelMapper modelMapper) {
+    private final DeliveryFoodLinksV2 deliveryFoodLinksV2;
+
+    public CityDTOAssemblerV2(ModelMapper modelMapper, DeliveryFoodLinksV2 deliveryFoodLinksV2) {
         super(CityControllerV2.class, CityDTOV2.class);
         this.modelMapper = modelMapper;
+        this.deliveryFoodLinksV2 = deliveryFoodLinksV2;
     }
 
     @Override
     public CityDTOV2 toModel(City city) {
-        CityDTOV2 cityDTO = modelMapper.map(city, CityDTOV2.class);
 
-        cityDTO.add(linkTo(methodOn(CityController.class).search(cityDTO.getIdCity()))
-                .withSelfRel());
+        CityDTOV2 cityDTO = createModelWithId(city.getId(), city);
 
-        cityDTO.add(linkTo(methodOn(CityController.class).list())
-                .withRel("cities"));
+        modelMapper.map(city, cityDTO);
 
+        cityDTO.add(deliveryFoodLinksV2.linkToCities("cities"));
+        
         return cityDTO;
     }
 
