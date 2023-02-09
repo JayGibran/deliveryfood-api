@@ -1,11 +1,10 @@
 package com.jaygibran.deliveryfood.core.modelmapper;
 
-import com.jaygibran.deliveryfood.api.model.AddressDTO;
-import com.jaygibran.deliveryfood.api.model.input.OrderItemInput;
+import com.jaygibran.deliveryfood.api.v1.model.AddressDTO;
+import com.jaygibran.deliveryfood.api.v1.model.input.OrderItemInput;
 import com.jaygibran.deliveryfood.domain.model.Address;
 import com.jaygibran.deliveryfood.domain.model.OrderItem;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

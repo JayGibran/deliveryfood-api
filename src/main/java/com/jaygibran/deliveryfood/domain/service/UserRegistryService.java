@@ -1,9 +1,7 @@
 package com.jaygibran.deliveryfood.domain.service;
 
-import com.jaygibran.deliveryfood.api.model.input.UserUpdatePasswordInput;
 import com.jaygibran.deliveryfood.domain.exception.BusinessException;
 import com.jaygibran.deliveryfood.domain.exception.EntityInUseException;
-import com.jaygibran.deliveryfood.domain.exception.GroupNotFoundException;
 import com.jaygibran.deliveryfood.domain.exception.PasswordNotMatchException;
 import com.jaygibran.deliveryfood.domain.exception.UserNotFoundException;
 import com.jaygibran.deliveryfood.domain.model.Group;
