@@ -10,6 +10,7 @@ import com.jaygibran.deliveryfood.domain.model.Cuisine;
 import com.jaygibran.deliveryfood.domain.repository.CuisineRepository;
 import com.jaygibran.deliveryfood.domain.service.CuisineRegistryService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 
+@Slf4j
 @AllArgsConstructor
 @RestController
 @RequestMapping(path = "/v1/cuisines", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -43,6 +45,8 @@ public class CuisineController implements CuisineControllerOpenApi {
 
     @GetMapping
     public Page<CuisineDTO> list(Pageable pageable) {
+        log.info("Querying cuisines...");
+
         Page<Cuisine> cuisinePages = this.cuisineRepository.findAll(pageable);
 
         List<CuisineDTO> cuisineDTOS = cuisineDTOAssembler.toCollectionDTO(cuisinePages.getContent());
