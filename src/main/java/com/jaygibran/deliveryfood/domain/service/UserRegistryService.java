@@ -10,6 +10,7 @@ import com.jaygibran.deliveryfood.domain.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,8 @@ public class UserRegistryService {
     private final UserRepository userRepository;
     private final GroupRegistryService groupRegistryService;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Transactional
     public User save(User user) {
         userRepository.detach(user);
@@ -32,6 +35,11 @@ public class UserRegistryService {
         if (userExists.isPresent() && !userExists.get().equals(user)) {
             throw new BusinessException(String.format("There was already a user created with this email '%s'", user.getEmail()));
         }
+
+        if (user.isNew()) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+        
         return userRepository.save(user);
     }
 

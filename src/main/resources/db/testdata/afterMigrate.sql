@@ -114,9 +114,9 @@ texttured tannins are followed by long aftertaste. An ideal companion for grille
 red meat", true, 5);
 
 
-insert into user (name, email, password, date_created) value ("Jay Gibran", "jaydeliveryfoodapi@gmail.com", "123456789", utc_timestamp);
-insert into user (name, email, password, date_created) value ("Emiriam Caroline", "emiriamdeliveryfoodapi@gmail.com", "987654321", utc_timestamp);
-insert into user (name, email, password, date_created) value ("Maria Hosana", "mariadeliveryfoodapi@gmail.com", "123456", utc_timestamp);
+insert into user (name, email, password, date_created) value ("Jay Gibran", "jaydeliveryfoodapi@gmail.com", "$2a$12$F5KFCZQH37Wy7SsLXMoo8uX3KcKXcsxtIARj6UUF/LF.NCgQluWDa", utc_timestamp);
+insert into user (name, email, password, date_created) value ("Emiriam Caroline", "emiriamdeliveryfoodapi@gmail.com", " $2a$12$F5KFCZQH37Wy7SsLXMoo8uX3KcKXcsxtIARj6UUF/LF.NCgQluWDa", utc_timestamp);
+insert into user (name, email, password, date_created) value ("Maria Hosana", "mariadeliveryfoodapi@gmail.com", "$2a$12$F5KFCZQH37Wy7SsLXMoo8uX3KcKXcsxtIARj6UUF/LF.NCgQluWDa", utc_timestamp);
 
 insert into user_group(user_id, group_id) value (1, 1);
 insert into user_group(user_id, group_id) value (1, 2);

@@ -15,7 +15,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -56,5 +55,9 @@ public class User {
 
     public void removeGroup(Group group) {
         this.groups.remove(group);
+    }
+
+    public boolean isNew() {
+        return id == null;
     }
 }
