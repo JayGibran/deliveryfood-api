@@ -8,6 +8,7 @@ import com.jaygibran.deliveryfood.api.v1.model.input.OrderInput;
 import com.jaygibran.deliveryfood.api.v1.model.input.OrderInputDisassembler;
 import com.jaygibran.deliveryfood.api.v1.openapi.controller.OrderControllerOpenApi;
 import com.jaygibran.deliveryfood.core.data.PageableTranslator;
+import com.jaygibran.deliveryfood.core.security.DeliveryFoodSecurity;
 import com.jaygibran.deliveryfood.domain.exception.BusinessException;
 import com.jaygibran.deliveryfood.domain.exception.CityNotFoundException;
 import com.jaygibran.deliveryfood.domain.exception.PaymentMethodNotFoundException;
@@ -47,6 +48,7 @@ public class OrderController implements OrderControllerOpenApi {
     private final OrderDTOAssembler orderDTOAssembler;
     private final OrderSummarizedDTOAssembler orderSummarizedDTOAssembler;
     private final OrderInputDisassembler orderInputDisassembler;
+    private final DeliveryFoodSecurity deliveryFoodSecurity;
 
     @GetMapping
     public Page<OrderSummarizedDTO> search(OrderFilter orderFilter, Pageable pageable) {
@@ -69,7 +71,7 @@ public class OrderController implements OrderControllerOpenApi {
     public OrderDTO save(@RequestBody @Valid OrderInput orderInput) {
         try {
             Order order = orderInputDisassembler.toDomain(orderInput);
-            order.setUser(User.builder().id(1L).build());
+            order.setUser(User.builder().id(deliveryFoodSecurity.getUserId()).build());
 
             return orderDTOAssembler.toDTO(orderRegistryService.placeOrder(order));
         } catch (RestaurantNotFoundException | PaymentMethodNotFoundException | CityNotFoundException |
