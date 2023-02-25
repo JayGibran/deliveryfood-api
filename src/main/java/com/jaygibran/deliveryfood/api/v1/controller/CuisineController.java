@@ -6,6 +6,7 @@ import com.jaygibran.deliveryfood.api.v1.assembler.CuisineInputDisassembler;
 import com.jaygibran.deliveryfood.api.v1.model.CuisineDTO;
 import com.jaygibran.deliveryfood.api.v1.model.input.CuisineInput;
 import com.jaygibran.deliveryfood.api.v1.openapi.controller.CuisineControllerOpenApi;
+import com.jaygibran.deliveryfood.core.security.CheckSecurity;
 import com.jaygibran.deliveryfood.domain.model.Cuisine;
 import com.jaygibran.deliveryfood.domain.repository.CuisineRepository;
 import com.jaygibran.deliveryfood.domain.service.CuisineRegistryService;
@@ -16,7 +17,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,7 +44,7 @@ public class CuisineController implements CuisineControllerOpenApi {
 
     private CuisineInputDisassembler cuisineInputDisassembler;
 
-    @PreAuthorize("isAuthenticated()")
+    @CheckSecurity.Cuisines.AllowQuery
     @GetMapping
     public Page<CuisineDTO> list(Pageable pageable) {
         log.info("Querying cuisines...");
@@ -56,13 +56,13 @@ public class CuisineController implements CuisineControllerOpenApi {
         return new PageImpl<>(cuisineDTOS, pageable, cuisinePages.getTotalElements());
     }
 
-    @PreAuthorize("isAuthenticated()")
+    @CheckSecurity.Cuisines.AllowQuery
     @GetMapping("/{id}")
     public CuisineDTO search(@PathVariable Long id) {
         return cuisineDTOAssembler.toDTO(cuisineRegistryService.searchOrFail(id));
     }
 
-    @PreAuthorize("hasAnyAuthority('EDIT_CUISINES')")
+    @CheckSecurity.Cuisines.AllowEdit
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CuisineDTO add(@RequestBody @Valid CuisineInput cuisineInput) {
@@ -71,6 +71,7 @@ public class CuisineController implements CuisineControllerOpenApi {
         return cuisineDTOAssembler.toDTO(cuisineRegistryService.save(cuisine));
     }
 
+    @CheckSecurity.Cuisines.AllowEdit
     @PutMapping("/{id}")
     public CuisineDTO update(@PathVariable Long id, @RequestBody @Valid CuisineInput cuisineInput) {
         Cuisine cuisineToUpdate = cuisineRegistryService.searchOrFail(id);
@@ -80,6 +81,7 @@ public class CuisineController implements CuisineControllerOpenApi {
         return cuisineDTOAssembler.toDTO(this.cuisineRegistryService.save(cuisineToUpdate));
     }
 
+    @CheckSecurity.Cuisines.AllowEdit
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
