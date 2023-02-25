@@ -10,7 +10,8 @@ public enum ApiErrorType {
     MESSAGE_NOT_READABLE("/message-not-readable", "Message not readable"),
     INVALID_PARAMETER("/invalid-parameter", "Invalid Parameter"),
     SYSTEM_ERROR("/system-error", "System error"),
-    INVALID_DATA("/invalid-data", "Invalid data");
+    INVALID_DATA("/invalid-data", "Invalid data"),
+    ACCESS_DENIED("/access-denied", "Access is denied");
 
     private String title;
     private String uri;

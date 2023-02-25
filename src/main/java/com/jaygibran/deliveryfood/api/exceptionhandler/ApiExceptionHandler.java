@@ -17,6 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -39,6 +40,8 @@ import java.util.stream.Collectors;
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     public static final String GENERIC_ERROR_MSG = "It happened an internal error. Try again and if error persists, get in touch with the admin.";
+    public static final String ACCESS_DENIED_ERROR_MSG = "You don't have the permission to execute this operation.";
+
 
     private final MessageSource messageSource;
 
@@ -202,7 +205,17 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, problem, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, webRequest);
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    private ResponseEntity<Object> handleAccessDeniedException(Exception ex, WebRequest webRequest) {
+        log.error(ex.getMessage(), ex);
+        Problem problem = createApiErrorBuilder(HttpStatus.FORBIDDEN, ApiErrorType.ACCESS_DENIED, ex.getMessage())
+                .userMessage(ACCESS_DENIED_ERROR_MSG)
+                .build();
+        return handleExceptionInternal(ex, problem, new HttpHeaders(), HttpStatus.FORBIDDEN, webRequest);
+    }
+
     @Override
+
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
         if (body == null) {
