@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,6 +44,7 @@ public class CuisineController implements CuisineControllerOpenApi {
 
     private CuisineInputDisassembler cuisineInputDisassembler;
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping
     public Page<CuisineDTO> list(Pageable pageable) {
         log.info("Querying cuisines...");
@@ -54,11 +56,13 @@ public class CuisineController implements CuisineControllerOpenApi {
         return new PageImpl<>(cuisineDTOS, pageable, cuisinePages.getTotalElements());
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}")
     public CuisineDTO search(@PathVariable Long id) {
         return cuisineDTOAssembler.toDTO(cuisineRegistryService.searchOrFail(id));
     }
 
+    @PreAuthorize("hasAnyAuthority('EDIT_CUISINES')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CuisineDTO add(@RequestBody @Valid CuisineInput cuisineInput) {
