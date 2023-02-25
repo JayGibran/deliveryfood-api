@@ -80,17 +80,58 @@ insert into payment_method(description) value ("Credit card");
 insert into payment_method(description) value ("Debit card");
 insert into payment_method(description) value ("Cash");
 
-insert into permission(id, name, description) value (1, "READ_RESTAURANT", "User can read restaurants");
-insert into permission(id, name, description) value (2, "EDIT_RESTAURANT", "User can edit restaurants");
-insert into permission(id, name, description) value (3, "ADD_PRODUCT", "User can add products");
+insert into permission(id, name, description) value (1, "QUERY_RESTAURANT", "Allow to query restaurants");
+insert into permission(id, name, description) value (2, "EDIT_RESTAURANT", "Allow to edit restaurants");
+insert into permission(id, name, description) value (3, "QUERY_PAYMENT_METHODS", "Allow to query payment methods");
+insert into permission(id, name, description) value (4, "EDIT_PAYMENT_METHODS", "Allow to edit restaurants");
+insert into permission(id, name, description) value (5, "QUERY_CITIES", "Allow to query cities");
+insert into permission(id, name, description) value (6, "EDIT_CITIES", "Allow to edit cities");
+insert into permission(id, name, description) value (7, "QUERY_STATES", "Allow to query states");
+insert into permission(id, name, description) value (8, "EDIT_STATES", "Allow to edit states");
+insert into permission(id, name, description) value (9, "QUERY_USERS", "Allow to query users");
+insert into permission(id, name, description) value (10, "EDIT_USERS", "Allow to edit users");
+insert into permission(id, name, description) value (11, "QUERY_CUISINES", "Allow to query cuisines");
+insert into permission(id, name, description) value (12, "EDIT_CUISINES", "Allow to edit cuisines");
+insert into permission(id, name, description) value (13, "QUERY_PRODUCTS", "Allow to query products");
+insert into permission(id, name, description) value (14, "EDIT_PRODUCTS", "Allow to edit products");
+insert into permission(id, name, description) value (15, "QUERY_ORDERS", "Allow to query orders");
+insert into permission(id, name, description) value (16, "MANAGE_ORDERS", "Allow to manager orders");
+insert into permission(id, name, description) value (17, "GENERATE_REPORTS", "Allow to generate reports");
 
-insert into group_(id, name) value (1, "Cook");
-insert into group_(id, name) value (2, "Driver");
+insert into group_(id, name) value (1, "Manager");
+insert into group_(id, name) value (2, "Seller");
+insert into group_(id, name) value (3, "Assistant");
+insert into group_(id, name) value (4, "Creator");
+insert into group_(id, name) value (5, "Cook");
+insert into group_(id, name) value (6, "Driver");
+insert into group_(id, name) value (7, "Secretary");
 
-insert into group_permission(group_id, permission_id) value (1, 1);
-insert into group_permission(group_id, permission_id) value (1, 2);
-insert into group_permission(group_id, permission_id) value (2, 1);
-insert into group_permission(group_id, permission_id) value (2, 2);
+-- added all permissions to manager group
+insert into group_permission(group_id, permission_id)
+select 1, id
+from permission;
+
+-- added permissions to seller group
+insert into group_permission(group_id, permission_id)
+select 2, id
+from permission
+where name like 'QUERY_%';
+
+insert into group_permission(group_id, permission_id) value (2, 14);
+
+-- added permissions to assistant group
+insert into group_permission(group_id, permission_id)
+select 3, id
+from permission
+where name like 'QUERY_%';
+
+-- added permissions to creator group
+insert into group_permission(group_id, permission_id)
+select 4, id
+from permission
+where name like '%_RESTAURANTS'
+   or name like '%_PRODUCTS';
+
 
 insert into restaurant_payment_method (restaurant_id, payment_method_id) value (1, 1), (1, 2), (1, 3), (2, 3), (3, 2), (3, 3), (4, 1), (4, 2), (4, 3), (5, 1), (5, 2), (5, 3);
 
@@ -119,8 +160,8 @@ insert into user (name, email, password, date_created) value ("Emiriam Caroline"
 insert into user (name, email, password, date_created) value ("Maria Hosana", "mariadeliveryfoodapi@gmail.com", "$2a$12$F5KFCZQH37Wy7SsLXMoo8uX3KcKXcsxtIARj6UUF/LF.NCgQluWDa", utc_timestamp);
 
 insert into user_group(user_id, group_id) value (1, 1);
-insert into user_group(user_id, group_id) value (1, 2);
-insert into user_group(user_id, group_id) value (2, 1);
+insert into user_group(user_id, group_id) value (2, 2);
+insert into user_group(user_id, group_id) value (3, 3);;
 
 insert into restaurant_user_responsible(restaurant_id, user_id) value (1, 1);
 insert into restaurant_user_responsible(restaurant_id, user_id) value (1, 2);
