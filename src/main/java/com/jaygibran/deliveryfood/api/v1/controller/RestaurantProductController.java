@@ -4,6 +4,7 @@ import com.jaygibran.deliveryfood.api.v1.assembler.ProductDTOAssembler;
 import com.jaygibran.deliveryfood.api.v1.assembler.ProductInputDisassembler;
 import com.jaygibran.deliveryfood.api.v1.model.ProductDTO;
 import com.jaygibran.deliveryfood.api.v1.model.input.ProductInput;
+import com.jaygibran.deliveryfood.core.security.CheckSecurity;
 import com.jaygibran.deliveryfood.domain.model.Product;
 import com.jaygibran.deliveryfood.domain.model.Restaurant;
 import com.jaygibran.deliveryfood.domain.repository.ProductRepository;
@@ -40,6 +41,7 @@ public class RestaurantProductController {
 
     private final ProductRepository productRepository;
 
+    @CheckSecurity.Restaurants.AllowQuery
     @GetMapping
     public List<ProductDTO> list(@PathVariable Long restaurantId, @RequestParam(required = false) boolean includeInactives) {
         Restaurant restaurant = restaurantRegistryService.findOrFail(restaurantId);
@@ -54,6 +56,7 @@ public class RestaurantProductController {
         return productDTOAssembler.toCollectionDTO(products);
     }
 
+    @CheckSecurity.Restaurants.AllowQuery
     @GetMapping("/{id}")
     public ProductDTO search(@PathVariable Long restaurantId, @PathVariable Long id) {
         Restaurant restaurant = restaurantRegistryService.findOrFail(restaurantId);
@@ -61,6 +64,7 @@ public class RestaurantProductController {
         return productDTOAssembler.toDTO(productRegistryService.findOrFail(id, restaurant.getId()));
     }
 
+    @CheckSecurity.Restaurants.AllowEdit
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public ProductDTO save(@PathVariable Long restaurantId, @RequestBody @Valid ProductInput productInput) {
@@ -72,6 +76,7 @@ public class RestaurantProductController {
         return productDTOAssembler.toDTO(productRegistryService.save(product));
     }
 
+    @CheckSecurity.Restaurants.AllowEdit
     @PutMapping("/{id}")
     public ProductDTO update(@PathVariable Long restaurantId, @PathVariable Long id, @RequestBody @Valid ProductInput productInput) {
         Product productToUpdate = productRegistryService.findOrFail(id, restaurantId);

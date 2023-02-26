@@ -2,6 +2,7 @@ package com.jaygibran.deliveryfood.api.v1.controller;
 
 import com.jaygibran.deliveryfood.api.v1.assembler.PaymentMethodDTOAssembler;
 import com.jaygibran.deliveryfood.api.v1.model.PaymentMethodDTO;
+import com.jaygibran.deliveryfood.core.security.CheckSecurity;
 import com.jaygibran.deliveryfood.domain.model.Restaurant;
 import com.jaygibran.deliveryfood.domain.service.RestaurantRegistryService;
 import lombok.AllArgsConstructor;
@@ -26,18 +27,21 @@ public class RestaurantPaymentMethodController {
 
     private PaymentMethodDTOAssembler paymentMethodDTOAssembler;
 
+    @CheckSecurity.Restaurants.AllowQuery
     @GetMapping
     public List<PaymentMethodDTO> list(@PathVariable Long restaurantId) {
         Restaurant restaurant = restaurantRegistryService.findOrFail(restaurantId);
         return paymentMethodDTOAssembler.toCollectionDTO(restaurant.getPaymentMethods());
     }
 
+    @CheckSecurity.Restaurants.AllowEdit
     @DeleteMapping("/{paymentMethodId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void disassociate(@PathVariable Long restaurantId, @PathVariable Long paymentMethodId) {
         restaurantRegistryService.disassociatePaymentMethod(restaurantId, paymentMethodId);
     }
 
+    @CheckSecurity.Restaurants.AllowEdit
     @PutMapping("/{paymentMethodId}")
     public void associate(@PathVariable Long restaurantId, @PathVariable Long paymentMethodId) {
         restaurantRegistryService.associatePaymentMethod(restaurantId, paymentMethodId);

@@ -80,23 +80,16 @@ insert into payment_method(description) value ("Credit card");
 insert into payment_method(description) value ("Debit card");
 insert into payment_method(description) value ("Cash");
 
-insert into permission(id, name, description) value (1, "QUERY_RESTAURANT", "Allow to query restaurants");
-insert into permission(id, name, description) value (2, "EDIT_RESTAURANT", "Allow to edit restaurants");
-insert into permission(id, name, description) value (3, "QUERY_PAYMENT_METHODS", "Allow to query payment methods");
-insert into permission(id, name, description) value (4, "EDIT_PAYMENT_METHODS", "Allow to edit restaurants");
-insert into permission(id, name, description) value (5, "QUERY_CITIES", "Allow to query cities");
-insert into permission(id, name, description) value (6, "EDIT_CITIES", "Allow to edit cities");
-insert into permission(id, name, description) value (7, "QUERY_STATES", "Allow to query states");
-insert into permission(id, name, description) value (8, "EDIT_STATES", "Allow to edit states");
-insert into permission(id, name, description) value (9, "QUERY_USERS", "Allow to query users");
-insert into permission(id, name, description) value (10, "EDIT_USERS", "Allow to edit users");
-insert into permission(id, name, description) value (11, "QUERY_CUISINES", "Allow to query cuisines");
-insert into permission(id, name, description) value (12, "EDIT_CUISINES", "Allow to edit cuisines");
-insert into permission(id, name, description) value (13, "QUERY_PRODUCTS", "Allow to query products");
-insert into permission(id, name, description) value (14, "EDIT_PRODUCTS", "Allow to edit products");
-insert into permission(id, name, description) value (15, "QUERY_ORDERS", "Allow to query orders");
-insert into permission(id, name, description) value (16, "MANAGE_ORDERS", "Allow to manager orders");
-insert into permission(id, name, description) value (17, "GENERATE_REPORTS", "Allow to generate reports");
+insert into permission(id, name, description) value (1, "EDIT_RESTAURANTS", "Allow to edit restaurants");
+insert into permission(id, name, description) value (2, "EDIT_PAYMENT_METHODS", "Allow to edit restaurants");
+insert into permission(id, name, description) value (3, "EDIT_CITIES", "Allow to edit cities");
+insert into permission(id, name, description) value (4, "EDIT_STATES", "Allow to edit states");
+insert into permission(id, name, description) value (5, "QUERY_USERS", "Allow to query users");
+insert into permission(id, name, description) value (6, "EDIT_USERS", "Allow to edit users");
+insert into permission(id, name, description) value (7, "EDIT_CUISINES", "Allow to edit cuisines");
+insert into permission(id, name, description) value (8, "QUERY_ORDERS", "Allow to query orders");
+insert into permission(id, name, description) value (9, "MANAGE_ORDERS", "Allow to manager orders");
+insert into permission(id, name, description) value (10, "GENERATE_REPORTS", "Allow to generate reports");
 
 insert into group_(id, name) value (1, "Manager");
 insert into group_(id, name) value (2, "Seller");
@@ -117,7 +110,10 @@ select 2, id
 from permission
 where name like 'QUERY_%';
 
-insert into group_permission(group_id, permission_id) value (2, 14);
+insert into group_permission(group_id, permission_id)
+select 2, id
+from permission
+where name = 'EDIT_RESTAURANTS';
 
 -- added permissions to assistant group
 insert into group_permission(group_id, permission_id)

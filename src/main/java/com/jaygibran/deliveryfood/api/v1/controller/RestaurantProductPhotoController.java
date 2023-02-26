@@ -3,6 +3,7 @@ package com.jaygibran.deliveryfood.api.v1.controller;
 import com.jaygibran.deliveryfood.api.v1.assembler.ProductPhotoDTOAssembler;
 import com.jaygibran.deliveryfood.api.v1.model.ProductPhotoDTO;
 import com.jaygibran.deliveryfood.api.v1.model.input.ProductPhotoInput;
+import com.jaygibran.deliveryfood.core.security.CheckSecurity;
 import com.jaygibran.deliveryfood.domain.exception.EntityNotFoundException;
 import com.jaygibran.deliveryfood.domain.model.Product;
 import com.jaygibran.deliveryfood.domain.model.ProductPhoto;
@@ -41,6 +42,7 @@ public class RestaurantProductPhotoController {
     private final ProductPhotoDTOAssembler productPhotoDTOAssembler;
     private final PhotoStorageService photoStorageService;
 
+    @CheckSecurity.Restaurants.AllowEdit
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ProductPhotoDTO updatePhoto(@PathVariable Long restaurantId, @PathVariable Long productId, @Valid ProductPhotoInput productPhotoInput) throws IOException {
         Product product = productRegistryService.findOrFail(productId, restaurantId);
@@ -57,11 +59,13 @@ public class RestaurantProductPhotoController {
         return productPhotoDTOAssembler.toDTO(catalogProductPhotoService.save(photo, file.getInputStream()));
     }
 
+    @CheckSecurity.Restaurants.AllowEdit
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ProductPhotoDTO search(@PathVariable Long restaurantId, @PathVariable Long productId) {
         return productPhotoDTOAssembler.toDTO(catalogProductPhotoService.findOrFail(restaurantId, productId));
     }
 
+    @CheckSecurity.Restaurants.AllowEdit
     @GetMapping
     public ResponseEntity<?> produces(@PathVariable Long restaurantId, @PathVariable Long productId, @RequestHeader(name = "accept") String acceptHeader) throws HttpMediaTypeNotAcceptableException {
         try {
@@ -89,6 +93,7 @@ public class RestaurantProductPhotoController {
         }
     }
 
+    @CheckSecurity.Restaurants.AllowEdit
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping
     public void delete(@PathVariable Long restaurantId, @PathVariable Long productId) {

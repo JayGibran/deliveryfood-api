@@ -2,6 +2,7 @@ package com.jaygibran.deliveryfood.api.v1.controller;
 
 import com.jaygibran.deliveryfood.api.v1.assembler.UserDTOAssembler;
 import com.jaygibran.deliveryfood.api.v1.model.UserDTO;
+import com.jaygibran.deliveryfood.core.security.CheckSecurity;
 import com.jaygibran.deliveryfood.domain.model.Restaurant;
 import com.jaygibran.deliveryfood.domain.service.RestaurantRegistryService;
 import lombok.AllArgsConstructor;
@@ -28,6 +29,7 @@ public class RestaurantUserController {
 
     private UserDTOAssembler userDTOAssembler;
 
+    @CheckSecurity.Restaurants.AllowQuery
     @GetMapping
     public CollectionModel<UserDTO> list(@PathVariable Long restaurantId) {
         Restaurant restaurant = restaurantRegistryService.findOrFail(restaurantId);
@@ -36,11 +38,13 @@ public class RestaurantUserController {
                 .add(linkTo(methodOn(RestaurantUserController.class).list(restaurantId)).withSelfRel());
     }
 
+    @CheckSecurity.Restaurants.AllowEdit
     @PutMapping("/{userId}")
     public void associate(@PathVariable Long restaurantId, @PathVariable Long userId) {
         restaurantRegistryService.associateUser(restaurantId, userId);
     }
 
+    @CheckSecurity.Restaurants.AllowEdit
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void disassociate(@PathVariable Long restaurantId, @PathVariable Long userId) {

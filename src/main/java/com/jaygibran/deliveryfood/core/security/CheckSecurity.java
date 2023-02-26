@@ -22,4 +22,20 @@ public @interface CheckSecurity {
         @interface AllowQuery {
         }
     }
+
+    @interface Restaurants {
+
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') && hasAuthority('EDIT_RESTAURANTS')")
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(ElementType.METHOD)
+        @interface AllowEdit {
+        }
+
+        @PreAuthorize("hasAuthority('SCOPE_READ') && isAuthenticated()")
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(ElementType.METHOD)
+        @interface AllowQuery {
+        }
+
+    }
 }
