@@ -154,18 +154,17 @@ red meat", true, 5);
 insert into user (name, email, password, date_created) value ("Jay Gibran", "jaydeliveryfoodapi@gmail.com", "$2a$12$F5KFCZQH37Wy7SsLXMoo8uX3KcKXcsxtIARj6UUF/LF.NCgQluWDa", utc_timestamp);
 insert into user (name, email, password, date_created) value ("Emiriam Caroline", "emiriamdeliveryfoodapi@gmail.com", " $2a$12$F5KFCZQH37Wy7SsLXMoo8uX3KcKXcsxtIARj6UUF/LF.NCgQluWDa", utc_timestamp);
 insert into user (name, email, password, date_created) value ("Maria Hosana", "mariadeliveryfoodapi@gmail.com", "$2a$12$F5KFCZQH37Wy7SsLXMoo8uX3KcKXcsxtIARj6UUF/LF.NCgQluWDa", utc_timestamp);
+insert into user (name, email, password, date_created) value ("Antonio", "antonio-owner@gmail.com", "$2a$12$F5KFCZQH37Wy7SsLXMoo8uX3KcKXcsxtIARj6UUF/LF.NCgQluWDa", utc_timestamp);
 
 insert into user_group(user_id, group_id) value (1, 1);
 insert into user_group(user_id, group_id) value (2, 2);
 insert into user_group(user_id, group_id) value (3, 3);;
 
-insert into restaurant_user_responsible(restaurant_id, user_id) value (1, 1);
 insert into restaurant_user_responsible(restaurant_id, user_id) value (1, 2);
-insert into restaurant_user_responsible(restaurant_id, user_id) value (2, 1);
+insert into restaurant_user_responsible(restaurant_id, user_id) value (1, 4);
 insert into restaurant_user_responsible(restaurant_id, user_id) value (2, 2);
 insert into restaurant_user_responsible(restaurant_id, user_id) value (3, 1);
 insert into restaurant_user_responsible(restaurant_id, user_id) value (3, 2);
-insert into restaurant_user_responsible(restaurant_id, user_id) value (4, 1);
 insert into restaurant_user_responsible(restaurant_id, user_id) value (4, 2);
 
 insert into order_ (id, code, restaurant_id, user_id, payment_method_id, address_city_id, address_air_code,

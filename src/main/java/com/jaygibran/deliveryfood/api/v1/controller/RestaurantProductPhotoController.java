@@ -42,7 +42,7 @@ public class RestaurantProductPhotoController {
     private final ProductPhotoDTOAssembler productPhotoDTOAssembler;
     private final PhotoStorageService photoStorageService;
 
-    @CheckSecurity.Restaurants.AllowEdit
+    @CheckSecurity.Restaurants.AllowManageRegistry
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ProductPhotoDTO updatePhoto(@PathVariable Long restaurantId, @PathVariable Long productId, @Valid ProductPhotoInput productPhotoInput) throws IOException {
         Product product = productRegistryService.findOrFail(productId, restaurantId);
@@ -59,13 +59,13 @@ public class RestaurantProductPhotoController {
         return productPhotoDTOAssembler.toDTO(catalogProductPhotoService.save(photo, file.getInputStream()));
     }
 
-    @CheckSecurity.Restaurants.AllowEdit
+    @CheckSecurity.Restaurants.AllowManageRegistry
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ProductPhotoDTO search(@PathVariable Long restaurantId, @PathVariable Long productId) {
         return productPhotoDTOAssembler.toDTO(catalogProductPhotoService.findOrFail(restaurantId, productId));
     }
 
-    @CheckSecurity.Restaurants.AllowEdit
+    @CheckSecurity.Restaurants.AllowManageFunctioning
     @GetMapping
     public ResponseEntity<?> produces(@PathVariable Long restaurantId, @PathVariable Long productId, @RequestHeader(name = "accept") String acceptHeader) throws HttpMediaTypeNotAcceptableException {
         try {
@@ -93,7 +93,7 @@ public class RestaurantProductPhotoController {
         }
     }
 
-    @CheckSecurity.Restaurants.AllowEdit
+    @CheckSecurity.Restaurants.AllowManageFunctioning
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping
     public void delete(@PathVariable Long restaurantId, @PathVariable Long productId) {

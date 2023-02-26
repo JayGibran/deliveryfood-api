@@ -64,7 +64,7 @@ public class RestaurantProductController {
         return productDTOAssembler.toDTO(productRegistryService.findOrFail(id, restaurant.getId()));
     }
 
-    @CheckSecurity.Restaurants.AllowEdit
+    @CheckSecurity.Restaurants.AllowManageFunctioning
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public ProductDTO save(@PathVariable Long restaurantId, @RequestBody @Valid ProductInput productInput) {
@@ -76,7 +76,7 @@ public class RestaurantProductController {
         return productDTOAssembler.toDTO(productRegistryService.save(product));
     }
 
-    @CheckSecurity.Restaurants.AllowEdit
+    @CheckSecurity.Restaurants.AllowManageFunctioning
     @PutMapping("/{id}")
     public ProductDTO update(@PathVariable Long restaurantId, @PathVariable Long id, @RequestBody @Valid ProductInput productInput) {
         Product productToUpdate = productRegistryService.findOrFail(id, restaurantId);

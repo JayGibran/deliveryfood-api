@@ -38,13 +38,13 @@ public class RestaurantUserController {
                 .add(linkTo(methodOn(RestaurantUserController.class).list(restaurantId)).withSelfRel());
     }
 
-    @CheckSecurity.Restaurants.AllowEdit
+    @CheckSecurity.Restaurants.AllowManageRegistry
     @PutMapping("/{userId}")
     public void associate(@PathVariable Long restaurantId, @PathVariable Long userId) {
         restaurantRegistryService.associateUser(restaurantId, userId);
     }
 
-    @CheckSecurity.Restaurants.AllowEdit
+    @CheckSecurity.Restaurants.AllowManageRegistry
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void disassociate(@PathVariable Long restaurantId, @PathVariable Long userId) {

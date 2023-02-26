@@ -28,7 +28,13 @@ public @interface CheckSecurity {
         @PreAuthorize("hasAuthority('SCOPE_WRITE') && hasAuthority('EDIT_RESTAURANTS')")
         @Retention(RetentionPolicy.RUNTIME)
         @Target(ElementType.METHOD)
-        @interface AllowEdit {
+        @interface AllowManageRegistry {
+        }
+
+        @PreAuthorize("(hasAuthority('SCOPE_WRITE') && hasAuthority('EDIT_RESTAURANTS')) || @deliveryFoodSecurity.doesManageRestaurant(#restaurantId)")
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(ElementType.METHOD)
+        @interface AllowManageFunctioning {
         }
 
         @PreAuthorize("hasAuthority('SCOPE_READ') && isAuthenticated()")

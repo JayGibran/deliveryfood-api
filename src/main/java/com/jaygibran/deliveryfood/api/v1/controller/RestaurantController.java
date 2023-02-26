@@ -88,7 +88,7 @@ public class RestaurantController {
         return restaurantDTOAssembler.toDTO(restaurant);
     }
 
-    @CheckSecurity.Restaurants.AllowEdit
+    @CheckSecurity.Restaurants.AllowManageRegistry
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public RestaurantDTO save(@RequestBody @Valid RestaurantInput restaurantInput) {
@@ -100,7 +100,7 @@ public class RestaurantController {
         }
     }
 
-    @CheckSecurity.Restaurants.AllowEdit
+    @CheckSecurity.Restaurants.AllowManageRegistry
     @PutMapping("/{id}")
     public RestaurantDTO update(@PathVariable Long id, @RequestBody @Valid RestaurantInput restaurantInput) {
         try {
@@ -114,49 +114,49 @@ public class RestaurantController {
         }
     }
 
-    @CheckSecurity.Restaurants.AllowEdit
+    @CheckSecurity.Restaurants.AllowManageRegistry
     @PutMapping("/{restaurantId}/active")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void active(@PathVariable Long restaurantId) {
         this.restaurantRegistryService.activate(restaurantId);
     }
 
-    @CheckSecurity.Restaurants.AllowEdit
+    @CheckSecurity.Restaurants.AllowManageRegistry
     @DeleteMapping("/{restaurantId}/inactive")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void inactive(@PathVariable Long restaurantId) {
         this.restaurantRegistryService.inactivate(restaurantId);
     }
 
-    @CheckSecurity.Restaurants.AllowEdit
+    @CheckSecurity.Restaurants.AllowManageRegistry
     @PutMapping("/activations")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void activateMultiples(@RequestBody List<Long> restaurantIds) {
         restaurantRegistryService.activate(restaurantIds);
     }
 
-    @CheckSecurity.Restaurants.AllowEdit
+    @CheckSecurity.Restaurants.AllowManageRegistry
     @DeleteMapping("/inactivations")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void inactivateMultiples(@RequestBody List<Long> restaurantIds) {
         restaurantRegistryService.inactivate(restaurantIds);
     }
 
-    @CheckSecurity.Restaurants.AllowEdit
+    @CheckSecurity.Restaurants.AllowManageFunctioning
     @PutMapping("/{restaurantId}/opening")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void opening(@PathVariable Long restaurantId) {
         this.restaurantRegistryService.opening(restaurantId);
     }
 
-    @CheckSecurity.Restaurants.AllowEdit
+    @CheckSecurity.Restaurants.AllowManageFunctioning
     @PutMapping("/{restaurantId}/closing")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void closing(@PathVariable Long restaurantId) {
         this.restaurantRegistryService.closing(restaurantId);
     }
 
-    @CheckSecurity.Restaurants.AllowEdit
+    @CheckSecurity.Restaurants.AllowManageRegistry
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {

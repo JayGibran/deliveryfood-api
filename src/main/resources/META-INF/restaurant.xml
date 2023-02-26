@@ -10,4 +10,12 @@
             where name like concat('%', :name, '%') and cuisine.id = :id
         </query>
     </named-query>
+
+    <named-query name="Restaurant.existsResponsible">
+        <query>
+            select case when count(1) > 0 then true else false end
+            from Restaurant rest join rest.users u
+            where rest.id = :restaurantId and u.id = :userId
+        </query>
+    </named-query>
 </entity-mappings>

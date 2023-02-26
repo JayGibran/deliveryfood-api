@@ -34,14 +34,14 @@ public class RestaurantPaymentMethodController {
         return paymentMethodDTOAssembler.toCollectionDTO(restaurant.getPaymentMethods());
     }
 
-    @CheckSecurity.Restaurants.AllowEdit
+    @CheckSecurity.Restaurants.AllowManageFunctioning
     @DeleteMapping("/{paymentMethodId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void disassociate(@PathVariable Long restaurantId, @PathVariable Long paymentMethodId) {
         restaurantRegistryService.disassociatePaymentMethod(restaurantId, paymentMethodId);
     }
 
-    @CheckSecurity.Restaurants.AllowEdit
+    @CheckSecurity.Restaurants.AllowManageFunctioning
     @PutMapping("/{paymentMethodId}")
     public void associate(@PathVariable Long restaurantId, @PathVariable Long paymentMethodId) {
         restaurantRegistryService.associatePaymentMethod(restaurantId, paymentMethodId);
