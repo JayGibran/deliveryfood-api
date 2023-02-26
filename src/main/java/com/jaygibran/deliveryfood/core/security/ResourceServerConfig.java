@@ -11,7 +11,6 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Configuration
@@ -31,15 +30,15 @@ public class ResourceServerConfig extends WebSecurityConfigurerAdapter {
     private JwtAuthenticationConverter jwtAuthenticationConverter() {
         var jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwt -> {
-            var authorities = jwt.getClaimAsStringList("authorities");
-
-            if (authorities == null) {
-                return Collections.emptyList();
-            }
-
             var scopesAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
             Collection<GrantedAuthority> grantedAuthorities = scopesAuthoritiesConverter.convert(jwt);
 
+            var authorities = jwt.getClaimAsStringList("authorities");
+
+            if (authorities == null) {
+                return grantedAuthorities;
+            }
+            
             grantedAuthorities.addAll(authorities.stream()
                     .map(SimpleGrantedAuthority::new)
                     .collect(Collectors.toList()));

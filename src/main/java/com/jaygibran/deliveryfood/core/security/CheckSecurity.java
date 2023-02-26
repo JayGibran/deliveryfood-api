@@ -1,5 +1,6 @@
 package com.jaygibran.deliveryfood.core.security;
 
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.lang.annotation.ElementType;
@@ -42,6 +43,17 @@ public @interface CheckSecurity {
         @Target(ElementType.METHOD)
         @interface AllowQuery {
         }
+    }
 
+    @interface Orders {
+
+        @PreAuthorize("hasAuthority('SCOPE_READ') && isAuthenticated()")
+        @PostAuthorize("hasAuthority('QUERY_ORDERS') || " +
+                "@deliveryFoodSecurity.getUserId() == returnObject.user.id  || " +
+                "@deliveryFoodSecurity.doesManageRestaurant(returnObject.restaurant.id)")
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(ElementType.METHOD)
+        @interface AllowQuery {
+        }
     }
 }

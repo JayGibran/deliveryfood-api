@@ -155,6 +155,7 @@ insert into user (name, email, password, date_created) value ("Jay Gibran", "jay
 insert into user (name, email, password, date_created) value ("Emiriam Caroline", "emiriamdeliveryfoodapi@gmail.com", " $2a$12$F5KFCZQH37Wy7SsLXMoo8uX3KcKXcsxtIARj6UUF/LF.NCgQluWDa", utc_timestamp);
 insert into user (name, email, password, date_created) value ("Maria Hosana", "mariadeliveryfoodapi@gmail.com", "$2a$12$F5KFCZQH37Wy7SsLXMoo8uX3KcKXcsxtIARj6UUF/LF.NCgQluWDa", utc_timestamp);
 insert into user (name, email, password, date_created) value ("Antonio", "antonio-owner@gmail.com", "$2a$12$F5KFCZQH37Wy7SsLXMoo8uX3KcKXcsxtIARj6UUF/LF.NCgQluWDa", utc_timestamp);
+insert into user (name, email, password, date_created) value ("Debora", "debora-user@gmail.com", "$2a$12$F5KFCZQH37Wy7SsLXMoo8uX3KcKXcsxtIARj6UUF/LF.NCgQluWDa", utc_timestamp);
 
 insert into user_group(user_id, group_id) value (1, 1);
 insert into user_group(user_id, group_id) value (2, 2);
@@ -170,7 +171,7 @@ insert into restaurant_user_responsible(restaurant_id, user_id) value (4, 2);
 insert into order_ (id, code, restaurant_id, user_id, payment_method_id, address_city_id, address_air_code,
                     address_street, address_number, address_additional, address_neighborhood,
                     status, date_created, sub_total, fee_delivery, total)
-values (1, "7e5da0a6-eb51-4497-97ae-1f67388e6251", 4, 1, 1, 1, 'DD02 PP50', 'Pearse Street', '100', 'Upper Street', 'D2', 'CREATED', utc_timestamp, 34.90, 11, 45.90);
+values (1, "7e5da0a6-eb51-4497-97ae-1f67388e6251", 4, 5, 1, 1, 'DD02 PP50', 'Pearse Street', '100', 'Upper Street', 'D2', 'CREATED', utc_timestamp, 34.90, 11, 45.90);
 
 insert into order_item (id, order_id, product_id, quantity, unit_price, total, note)
 values (1, 1, 8, 1, 5.00, 5.00, "No sugar");

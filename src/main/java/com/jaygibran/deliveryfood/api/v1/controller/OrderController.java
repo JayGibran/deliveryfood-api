@@ -8,16 +8,17 @@ import com.jaygibran.deliveryfood.api.v1.model.input.OrderInput;
 import com.jaygibran.deliveryfood.api.v1.model.input.OrderInputDisassembler;
 import com.jaygibran.deliveryfood.api.v1.openapi.controller.OrderControllerOpenApi;
 import com.jaygibran.deliveryfood.core.data.PageableTranslator;
+import com.jaygibran.deliveryfood.core.security.CheckSecurity;
 import com.jaygibran.deliveryfood.core.security.DeliveryFoodSecurity;
 import com.jaygibran.deliveryfood.domain.exception.BusinessException;
 import com.jaygibran.deliveryfood.domain.exception.CityNotFoundException;
 import com.jaygibran.deliveryfood.domain.exception.PaymentMethodNotFoundException;
 import com.jaygibran.deliveryfood.domain.exception.ProductNotFoundException;
 import com.jaygibran.deliveryfood.domain.exception.RestaurantNotFoundException;
+import com.jaygibran.deliveryfood.domain.filter.OrderFilter;
 import com.jaygibran.deliveryfood.domain.model.Order;
 import com.jaygibran.deliveryfood.domain.model.User;
 import com.jaygibran.deliveryfood.domain.repository.OrderRepository;
-import com.jaygibran.deliveryfood.domain.filter.OrderFilter;
 import com.jaygibran.deliveryfood.domain.service.OrderRegistryService;
 import com.jaygibran.deliveryfood.infrastructure.repository.spec.OrderSpecs;
 import lombok.AllArgsConstructor;
@@ -50,8 +51,10 @@ public class OrderController implements OrderControllerOpenApi {
     private final OrderInputDisassembler orderInputDisassembler;
     private final DeliveryFoodSecurity deliveryFoodSecurity;
 
+    @CheckSecurity.Orders.AllowQuery
     @GetMapping
     public Page<OrderSummarizedDTO> search(OrderFilter orderFilter, Pageable pageable) {
+
         pageable = translatePageable(pageable);
 
         Page<Order> orderPages = orderRepository.findAll(OrderSpecs.usingFilter(orderFilter), pageable);
@@ -61,6 +64,7 @@ public class OrderController implements OrderControllerOpenApi {
         return new PageImpl<>(orderSummarizedDTOS, pageable, orderPages.getTotalElements());
     }
 
+    @CheckSecurity.Orders.AllowQuery
     @GetMapping("/{orderCode}")
     public OrderDTO search(@PathVariable String orderCode) {
         return orderDTOAssembler.toDTO(orderRegistryService.findOrFail(orderCode));

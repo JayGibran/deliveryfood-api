@@ -20,6 +20,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,6 +54,7 @@ public class RestaurantController {
     @JsonView(RestaurantView.Summary.class)
     @GetMapping
     public List<RestaurantDTO> list() {
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
         return restaurantDTOAssembler.toCollectionDTO(this.restaurantRepository.findAll());
     }
 
