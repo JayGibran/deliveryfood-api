@@ -64,7 +64,7 @@ public class OrderController implements OrderControllerOpenApi {
         return new PageImpl<>(orderSummarizedDTOS, pageable, orderPages.getTotalElements());
     }
 
-    @CheckSecurity.Orders.AllowQuery
+    @CheckSecurity.Orders.AllowSearch
     @GetMapping("/{orderCode}")
     public OrderDTO search(@PathVariable String orderCode) {
         return orderDTOAssembler.toDTO(orderRegistryService.findOrFail(orderCode));

@@ -53,6 +53,15 @@ public @interface CheckSecurity {
                 "@deliveryFoodSecurity.doesManageRestaurant(returnObject.restaurant.id)")
         @Retention(RetentionPolicy.RUNTIME)
         @Target(ElementType.METHOD)
+        @interface AllowSearch {
+        }
+
+        @PreAuthorize("hasAuthority('SCOPE_READ') && isAuthenticated()")
+        @PostAuthorize("hasAuthority('QUERY_ORDERS') || " +
+                "@deliveryFoodSecurity.getUserId() == returnObject.user.id  || " +
+                "@deliveryFoodSecurity.doesManageRestaurant(returnObject.restaurant.id)")
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(ElementType.METHOD)
         @interface AllowQuery {
         }
     }

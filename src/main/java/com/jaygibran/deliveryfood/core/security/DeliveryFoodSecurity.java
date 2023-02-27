@@ -19,6 +19,9 @@ public class DeliveryFoodSecurity {
     }
 
     public boolean doesManageRestaurant(Long restaurantId) {
+        if (restaurantId == null) {
+            return false;
+        }
         return restaurantRepository.existsResponsible(restaurantId, getUserId());
     }
 
