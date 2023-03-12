@@ -152,7 +152,7 @@ red meat", true, 5);
 
 
 insert into user (name, email, password, date_created) value ("Jay Gibran", "jaydeliveryfoodapi@gmail.com", "$2a$12$F5KFCZQH37Wy7SsLXMoo8uX3KcKXcsxtIARj6UUF/LF.NCgQluWDa", utc_timestamp);
-insert into user (name, email, password, date_created) value ("Emiriam Caroline", "emiriamdeliveryfoodapi@gmail.com", " $2a$12$F5KFCZQH37Wy7SsLXMoo8uX3KcKXcsxtIARj6UUF/LF.NCgQluWDa", utc_timestamp);
+insert into user (name, email, password, date_created) value ("Emiriam Caroline", "emiriamdeliveryfoodapi@gmail.com", "$2a$12$F5KFCZQH37Wy7SsLXMoo8uX3KcKXcsxtIARj6UUF/LF.NCgQluWDa", utc_timestamp);
 insert into user (name, email, password, date_created) value ("Maria Hosana", "mariadeliveryfoodapi@gmail.com", "$2a$12$F5KFCZQH37Wy7SsLXMoo8uX3KcKXcsxtIARj6UUF/LF.NCgQluWDa", utc_timestamp);
 insert into user (name, email, password, date_created) value ("Antonio", "antonio-owner@gmail.com", "$2a$12$F5KFCZQH37Wy7SsLXMoo8uX3KcKXcsxtIARj6UUF/LF.NCgQluWDa", utc_timestamp);
 insert into user (name, email, password, date_created) value ("Debora", "debora-user@gmail.com", "$2a$12$F5KFCZQH37Wy7SsLXMoo8uX3KcKXcsxtIARj6UUF/LF.NCgQluWDa", utc_timestamp);

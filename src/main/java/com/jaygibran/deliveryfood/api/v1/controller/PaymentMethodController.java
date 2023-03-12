@@ -5,6 +5,7 @@ import com.jaygibran.deliveryfood.api.v1.assembler.PaymentMethodDTODisassembler;
 import com.jaygibran.deliveryfood.api.v1.model.PaymentMethodDTO;
 import com.jaygibran.deliveryfood.api.v1.model.input.PaymentMethodInput;
 import com.jaygibran.deliveryfood.api.v1.openapi.controller.PaymentMethodControllerOpenApi;
+import com.jaygibran.deliveryfood.core.security.CheckSecurity;
 import com.jaygibran.deliveryfood.domain.model.PaymentMethod;
 import com.jaygibran.deliveryfood.domain.repository.PaymentMethodRepository;
 import com.jaygibran.deliveryfood.domain.service.PaymentMethodRegistryService;
@@ -42,6 +43,7 @@ public class PaymentMethodController implements PaymentMethodControllerOpenApi {
 
     private final PaymentMethodDTODisassembler paymentMethodDTODisassembler;
 
+    @CheckSecurity.PaymentMethod.AllowQuery
     @GetMapping
     public ResponseEntity<List<PaymentMethodDTO>> list() {
         List<PaymentMethodDTO> paymentMethodDTOS = paymentMethodDTOAssembler.toCollectionDTO(this.paymentMethodRepository.findAll());
@@ -50,6 +52,7 @@ public class PaymentMethodController implements PaymentMethodControllerOpenApi {
                 .body(paymentMethodDTOS);
     }
 
+    @CheckSecurity.PaymentMethod.AllowQuery
     @GetMapping("/{id}")
     public ResponseEntity<PaymentMethodDTO> search(@PathVariable Long id, ServletWebRequest request) {
 
@@ -61,6 +64,7 @@ public class PaymentMethodController implements PaymentMethodControllerOpenApi {
                 .body(paymentMethodDTO);
     }
 
+    @CheckSecurity.PaymentMethod.AllowEdit
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public PaymentMethodDTO add(@RequestBody @Valid PaymentMethodInput paymentMethodInput) {
@@ -69,6 +73,7 @@ public class PaymentMethodController implements PaymentMethodControllerOpenApi {
         return paymentMethodDTOAssembler.toDTO(paymentMethodRegistryService.save(paymentMethod));
     }
 
+    @CheckSecurity.PaymentMethod.AllowEdit
     @PutMapping("/{id}")
     public PaymentMethodDTO update(@PathVariable Long id, @RequestBody @Valid PaymentMethodInput paymentMethodInput) {
         PaymentMethod paymentMethodToUpdate = paymentMethodRegistryService.findOrFail(id);
@@ -78,6 +83,7 @@ public class PaymentMethodController implements PaymentMethodControllerOpenApi {
         return paymentMethodDTOAssembler.toDTO(this.paymentMethodRegistryService.save(paymentMethodToUpdate));
     }
 
+    @CheckSecurity.PaymentMethod.AllowEdit
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {

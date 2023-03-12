@@ -73,4 +73,20 @@ public @interface CheckSecurity {
         @interface AllowManageOrders {
         }
     }
+
+    @interface PaymentMethod {
+
+        @PreAuthorize("hasAuthority('SCOPE_READ') && isAuthenticated()")
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(ElementType.METHOD)
+        @interface AllowQuery {
+        }
+
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') && isAuthenticated()")
+        @PostAuthorize("hasAuthority('EDIT_PAYMENT_METHODS')")
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(ElementType.METHOD)
+        @interface AllowEdit {
+        }
+    }
 }
