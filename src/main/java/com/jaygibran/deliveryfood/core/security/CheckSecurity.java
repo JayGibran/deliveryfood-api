@@ -64,5 +64,13 @@ public @interface CheckSecurity {
         @Target(ElementType.METHOD)
         @interface AllowQuery {
         }
+
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') && isAuthenticated()")
+        @PostAuthorize("hasAuthority('MANAGE_ORDERS') || " +
+                "@deliveryFoodSecurity.doesManageRestaurantOfOrder(#orderCode)")
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(ElementType.METHOD)
+        @interface AllowManageOrders {
+        }
     }
 }

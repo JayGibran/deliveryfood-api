@@ -1,5 +1,6 @@
 package com.jaygibran.deliveryfood.core.security;
 
+import com.jaygibran.deliveryfood.domain.repository.OrderRepository;
 import com.jaygibran.deliveryfood.domain.repository.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 public class DeliveryFoodSecurity {
 
     private final RestaurantRepository restaurantRepository;
+    private final OrderRepository orderRepository;
 
     public Long getUserId() {
         Jwt jwt = (Jwt) getAuthentication().getPrincipal();
@@ -23,6 +25,10 @@ public class DeliveryFoodSecurity {
             return false;
         }
         return restaurantRepository.existsResponsible(restaurantId, getUserId());
+    }
+
+    public boolean doesManageRestaurantOfOrder(String code) {
+        return orderRepository.isOrderManagedBy(code, getUserId());
     }
 
     private Authentication getAuthentication() {

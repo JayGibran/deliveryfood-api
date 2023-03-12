@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings
+        xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/orm_2_2.xsd"
+        version="2.2">
+
+    <named-query name="Order.isOrderManagedBy">
+        <query>
+            Select case when count(1) > 0 then true else false end
+            from Order o join o.restaurant r join r.users u
+            where o.code = :orderCode and u.id = :useId
+        </query>
+    </named-query>
+
+</entity-mappings>
