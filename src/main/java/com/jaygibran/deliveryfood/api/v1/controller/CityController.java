@@ -7,6 +7,7 @@ import com.jaygibran.deliveryfood.api.v1.assembler.CityInputDisassembler;
 import com.jaygibran.deliveryfood.api.v1.model.CityDTO;
 import com.jaygibran.deliveryfood.api.v1.model.input.CityInput;
 import com.jaygibran.deliveryfood.api.v1.openapi.controller.CityControllerOpenApi;
+import com.jaygibran.deliveryfood.core.security.CheckSecurity;
 import com.jaygibran.deliveryfood.domain.exception.BusinessException;
 import com.jaygibran.deliveryfood.domain.exception.StateNotFoundException;
 import com.jaygibran.deliveryfood.domain.model.City;
@@ -47,16 +48,19 @@ public class CityController implements CityControllerOpenApi {
 
     private CityInputDisassembler cityInputDisassembler;
 
+    @CheckSecurity.City.AllowQuery
     @GetMapping
     public CollectionModel<CityDTO> list() {
         return cityDTOAssembler.toCollectionModel(cityRepository.findAll());
     }
 
+    @CheckSecurity.City.AllowQuery
     @GetMapping(path = "/{id}")
     public CityDTO search(@PathVariable Long id) {
         return cityDTOAssembler.toModel(cityRegistryService.findOrFail(id));
     }
 
+    @CheckSecurity.City.AllowEdit
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public CityDTO save(@RequestBody @Valid CityInput cityInput) {
@@ -73,6 +77,7 @@ public class CityController implements CityControllerOpenApi {
         }
     }
 
+    @CheckSecurity.City.AllowEdit
     @PutMapping(path = "/{id}")
     public CityDTO update(@PathVariable Long id,
                           @RequestBody @Valid CityInput cityInput) {
@@ -87,6 +92,7 @@ public class CityController implements CityControllerOpenApi {
         }
     }
 
+    @CheckSecurity.City.AllowEdit
     @ApiOperation("Delete city by id")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "City was deleted"),

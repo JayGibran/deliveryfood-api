@@ -4,6 +4,7 @@ import com.jaygibran.deliveryfood.api.v1.assembler.StateDTOAssembler;
 import com.jaygibran.deliveryfood.api.v1.assembler.StateInputDisassembler;
 import com.jaygibran.deliveryfood.api.v1.model.StateDTO;
 import com.jaygibran.deliveryfood.api.v1.model.input.StateInput;
+import com.jaygibran.deliveryfood.core.security.CheckSecurity;
 import com.jaygibran.deliveryfood.domain.model.State;
 import com.jaygibran.deliveryfood.domain.repository.StateRepository;
 import com.jaygibran.deliveryfood.domain.service.StateRegistryService;
@@ -36,16 +37,19 @@ public class StateController {
 
     private StateInputDisassembler stateInputDisassembler;
 
+    @CheckSecurity.State.AllowQuery
     @GetMapping
     public CollectionModel<StateDTO> list() {
         return stateDTOAssembler.toCollectionModel(this.stateRepository.findAll());
     }
 
+    @CheckSecurity.State.AllowQuery
     @GetMapping("/{id}")
     public StateDTO search(@PathVariable Long id) {
         return stateDTOAssembler.toModel(this.stateRegistryService.findOrFail(id));
     }
 
+    @CheckSecurity.State.AllowEdit
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public StateDTO save(@RequestBody @Valid StateInput stateInput) {
@@ -55,6 +59,7 @@ public class StateController {
         return stateDTOAssembler.toModel(stateRegistryService.save(state));
     }
 
+    @CheckSecurity.State.AllowEdit
     @PutMapping("/{id}")
     public StateDTO update(@PathVariable Long id, @RequestBody @Valid StateInput stateInput) {
         State stateToUpdate = this.stateRegistryService.findOrFail(id);
@@ -64,6 +69,7 @@ public class StateController {
         return stateDTOAssembler.toModel(stateRegistryService.save(stateToUpdate));
     }
 
+    @CheckSecurity.State.AllowEdit
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
