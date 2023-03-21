@@ -1,5 +1,8 @@
 package com.jaygibran.deliveryfood.api.v1.controller;
 
+import java.util.List;
+import javax.validation.Valid;
+
 import com.jaygibran.deliveryfood.api.v1.assembler.GroupDTOAssembler;
 import com.jaygibran.deliveryfood.api.v1.assembler.GroupInputDisassembler;
 import com.jaygibran.deliveryfood.api.v1.model.GroupDTO;
@@ -21,9 +24,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
-import java.util.List;
 
 @AllArgsConstructor
 @RestController
@@ -50,7 +50,6 @@ public class GroupController implements GroupControllerOpenApi {
         return groupDTOAssembler.toDTO(groupRegistryService.findOrFail(id));
     }
 
-
     @CheckSecurity.UsersGroupsPermissions.AllowEdit
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -59,7 +58,6 @@ public class GroupController implements GroupControllerOpenApi {
 
         return groupDTOAssembler.toDTO(groupRegistryService.save(group));
     }
-
 
     @CheckSecurity.UsersGroupsPermissions.AllowEdit
     @PutMapping("/{id}")
@@ -71,12 +69,10 @@ public class GroupController implements GroupControllerOpenApi {
         return groupDTOAssembler.toDTO(this.groupRegistryService.save(groupToUpdate));
     }
 
-
     @CheckSecurity.UsersGroupsPermissions.AllowEdit
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         this.groupRegistryService.delete(id);
     }
-
 }

@@ -1,10 +1,10 @@
 package com.jaygibran.deliveryfood.core.security;
 
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -145,8 +145,16 @@ public @interface CheckSecurity {
         @interface AllowEdit {
         }
 
-
         @PreAuthorize("hasAuthority('SCOPE_READ') and hasAuthority('QUERY_USERS_GROUPS_PERMISSIONS')")
+        @Retention(RUNTIME)
+        @Target(METHOD)
+        @interface AllowQuery {
+        }
+    }
+
+    @interface Statistic {
+
+        @PreAuthorize("hasAuthority('SCOPE_READ') and hasAuthority('GENERATE_REPORTS')")
         @Retention(RUNTIME)
         @Target(METHOD)
         @interface AllowQuery {

@@ -1,5 +1,7 @@
 package com.jaygibran.deliveryfood.api.v1.controller;
 
+import java.util.List;
+
 import com.jaygibran.deliveryfood.api.v1.assembler.PermissionDTOAssembler;
 import com.jaygibran.deliveryfood.api.v1.model.PermissionDTO;
 import com.jaygibran.deliveryfood.core.security.CheckSecurity;
@@ -16,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @AllArgsConstructor
 @RestController
 @RequestMapping(path = "/v1/groups/{groupId}/permissions", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -26,7 +26,6 @@ public class GroupPermissionController {
     private GroupRegistryService groupRegistryService;
 
     private PermissionDTOAssembler permissionDTOAssembler;
-
 
     @CheckSecurity.UsersGroupsPermissions.AllowQuery
     @GetMapping
