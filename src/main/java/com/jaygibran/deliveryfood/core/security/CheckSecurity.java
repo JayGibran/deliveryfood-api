@@ -50,17 +50,16 @@ public @interface CheckSecurity {
 
         @PreAuthorize("hasAuthority('SCOPE_READ') && isAuthenticated()")
         @PostAuthorize("hasAuthority('QUERY_ORDERS') || " +
-                "@deliveryFoodSecurity.getUserId() == returnObject.user.id  || " +
+                "@deliveryFoodSecurity.authenticatedUserEquals(returnObject.user.id) || " +
                 "@deliveryFoodSecurity.doesManageRestaurant(returnObject.restaurant.id)")
         @Retention(RUNTIME)
         @Target(METHOD)
         @interface AllowSearch {
         }
 
-        @PreAuthorize("hasAuthority('SCOPE_READ') && isAuthenticated()")
-        @PostAuthorize("hasAuthority('QUERY_ORDERS') || " +
-                "@deliveryFoodSecurity.getUserId() == returnObject.user.id  || " +
-                "@deliveryFoodSecurity.doesManageRestaurant(returnObject.restaurant.id)")
+        @PreAuthorize("hasAuthority('SCOPE_READ') && (hasAuthority('QUERY_ORDERS') || " +
+                "@deliveryFoodSecurity.authenticatedUserEquals(#orderFilter.userId) || " +
+                "@deliveryFoodSecurity.doesManageRestaurant(#orderFilter.restaurantId))")
         @Retention(RUNTIME)
         @Target(METHOD)
         @interface AllowQuery {
@@ -126,14 +125,14 @@ public @interface CheckSecurity {
     @interface UsersGroupsPermissions {
 
         @PreAuthorize("hasAuthority('SCOPE_WRITE') and "
-                + "@deliveryFoodSecurity.getUserId() == #id")
+                + "@deliveryFoodSecurity.authenticatedUserEquals(#id)")
         @Retention(RUNTIME)
         @Target(METHOD)
         @interface AllowEditOwnPassword {
         }
 
         @PreAuthorize("hasAuthority('SCOPE_WRITE') and (hasAuthority('EDIT_USERS_GROUPS_PERMISSIONS') or "
-                + "@deliveryFoodSecurity.getUserId() == #id)")
+                + "@deliveryFoodSecurity.authenticatedUserEquals(#id))")
         @Retention(RUNTIME)
         @Target(METHOD)
         @interface AllowEditUser {

@@ -31,6 +31,10 @@ public class DeliveryFoodSecurity {
         return orderRepository.isOrderManagedBy(code, getUserId());
     }
 
+    public boolean authenticatedUserEquals(Long userId) {
+        return getUserId() != null && userId != null && getUserId().equals(userId);
+    }
+
     private Authentication getAuthentication() {
         return SecurityContextHolder.getContext().getAuthentication();
     }

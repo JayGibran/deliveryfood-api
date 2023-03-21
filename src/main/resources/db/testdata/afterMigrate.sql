@@ -268,5 +268,5 @@ insert into oauth_client_details (client_id, resource_ids, client_secret,
                                   scope, authorized_grant_types, web_server_redirect_uri, authorities,
                                   access_token_validity, refresh_token_validity, autoapprove)
 values ('billing', null, '$2a$12$lv8lh.WASCRjNaoEHUKZl.Dl.ZidVuRpZdKTKea8tJTLjkgY5SiDu',
-        'READ,WRITE', 'client_credentials', null, 'QUERY_ORDERS,GENERATE_REPORTS',
+        'READ,WRITE', 'client_credentials', null, null,
         null, null, null);
