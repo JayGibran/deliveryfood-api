@@ -84,8 +84,8 @@ insert into permission(id, name, description) value (1, "EDIT_RESTAURANTS", "All
 insert into permission(id, name, description) value (2, "EDIT_PAYMENT_METHODS", "Allow to edit restaurants");
 insert into permission(id, name, description) value (3, "EDIT_CITIES", "Allow to edit cities");
 insert into permission(id, name, description) value (4, "EDIT_STATES", "Allow to edit states");
-insert into permission(id, name, description) value (5, "QUERY_USERS", "Allow to query users");
-insert into permission(id, name, description) value (6, "EDIT_USERS", "Allow to edit users");
+insert into permission(id, name, description) value (5, "QUERY_USERS_GROUPS_PERMISSIONS", "Allow to query users");
+insert into permission(id, name, description) value (6, "EDIT_USERS_GROUPS_PERMISSIONS", "Allow to edit users");
 insert into permission(id, name, description) value (7, "EDIT_CUISINES", "Allow to edit cuisines");
 insert into permission(id, name, description) value (8, "QUERY_ORDERS", "Allow to query orders");
 insert into permission(id, name, description) value (9, "MANAGE_ORDERS", "Allow to manager orders");

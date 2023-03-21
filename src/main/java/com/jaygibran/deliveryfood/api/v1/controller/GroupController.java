@@ -5,6 +5,7 @@ import com.jaygibran.deliveryfood.api.v1.assembler.GroupInputDisassembler;
 import com.jaygibran.deliveryfood.api.v1.model.GroupDTO;
 import com.jaygibran.deliveryfood.api.v1.model.input.GroupInput;
 import com.jaygibran.deliveryfood.api.v1.openapi.controller.GroupControllerOpenApi;
+import com.jaygibran.deliveryfood.core.security.CheckSecurity;
 import com.jaygibran.deliveryfood.domain.model.Group;
 import com.jaygibran.deliveryfood.domain.repository.GroupRepository;
 import com.jaygibran.deliveryfood.domain.service.GroupRegistryService;
@@ -37,16 +38,20 @@ public class GroupController implements GroupControllerOpenApi {
 
     private GroupInputDisassembler groupInputDisassembler;
 
+    @CheckSecurity.UsersGroupsPermissions.AllowQuery
     @GetMapping
     public List<GroupDTO> list() {
         return groupDTOAssembler.toCollectionDTO(this.groupRepository.findAll());
     }
 
+    @CheckSecurity.UsersGroupsPermissions.AllowQuery
     @GetMapping("/{id}")
     public GroupDTO search(@PathVariable Long id) {
         return groupDTOAssembler.toDTO(groupRegistryService.findOrFail(id));
     }
 
+
+    @CheckSecurity.UsersGroupsPermissions.AllowEdit
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public GroupDTO add(@RequestBody @Valid GroupInput groupInput) {
@@ -55,6 +60,8 @@ public class GroupController implements GroupControllerOpenApi {
         return groupDTOAssembler.toDTO(groupRegistryService.save(group));
     }
 
+
+    @CheckSecurity.UsersGroupsPermissions.AllowEdit
     @PutMapping("/{id}")
     public GroupDTO update(@PathVariable Long id, @RequestBody @Valid GroupInput groupInput) {
         Group groupToUpdate = groupRegistryService.findOrFail(id);
@@ -64,6 +71,8 @@ public class GroupController implements GroupControllerOpenApi {
         return groupDTOAssembler.toDTO(this.groupRegistryService.save(groupToUpdate));
     }
 
+
+    @CheckSecurity.UsersGroupsPermissions.AllowEdit
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {

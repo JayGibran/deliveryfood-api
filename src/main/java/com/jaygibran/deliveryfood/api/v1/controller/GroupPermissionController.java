@@ -2,6 +2,7 @@ package com.jaygibran.deliveryfood.api.v1.controller;
 
 import com.jaygibran.deliveryfood.api.v1.assembler.PermissionDTOAssembler;
 import com.jaygibran.deliveryfood.api.v1.model.PermissionDTO;
+import com.jaygibran.deliveryfood.core.security.CheckSecurity;
 import com.jaygibran.deliveryfood.domain.model.Group;
 import com.jaygibran.deliveryfood.domain.service.GroupRegistryService;
 import lombok.AllArgsConstructor;
@@ -26,18 +27,21 @@ public class GroupPermissionController {
 
     private PermissionDTOAssembler permissionDTOAssembler;
 
+
+    @CheckSecurity.UsersGroupsPermissions.AllowQuery
     @GetMapping
     public List<PermissionDTO> list(@PathVariable Long groupId) {
         Group group = groupRegistryService.findOrFail(groupId);
         return permissionDTOAssembler.toCollectionDTO(group.getPermissions());
     }
 
-
+    @CheckSecurity.UsersGroupsPermissions.AllowEdit
     @PutMapping("/{permissionId}")
     public void associate(@PathVariable Long groupId, @PathVariable Long permissionId) {
         groupRegistryService.associatePermission(groupId, permissionId);
     }
 
+    @CheckSecurity.UsersGroupsPermissions.AllowEdit
     @DeleteMapping("/{permissionId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void disassociate(@PathVariable Long groupId, @PathVariable Long permissionId) {

@@ -1,5 +1,7 @@
 package com.jaygibran.deliveryfood.domain.service;
 
+import java.util.Optional;
+
 import com.jaygibran.deliveryfood.domain.exception.BusinessException;
 import com.jaygibran.deliveryfood.domain.exception.EntityInUseException;
 import com.jaygibran.deliveryfood.domain.exception.PasswordNotMatchException;
@@ -14,8 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @AllArgsConstructor
 @Service
 public class UserRegistryService {
@@ -24,7 +24,6 @@ public class UserRegistryService {
 
     private final UserRepository userRepository;
     private final GroupRegistryService groupRegistryService;
-
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
@@ -39,14 +38,14 @@ public class UserRegistryService {
         if (user.isNew()) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-        
+
         return userRepository.save(user);
     }
 
     @Transactional
     public void updatePassword(Long id, String currentPassword, String newPassword) {
         User userToUpdate = findOrFail(id);
-        if (userToUpdate.passwordDoesNotMatch(currentPassword)) {
+        if (!passwordEncoder.matches(currentPassword, userToUpdate.getPassword())) {
             throw new PasswordNotMatchException(currentPassword);
         }
         userToUpdate.setPassword(newPassword);

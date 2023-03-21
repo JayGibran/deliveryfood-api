@@ -6,6 +6,7 @@ import com.jaygibran.deliveryfood.api.v1.model.UserDTO;
 import com.jaygibran.deliveryfood.api.v1.model.input.UserInput;
 import com.jaygibran.deliveryfood.api.v1.model.input.UserUpdateInput;
 import com.jaygibran.deliveryfood.api.v1.model.input.UserUpdatePasswordInput;
+import com.jaygibran.deliveryfood.core.security.CheckSecurity;
 import com.jaygibran.deliveryfood.domain.model.User;
 import com.jaygibran.deliveryfood.domain.repository.UserRepository;
 import com.jaygibran.deliveryfood.domain.service.UserRegistryService;
@@ -37,12 +38,14 @@ public class UserController {
     private final UserDTOAssembler userDTOAssembler;
 
     private final UserInputDisassembler userInputDisassembler;
-
+    
+    @CheckSecurity.UsersGroupsPermissions.AllowQuery
     @GetMapping
     public CollectionModel<UserDTO> list() {
         return userDTOAssembler.toCollectionModel(this.userRepository.findAll());
     }
 
+    @CheckSecurity.UsersGroupsPermissions.AllowQuery
     @GetMapping("/{id}")
     public UserDTO search(@PathVariable Long id) {
         return userDTOAssembler.toModel(this.userRegistryService.findOrFail(id));
@@ -57,6 +60,7 @@ public class UserController {
         return userDTOAssembler.toModel(userRegistryService.save(user));
     }
 
+    @CheckSecurity.UsersGroupsPermissions.AllowEditUser
     @PutMapping("/{id}")
     public UserDTO update(@PathVariable Long id, @RequestBody @Valid UserUpdateInput userUpdateInput) {
         User userToUpdate = this.userRegistryService.findOrFail(id);
@@ -66,12 +70,14 @@ public class UserController {
         return userDTOAssembler.toModel(userRegistryService.save(userToUpdate));
     }
 
+    @CheckSecurity.UsersGroupsPermissions.AllowEditOwnPassword
     @PutMapping("/{id}/password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updatePassword(@PathVariable Long id, @RequestBody @Valid UserUpdatePasswordInput userUpdatePasswordInput) {
         userRegistryService.updatePassword(id, userUpdatePasswordInput.getCurrentPassword(), userUpdatePasswordInput.getNewPassword());
     }
 
+    @CheckSecurity.UsersGroupsPermissions.AllowEdit
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {

@@ -2,6 +2,7 @@ package com.jaygibran.deliveryfood.api.v1.controller;
 
 import com.jaygibran.deliveryfood.api.v1.assembler.GroupDTOAssembler;
 import com.jaygibran.deliveryfood.api.v1.model.GroupDTO;
+import com.jaygibran.deliveryfood.core.security.CheckSecurity;
 import com.jaygibran.deliveryfood.domain.model.User;
 import com.jaygibran.deliveryfood.domain.service.UserRegistryService;
 import lombok.AllArgsConstructor;
@@ -26,18 +27,20 @@ public class UserGroupController {
 
     private GroupDTOAssembler groupDTOAssembler;
 
+    @CheckSecurity.UsersGroupsPermissions.AllowQuery
     @GetMapping
     public List<GroupDTO> list(@PathVariable Long userId) {
         User user = userRegistryService.findOrFail(userId);
         return groupDTOAssembler.toCollectionDTO(user.getGroups());
     }
 
-
+    @CheckSecurity.UsersGroupsPermissions.AllowEdit
     @PutMapping("/{groupId}")
     public void associate(@PathVariable Long userId, @PathVariable Long groupId) {
         userRegistryService.associateGroup(userId, groupId);
     }
 
+    @CheckSecurity.UsersGroupsPermissions.AllowEdit
     @DeleteMapping("/{groupId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void disassociate(@PathVariable Long userId, @PathVariable Long groupId) {
