@@ -1,0 +1,1 @@
+org.springframework.context.ApplicationContextInitializer=com.jaygibran.deliveryfood.core.io.Base64ProtocolResolver
