@@ -1,5 +1,15 @@
 package com.jaygibran.deliveryfood.core.openapi;
 
+import java.io.File;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLStreamHandler;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Consumer;
+
 import com.fasterxml.classmate.TypeResolver;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.jaygibran.deliveryfood.api.exceptionhandler.Problem;
@@ -27,21 +37,16 @@ import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseBuilder;
 import springfox.documentation.schema.AlternateTypeRules;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.AuthorizationScope;
 import springfox.documentation.service.Contact;
+import springfox.documentation.service.HttpAuthenticationScheme;
 import springfox.documentation.service.Response;
+import springfox.documentation.service.SecurityReference;
 import springfox.documentation.service.Tag;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.json.JacksonModuleRegistrar;
 import springfox.documentation.spring.web.plugins.Docket;
-
-import java.io.File;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLStreamHandler;
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.Consumer;
 
 @EnableWebMvc
 @Configuration
@@ -84,7 +89,10 @@ public class SpringFoxConfig {
                         new Tag("Groups", "Management of user groups"),
                         new Tag("Cuisines", "Management of cuisines"),
                         new Tag("Payment Methods", "Management of payment methods"),
-                        new Tag("Orders", "Management of orders"));
+                        new Tag("Orders", "Management of orders"))
+                .securityContexts(Collections.singletonList(securityContext()))
+                .securitySchemes(List.of(authenticationScheme()))
+                .securityContexts(List.of(securityContext()));
     }
 
     @Bean
@@ -107,7 +115,10 @@ public class SpringFoxConfig {
                         URL.class, URI.class, URLStreamHandler.class, Resource.class,
                         File.class, InputStream.class)
                 .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
-                .apiInfo(apiInfoV2());
+                .apiInfo(apiInfoV2())
+                .securityContexts(Collections.singletonList(securityContext()))
+                .securitySchemes(List.of(authenticationScheme()))
+                .securityContexts(List.of(securityContext()));
     }
 
     private ApiInfo apiInfo() {
@@ -127,7 +138,6 @@ public class SpringFoxConfig {
                 .contact(new Contact("DeliveryFood", "https://www.deliveryfood.com", "contato@deliveryfood.com"))
                 .build();
     }
-
 
     private List<Response> globalGetResponseMessages() {
         return Arrays.asList(
@@ -193,5 +203,21 @@ public class SpringFoxConfig {
     @Bean
     public JacksonModuleRegistrar springFoxJacksonConfig() {
         return objectMapper -> objectMapper.registerModule(new JavaTimeModule());
+    }
+
+    private SecurityContext securityContext() {
+        return SecurityContext.builder()
+                .securityReferences(securityReference()).build();
+    }
+
+    private List<SecurityReference> securityReference() {
+        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
+        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+        authorizationScopes[0] = authorizationScope;
+        return List.of(new SecurityReference("Authorization", authorizationScopes));
+    }
+
+    private HttpAuthenticationScheme authenticationScheme() {
+        return HttpAuthenticationScheme.JWT_BEARER_BUILDER.name("Authorization").build();
     }
 }
