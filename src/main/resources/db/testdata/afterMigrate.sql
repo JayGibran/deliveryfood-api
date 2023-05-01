@@ -1,5 +1,10 @@
 set
 foreign_key_checks = 0;
+    
+lock
+tables city write, cuisine write, group_ write, group_permission write, payment_method write, permission write, product write, 
+restaurant_user_responsible write, restaurant write,  restaurant_payment_method write, state write, user write, user_group write, 
+order_item write, order_ write, product_photo write, oauth_client_details write;
 
 delete
 from city;
@@ -271,3 +276,6 @@ insert into oauth_client_details (client_id, resource_ids, client_secret,
 values ('billing', null, '$2a$12$lv8lh.WASCRjNaoEHUKZl.Dl.ZidVuRpZdKTKea8tJTLjkgY5SiDu',
         'READ,WRITE', 'client_credentials', null, "QUERY_ORDERS,MANAGE_ORDERS",
         null, null, null);
+
+unlock
+tables;

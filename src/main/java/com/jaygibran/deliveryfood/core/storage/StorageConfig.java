@@ -4,6 +4,7 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.Region;
 import com.jaygibran.deliveryfood.domain.service.PhotoStorageService;
 import com.jaygibran.deliveryfood.infrastructure.service.storage.LocalStorageService;
 import com.jaygibran.deliveryfood.infrastructure.service.storage.S3PhotoStorageService;
@@ -30,10 +31,10 @@ public class StorageConfig {
                 .withRegion(storageProperties.getS3().getRegion())
                 .build();
     }
-    
+
     @Bean
-    public AmazonS3 localAmazonS3(){
-        return AmazonS3ClientBuilder.standard().build();
+    public AmazonS3 localAmazonS3() {
+        return AmazonS3ClientBuilder.standard().withRegion(Region.EU_Ireland.toString()).build();
     }
 
     @Bean

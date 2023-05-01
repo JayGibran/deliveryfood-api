@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  deliveryfood-mysql:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_ROOT_PASSWORD: ""
+    ports:
+      - "3306:3306"
+    networks:
+      - deliveryfood-network
+  
+  deliveryfood-api:
+    image: deliveryfood-api:0.0.1-SNAPSHOT
+    command: [ "/wait-for-it.sh", "-t", "30", "deliveryfood-mysql:3306", "--", "java", "-jar", "api.jar" ]
+    environment:
+      DB_HOST: deliveryfood-mysql
+    ports:
+      - "8080:8080"
+    networks:
+      - deliveryfood-network
+    depends_on:
+      - deliveryfood-mysql
+
+networks:
+  deliveryfood-network:
+    driver: bridge
+    
