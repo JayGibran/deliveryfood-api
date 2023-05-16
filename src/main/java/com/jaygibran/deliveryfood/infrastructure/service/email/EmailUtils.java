@@ -1,11 +1,9 @@
-package com.jaygibran.deliveryfood.domain.util;
+package com.jaygibran.deliveryfood.infrastructure.service.email;
 
 import com.jaygibran.deliveryfood.domain.service.EmailService;
-import com.jaygibran.deliveryfood.infrastructure.service.email.EmailException;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import lombok.AllArgsConstructor;
-import lombok.experimental.UtilityClass;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 

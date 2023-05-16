@@ -8,7 +8,7 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_ROOT_PASSWORD: ""
     ports:
-      - "3306:3306"
+      - "13306:3306"
     networks:
       - deliveryfood-network
   
@@ -17,6 +17,7 @@ services:
     command: [ "/wait-for-it.sh", "-t", "30", "deliveryfood-mysql:3306", "--", "java", "-jar", "api.jar" ]
     environment:
       DB_HOST: deliveryfood-mysql
+      SPRING_PROFILES_ACTIVE: development
     ports:
       - "8080:8080"
     networks:

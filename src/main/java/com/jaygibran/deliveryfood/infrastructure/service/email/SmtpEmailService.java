@@ -1,15 +1,14 @@
 package com.jaygibran.deliveryfood.infrastructure.service.email;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
 import com.jaygibran.deliveryfood.core.email.EmailProperties;
 import com.jaygibran.deliveryfood.domain.service.EmailService;
-import com.jaygibran.deliveryfood.domain.util.EmailUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 
 @RequiredArgsConstructor
 @Service
@@ -18,7 +17,7 @@ public class SmtpEmailService implements EmailService {
     private final JavaMailSender mailSender;
     private final EmailUtils emailUtils;
     protected final EmailProperties emailProperties;
-    
+
     @Override
     public void send(Message message) {
         try {
