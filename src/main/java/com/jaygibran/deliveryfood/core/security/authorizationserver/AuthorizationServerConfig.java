@@ -1,11 +1,17 @@
 package com.jaygibran.deliveryfood.core.security.authorizationserver;
 
+import java.io.*;
+import java.security.*;
 import java.time.*;
 import java.util.*;
 
+import com.nimbusds.jose.jwk.*;
+import com.nimbusds.jose.jwk.source.*;
+import com.nimbusds.jose.proc.*;
 import org.springframework.context.annotation.*;
 import org.springframework.core.*;
 import org.springframework.core.annotation.*;
+import org.springframework.core.io.*;
 import org.springframework.jdbc.core.*;
 import org.springframework.security.config.annotation.web.builders.*;
 import org.springframework.security.config.annotation.web.configuration.*;
@@ -46,7 +52,7 @@ public class AuthorizationServerConfig {
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                 .scope("READ")
                 .tokenSettings(TokenSettings.builder()
-                        .accessTokenFormat(OAuth2TokenFormat.REFERENCE)
+                        .accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)
                         .accessTokenTimeToLive(Duration.ofMinutes(30))
                         .build())
                 .build();
@@ -58,5 +64,20 @@ public class AuthorizationServerConfig {
     public OAuth2AuthorizationService oAuth2AuthorizationService(JdbcOperations jdbcOperations, 
                                                                  RegisteredClientRepository registeredClientRepository){
         return new JdbcOAuth2AuthorizationService(jdbcOperations, registeredClientRepository);
+    }
+    
+    @Bean
+    public JWKSource<SecurityContext> jwkSource(JwtKeyStoreProperties properties) throws Exception{
+        char[] keyStorePass = properties.getPass().toCharArray();
+        String keyPairAlias = properties.getAlias();
+        
+        Resource jksLocation = properties.getJksLocation();
+        InputStream inputStream = jksLocation.getInputStream();
+        KeyStore keyStore = KeyStore.getInstance("JKS");
+        keyStore.load(inputStream, keyStorePass);
+
+        RSAKey rsaKey = RSAKey.load(keyStore, keyPairAlias, keyStorePass);
+        
+        return new ImmutableJWKSet<>(new JWKSet(rsaKey));
     }
 }
